@@ -8,8 +8,11 @@ Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js`
 
 打包 Windows / macOS：
     npm install @electron/packager --save-dev
-    npx @electron/packager . FireTake --platform=win32 --arch=x64 --icon=icon.ico
-    npx @electron/packager . FireTake --platform=darwin --arch=arm64 --icon=icon.png
+    npx @electron/packager . FireTake --platform=win32 --arch=x64 --icon=icon.ico --no-asar
+    npx @electron/packager . FireTake --platform=darwin --arch=arm64 --icon=icon.icns --no-asar
+（必须加 --no-asar：在线更新会把新文件写进程序目录，asar 包是只读的。
+ 在 Mac/Linux 上打 Windows 包时，--icon 需要 wine；没有 wine 就先不加 --icon，打包后用 resedit 写入 icon.ico。
+ icon.icns 可由 icon.png 生成：python3 -c "from PIL import Image; Image.open('icon.png').save('icon.icns')"）
 
 发布在线更新：
 1. 修改代码后把 package.json 的 version 加一（例如 1.4.1）。
