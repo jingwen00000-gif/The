@@ -2,3 +2,6 @@ node_modules/
 firetake-web.html
 *.ftupd
 latest.json
+tests/symbol-search/*.pdf
+tests/symbol-search/*_truth.json
+tests/symbol-search/*.html

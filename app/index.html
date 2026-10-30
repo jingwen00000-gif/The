@@ -455,7 +455,7 @@ kbd{font-family:var(--f-mono)}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><span>Fire<b>Take</b></span><small>v2.9.0</small></div>
+  <div class="brand"><span>Fire<b>Take</b></span><small>v2.10.0</small></div>
   <select id="projSel" class="projsel" aria-label="切换项目"></select>
   <span class="ptlbl">类型</span><div class="seg ptseg" id="ptypeSeg" role="group" aria-label="项目类型"><button data-pt="NEW" title="新建 / 在建工程">新建工程</button><button data-pt="REFURB" title="既有建筑改造">翻新装修</button></div>
   <nav class="tabs" role="tablist">
@@ -1318,19 +1318,21 @@ function renderReview(){
 }
 
 /* ============ Detection: PDF text layer ============ */
+// [words found anywhere in a label, short tag that must be the whole label (optionally numbered: 'SD', 'HR-02', 'EL3'), type].
+// Short tags are ambiguous inside a sentence ('2 HR FIRE RATED', 'EXT WALL', 'EL 3.200' = elevation), so they only count on their own.
 const TXT_RULES=[
-  [/\bF?HR\b|HOSE\s*REEL/i,'hosereel'],[/\bFHV?\b|HYDRANT|LANDING\s*VALVE/i,'hydrant'],[/BOOSTER/i,'booster'],
-  [/\bCO2\b|CO₂/i,'ext_co2'],[/\bEXT\b|EXTINGUISHER|\bABE\b/i,'ext_abe'],[/FIRE\s*BLANKET|\bFB\b/i,'blanket'],
-  [/\bFIP\b|FIRE\s*INDICATOR/i,'fip'],[/\bMCP\b|CALL\s*POINT/i,'mcp'],[/VALVE\s*SET|CONTROL\s*VALVE|ALARM\s*VALVE/i,'valveset'],
-  [/FLOW\s*SWITCH/i,'flowsw'],[/\bSD\b|SMOKE\s*DET/i,'smoke'],[/\bHD\b|HEAT\s*DET|THERMAL\s*DET/i,'heat'],[/EXIT\s*SIGN/i,'exit'],[/\bEM\s*LIGHT|\bEL\b/i,'emlight']
-];
+  [/HOSE\s*REEL|\bFHR\b/i,'F?HR','hosereel'],[/HYDRANT|LANDING\s*VALVE|\bFHV\b/i,'FH','hydrant'],[/BOOSTER/i,null,'booster'],
+  [/\bCO2\b|CO₂|CARBON\s*DIOXIDE/i,null,'ext_co2'],[/EXTINGUISHER|\bABE\b/i,'EXT','ext_abe'],[/FIRE\s*BLANKET/i,'FB','blanket'],
+  [/\bFIP\b|FIRE\s*INDICATOR/i,null,'fip'],[/\bMCP\b|CALL\s*POINT/i,null,'mcp'],[/VALVE\s*SET|CONTROL\s*VALVE|ALARM\s*VALVE/i,null,'valveset'],
+  [/FLOW\s*SWITCH/i,null,'flowsw'],[/SMOKE\s*DET/i,'SD','smoke'],[/HEAT\s*DET|THERMAL\s*DET/i,'HD','heat'],[/EXIT\s*SIGN/i,null,'exit'],[/\bEM\s*LIGHT|EMERGENCY\s*LIGHT/i,'EL','emlight']
+].map(([rx,ab,type])=>[rx,ab&&new RegExp('^(?:'+ab+')(?:[-\\s.]?\\d{1,3}[A-Z]?)?$','i'),type]);
 async function textDetect(){
   const p=page(); const out=$('#detectOut');
   if(!p) return toast('先打开图纸');
   if(p.kind!=='pdf'){out.innerHTML='本页不是 PDF，没有文字层。请用 <b>AI 识别本页</b>。'; return}
   const ref=pdfPageRef.get(p.id); if(!ref) return toast('请重新打开该 PDF');
   const pg=await pdfDocs.get(ref.key).getPage(ref.num); const vp=pg.getViewport({scale:1}); const tc=await pg.getTextContent();
-  const dn={}, scales={}; let added=0, faint=0; snap();
+  const dn={}, scales={}; let added=0, faint=0, inLeg=0; snap(); const LZ=await legendZones(p).catch(()=>[]);
   // faint grey text (architectural background, labels under fills) is not a fire-services annotation
   const bm=await ensureBitmap(p), bk=bm?bm.width/p.w:0, bg=bm?bm.getContext('2d'):null;
   const inkOf=(x,y,w,h)=>{if(!bg) return 0; const X=Math.max(0,Math.floor(x*bk)), Y=Math.max(0,Math.floor((y-h)*bk)), W=Math.max(1,Math.min(bm.width-X,Math.ceil(w*bk))), H=Math.max(1,Math.min(bm.height-Y,Math.ceil(h*bk)));
@@ -1343,15 +1345,17 @@ async function textDetect(){
       // '1:100 @ A1' on a PDF that is really A3 → the PDF is half size, so 1:200 at PDF size
       if(sm[2]!=null){const AL={0:1189,1:841,2:594,3:420,4:297}[sm[2]], pl=Math.max(p.w,p.h)/72*25.4; if(AL&&Math.abs(pl-AL)>15) n=Math.round(n*AL/pl)}
       scales[n]=(scales[n]||0)+1}}
-    for(const [rx,type] of TXT_RULES){ if(rx.test(s)&&s.length<40){
-      const th=Math.abs(it.height||it.transform[3]||6); if(inkOf(x,y,Math.max(4,it.width||th*s.length*.6),th)>150){faint++; break}
+    for(const [rx,ab,type] of TXT_RULES){ if((rx.test(s)||(ab&&ab.test(s)))&&s.length<40){
+      const th=Math.abs(it.height||it.transform[3]||6);
+      // the legend's own descriptions ('SMOKE DETECTOR' beside the key symbol) are not devices
+      if(LZ.some(z=>x>=z[0]&&x<=z[2]&&y-th*.35>=z[1]&&y-th*.35<=z[3])){inLeg++; break} if(inkOf(x,y,Math.max(4,it.width||th*s.length*.6),th)>150){faint++; break}
       if(!S.marks.some(q=>q.page===p.id&&q.type===type&&Math.hypot(q.x-x,q.y-y)<6)){S.marks.push({id:uid(),page:p.id,type,x,y,pending:true,src:'text',text:s}); added++}
       break}}
   }
   const dnS=Object.keys(dn).sort((a,b)=>a-b).map(k=>`DN${k} ×${dn[k]}`).join('，');
   const sc=Object.keys(scales).sort((a,b)=>scales[b]-scales[a]); let autoSc=null;
   if(sc.length===1&&!p.mPerUnit&&p.kind==='pdf'){$('#ratioIn').value=sc[0]; $('#ratioApply').click(); autoSc=sc[0]}
-  out.innerHTML=`<div>找到 <b>${added}</b> 个构件标注（已加入待确认）。图例和标题栏里的字也会被读到，确认前请删掉多余的。${faint?`<br><span class="note">另有 ${faint} 个浅灰色的文字（建筑底图）已忽略。</span>`:''}</div>
+  out.innerHTML=`<div>找到 <b>${added}</b> 个构件标注（已加入待确认）。${inLeg?`图例里的 ${inLeg} 条说明文字已自动跳过。`:''}标题栏里的字也可能被读到，确认前请删掉多余的。${faint?`<br><span class="note">另有 ${faint} 个浅灰色的文字（建筑底图）已忽略。</span>`:''}</div>
    ${dnS?`<div style="margin-top:6px">图纸管径标注：<span class="num">${dnS}</span></div>`:''}
    ${autoSc?`<div style="margin-top:6px">已按图纸标注的比例 <b>1:${autoSc}</b> 设置本页（PDF 原尺寸）。如不对请重新校准。</div>`:''}
    ${sc.length&&!autoSc?`<div style="margin-top:6px">图纸比例：${sc.map(n=>`<button class="btn sm" data-ratio="${n}">应用 1:${n}</button>`).join(' ')}</div>`:''}`;
@@ -2563,6 +2567,9 @@ Object.assign(I18N,{"点击识别 / 拖矩形": "Click to detect / drag rectangl
 Object.assign(I18N,{"手动添加设备": "Add devices by hand", "自动布置之外，需要单独加的": "for devices the auto layout does not place", "其他设备": "Other device", "— 选择 —": "— choose —", "隐蔽空间感烟": "Concealed space smoke", "风管下喷头": "Under-duct sprinkler", "隐蔽空间喷头": "Concealed space sprinkler", "Fire trip 喷淋联动": "Fire trip (sprinkler interface)", "联动接口模块": "Interface module", "感温": "Heat", "感烟": "Smoke", "边墙喷头": "Sidewall sprinkler", "手报": "MCP", "声光": "Sounder / strobe", "水流指示器": "Flow switch", "监控阀": "Monitored valve", "正在添加：": "Adding: ", "— 在图纸上点击放置（可连续点），放在房间里会算进该房间，重新布置时保留。Esc 或再点一次按钮结束。要移动 / 删除用选择工具 (V)。": " – click the drawing to place (keep clicking for more). Devices placed in a room belong to that room and are kept when it is laid out again. Esc or click the button again to stop. Use Select (V) to move or delete.", "吊顶内 / 架空地板等隐蔽空间也需要保护时勾选，按同样间距在隐蔽空间里布置": "Tick when the ceiling / floor void also needs protection; devices are laid out in the void at the same spacing", "已添加 ": "Added "});
 Object.assign(I18N,{"图纸上没找到对应的图例文字，正在用 AI 识别这个图标…": "No matching legend text on the drawings – asking AI what this symbol is…", "正在识别这个图标是什么设备…": "Working out which device this symbol is…", "没认出这个图标，请在下面“统计为”里选择。加入计数时软件会记住，下次自动识别。": "Symbol not recognised – choose it under “Count as” below. FireTake remembers it when you add the count and recognises it next time.", "不对就在“统计为”里改，加入计数时会记住你的选择。": "If this is wrong, change “Count as”; your choice is remembered when you add the count.", "已手动改为其他类型": "Changed manually to another type", "自动识别为": "Recognised as", "（不太确定）": " (not sure)", "依据：": "Based on: ", "以前统计过的同样图标": "the same symbol counted before", "图标里的文字": "text in the symbol", "AI 看图判断": "AI reading of the image"});
 Object.assign(I18N,{"本页 ▾": "This sheet ▾", "更多导出 ▾": "More exports ▾", "项目文件 ▾": "Project file ▾", "AI 精度与对齐选项": "AI accuracy & snapping options", "公司单价、套件、供应商价格": "Company rates, assemblies and supplier prices", "被动防火单价还是软件默认值（报价公司没有被动防火单价），金额可能偏离实际，请换成公司单价": "Passive fire rates are still the FireTake defaults (the quoting company has no passive fire rates) – the price may be off; switch to your own rates", "整改项目常见另计项：检修口、项目管理、合规证书。报价里没有提到，请确认已计入或写进 Exclusions": "Remediation jobs usually also carry access panels, project management and compliance certificates. None are mentioned – confirm they are priced or list them in the Exclusions", "项识别结果待确认": " detected items to confirm", "被动防火单价还是软件默认值": "Passive fire rates are still the defaults", "项需要核对": " items to review", "个问题需要处理": " issue(s) to fix", "条提醒": " notes", "报价前检查": "Pre-quote check", "✓ 没有发现问题，可以导出报价": "✓ No issues found – ready to export", "个问题": " issues", "项待确认": " to confirm", "逐个核对": "Review one by one", "识别结果已全部确认": "All detections confirmed", "全部符合": "All OK", "查看": "View", "检查通过": "Check passed", "单价是默认值": "Default rates", "改单价": "Edit rates", "份资料": " documents", "没有招标资料也可以直接去算量": "No tender documents? Go straight to takeoff", "下一步：": "Next: ", "跳到": "Jump to", "文字识别": "Text", "图标搜索": "Symbol search", "相似度": "Match", "跳过": "Skip", "还剩 ": "Remaining: ", " 个跳过的": " skipped", "其他已全部处理。": "Everything else is done.", "再看一遍跳过的": "Review skipped again", "退出 ": "Exit ", "退出核对": "Exit review", "✓ 确认": "✓ Confirm", "✕ 删除": "✕ Delete", "全部确认（剩 ": "Confirm all (", " 项）": " left)", "把剩下的 ": "Confirm all remaining ", " 项全部确认并计入数量？": " items and add them to the quantities?", "没有待确认的识别结果": "Nothing to confirm", "全部核对完成": "Review complete", "剩下的全部确认": "Confirm all remaining", "报价 · SOW": "Quote · SOW", "问题": "Issue", "个问题": " issue(s)", "③ 被动防火": "③ Passive fire", "新建：按图纸统计新管线穿过防火墙 / 楼板。翻新：拆除旧管线、既有穿透勘察和整改、非工作时间。决定计价方式、Scope of Work 与 Exclusions": "New build: new services through fire walls / slabs from the drawings. Refurbishment: removals, survey and remediation of existing penetrations, out-of-hours work. Sets the pricing method, Scope of Work and Exclusions"}); /* v2.9 workflow layer */
+Object.assign(I18N,{"包括旋转 / 镜像的图标": "Include rotated / mirrored symbols", "矢量线条匹配": "vector line-work match", "图像匹配": "image match", "镜像": "mirrored", "在图例中": "in legend", "图例": "legend",
+ "个由 PDF 矢量线条精确匹配（任意角度、镜像均可）。": " matched exactly on the PDF vector line work (any angle, mirrored too).", "其中 ": "Of these, ",
+ "个在图例 / 符号表里，默认不计（点框可恢复）。": " are in the legend / symbol key and are not counted (click a box to count it).", "图例里的 ": "In the legend, ", "条说明文字已自动跳过。": " description labels were skipped automatically. ", "标题栏里的字也可能被读到，确认前请删掉多余的。": "Text in the title block may also be read – delete any extras before confirming."});
 const I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
 const CJK_RE=/[一-鿿　-〿＀-￯]/;
 const I18N_PUNCT={'（':' (','）':')','，':', ','。':'. ','：':': ','；':'; ','、':', ','“':'"','”':'"','　':' '};
@@ -3285,7 +3292,7 @@ async function buildBackup(){
   const fl=[]; for(const f of files){fl.push({...f,blob:undefined,b64:await blobToB64(f.blob)})}
   return JSON.stringify({app:'FireTake',type:'backup',version:APPVER,created:new Date().toISOString(),projects,meta,files:fl});
 }
-let APPVER='2.9.0';
+let APPVER='2.10.0';
 async function runBackup(force){
   if(!DB.ok) return; const today=todayISO(); let last=''; try{last=localStorage.getItem('firetake.lastBackup')||''}catch(e){}
   if(!force&&last===today) return;
@@ -3503,14 +3510,14 @@ async function pdfVectors(p){
   if(vecCache.has(p.id)) return vecCache.get(p.id); if(p.kind!=='pdf') return [];
   const pg=await pdfPageObj(p); if(!pg) return []; const vp=pg.getViewport({scale:1}); const ol=await pg.getOperatorList(); const O=pdfjsLib.OPS;
   const mul=(A,B)=>[A[0]*B[0]+A[2]*B[1],A[1]*B[0]+A[3]*B[1],A[0]*B[2]+A[2]*B[3],A[1]*B[2]+A[3]*B[3],A[0]*B[4]+A[2]*B[5]+A[4],A[1]*B[4]+A[3]*B[5]+A[5]];
-  let st={m:[1,0,0,1,0,0],col:'000000',lw:1}; const stack=[]; const segs=[]; let path=[];
+  let st={m:[1,0,0,1,0,0],col:'000000',fcol:'000000',lw:1}; const stack=[]; const segs=[], fills=[]; let path=[];
   const T=(x,y)=>{const m=st.m; return vp.convertToViewportPoint(m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5])};
   const hex=a=>[...a].slice(0,3).map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
   for(let i=0;i<ol.fnArray.length;i++){const fn=ol.fnArray[i], a=ol.argsArray[i];
     if(fn===O.save) stack.push({...st,m:[...st.m]}); else if(fn===O.restore){if(stack.length) st=stack.pop()}
     else if(fn===O.transform) st.m=mul(st.m,a);
     else if(fn===O.paintFormXObjectBegin){stack.push({...st,m:[...st.m]}); if(a&&a[0]) st.m=mul(st.m,a[0])} else if(fn===O.paintFormXObjectEnd){if(stack.length) st=stack.pop()}
-    else if(fn===O.setStrokeRGBColor) st.col=hex(a);
+    else if(fn===O.setStrokeRGBColor) st.col=hex(a); else if(fn===O.setFillRGBColor) st.fcol=hex(a);
     else if(fn===O.setLineWidth) st.lw=a[0];
     else if(fn===O.constructPath){const ops=a[0], c=a[1]; let k=0, start=null, curP=null;
       for(const op of ops){
@@ -3524,9 +3531,11 @@ async function pdfVectors(p){
     else if(fn===O.stroke||fn===O.closeStroke||fn===O.fillStroke||fn===O.closeFillStroke||fn===O.eoFillStroke||fn===O.closeEOFillStroke){
       const sc=Math.sqrt(Math.abs(st.m[0]*st.m[3]-st.m[1]*st.m[2]))||1; const w=Math.max(.1,(st.lw||0)*sc);
       for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) segs.push({a:s[0],b:s[1],col:st.col,w,L})} path=[]}
-    else if(fn===O.fill||fn===O.eoFill||fn===O.endPath) path=[];
+    // outlines of filled shapes (solid triangles / dots inside symbols) are kept apart in segs.fills, for symbol matching only
+    else if(fn===O.fill||fn===O.eoFill){for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) fills.push({a:s[0],b:s[1],col:st.fcol,w:0,L,f:1})} path=[]}
+    else if(fn===O.endPath) path=[];
   }
-  vecCache.set(p.id,segs); return segs;
+  segs.fills=fills; vecCache.set(p.id,segs); return segs;
 }
 function vecColors(segs){const m={}; segs.forEach(s=>{const k=s.col+'|'+(Math.round(s.w*4)/4); m[k]=m[k]||{col:s.col,w:Math.round(s.w*4)/4,L:0,n:0}; m[k].L+=s.L; m[k].n++}); return Object.values(m).sort((a,b)=>b.L-a.L)}
 const colorDist=(a,b)=>{const p=h=>[0,2,4].map(i=>parseInt(h.substr(i,2),16)); const x=p(a),y=p(b); return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2])};
@@ -3691,6 +3700,19 @@ function integ(img,W,H){const S=new Float64Array((W+1)*(H+1)),S2=new Float64Arra
 function ncc(I,t,x,y){const W=I.W,w=t.w,h=t.h,n=w*h,S=I.S,S2=I.S2,K=W+1;
   const s=S[(y+h)*K+x+w]-S[y*K+x+w]-S[(y+h)*K+x]+S[y*K+x]; const v=S2[(y+h)*K+x+w]-S2[y*K+x+w]-S2[(y+h)*K+x]+S2[y*K+x]-s*s/n;
   if(v<t.minVar*n) return -1; let c=0; const img=I.img, d=t.d; for(let j=0;j<h;j++){const ro=(y+j)*W+x,to=j*w; for(let i=0;i<w;i++) c+=d[to+i]*img[ro+i]} return c/Math.sqrt(v)}
+// share of the template's own strokes that are really there (±1 px): NCC forgives a missing part when the rest lines up,
+// so a plain circle scores high against 'circle + triangle'; this does not
+function recall(R,t,x,y,bg){const W=R.W,H=R.H,img=R.img; let hit=0;
+  for(const o of t.ink){const j=(o/t.w)|0, i=o-j*t.w, X=x+i, Y=y+j; let ok=false;
+    for(let dy=-1;dy<=1&&!ok;dy++) for(let dx=-1;dx<=1&&!ok;dx++){const xx=X+dx, yy=Y+dy; if(xx>=0&&yy>=0&&xx<W&&yy<H&&Math.abs(img[yy*W+xx]-bg)>=t.ci) ok=true}
+    if(ok) hit++} return t.ink.length?hit/t.ink.length:1}
+// share of the ink inside the symbol's outline that the template explains (±1 px): a symbol with extra strokes (circle + cross against a
+// plain circle) is a different device. Straight runs crossing the whole outline (a pipe through the head) are not held against it.
+function precision(R,t,x,y,bg){const W=R.W,img=R.img; const on=(X,Y)=>X>=0&&Y>=0&&X<W&&Y<R.H&&Math.abs(img[Y*W+X]-bg)>=t.ci; let ex=0,ok=0;
+  const [i0,j0,i1,j1]=t.ib; const run=(i,j,di,dj)=>{let gap=0; for(let a=i,b=j;a>=i0&&a<=i1&&b>=j0&&b<=j1;a+=di,b+=dj){if(on(x+a,y+b)||on(x+a+dj,y+b+di)||on(x+a-dj,y+b-di)) gap=0; else if(++gap>1) return false} return true};
+  for(let j=j0;j<=j1;j++) for(let i=i0;i<=i1;i++){if(!on(x+i,y+j)) continue; if(t.dil[j*t.w+i]){ok++; continue}
+    if((run(i,j,-1,0)&&run(i,j,1,0))||(run(i,j,0,-1)&&run(i,j,0,1))) continue; ex++}
+  return ok+ex?ok/(ok+ex):1}
 self.onmessage=e=>{const {coarse,fine,ratio,cMin,id}=e.data;
   const C=integ(coarse.img,coarse.W,coarse.H), F=integ(fine.img,fine.W,fine.H);
   let cand=[]; const total=coarse.tpls.reduce((a,t)=>a+Math.max(0,C.H-t.h+1),0); let done=0;
@@ -3700,10 +3722,15 @@ self.onmessage=e=>{const {coarse,fine,ratio,cMin,id}=e.data;
     if(!near){ck.push(m); const key=gx+','+gy; if(!grid.has(key)) grid.set(key,[]); grid.get(key).push(m); if(ck.length>=6000) break}}
   const out=[]; const rad=Math.ceil(ratio*1.5)+1;
   // refine every coarse hit with all orientations at full resolution: at 12 px the coarse pass often picks the wrong rotation
+  // fine templates = orientations × mirror × 3 sizes: pass 1 tries all of them on a 2 px grid, pass 2 polishes the winner at 1 px
   ck.forEach((m,i)=>{const t0=coarse.tpls[m[3]]; const cx=(m[0]+t0.w/2)*ratio, cy=(m[1]+t0.h/2)*ratio; let best=-1,bx=0,by=0,bt=0;
-    fine.tpls.forEach((t,ti)=>{const fx=Math.round(cx-t.w/2), fy=Math.round(cy-t.h/2);
-      for(let y=Math.max(0,fy-rad);y<=Math.min(F.H-t.h,fy+rad);y++) for(let x=Math.max(0,fx-rad);x<=Math.min(F.W-t.w,fx+rad);x++){const sc=ncc(F,t,x,y); if(sc>best){best=sc;bx=x+t.w/2;by=y+t.h/2;bt=ti}}});
-    if(best>0) out.push([bx,by,best,bt]); if(i%200===0) self.postMessage({id,progress:.8+.2*i/ck.length})});
+    const gb={}; const tryT=(t,ti)=>{const fx=Math.round(cx-t.w/2), fy=Math.round(cy-t.h/2);
+      for(let y=Math.max(0,fy-rad);y<=Math.min(F.H-t.h,fy+rad);y+=2) for(let x=Math.max(0,fx-rad);x<=Math.min(F.W-t.w,fx+rad);x+=2){const sc=ncc(F,t,x,y); if(sc>(gb[t.g]||-1)) gb[t.g]=sc; if(sc>best){best=sc;bx=x;by=y;bt=ti}}};
+    fine.tpls.forEach((t,ti)=>{if(t.sz===1) tryT(t,ti)}); const top=Object.keys(gb).sort((a,b)=>gb[b]-gb[a]).slice(0,2);
+    if(best>=cMin) fine.tpls.forEach((t,ti)=>{if(t.sz!==1&&top.includes(t.g)) tryT(t,ti)});
+    if(best>0){const t=fine.tpls[bt], x0=bx, y0=by; for(let y=Math.max(0,y0-1);y<=Math.min(F.H-t.h,y0+1);y++) for(let x=Math.max(0,x0-1);x<=Math.min(F.W-t.w,x0+1);x++){const sc=ncc(F,t,x,y); if(sc>best){best=sc;bx=x;by=y}}
+      out.push([bx+t.w/2,by+t.h/2,best,bt,recall(fine.raw,t,bx,by,fine.bg),precision(fine.raw,t,bx,by,fine.bg)])}
+    if(i%200===0) self.postMessage({id,progress:.8+.2*i/ck.length})});
   self.postMessage({id,done:true,matches:out});
 };`;
 let smWorker=null, smJob=0;
@@ -3716,6 +3743,15 @@ function smChannel(data,mode,col){const n=data.length/4, out=new Float32Array(n)
   if(mode==='ink'){for(let i=0;i<n;i++) out[i]=255-Math.min(data[i*4],data[i*4+1],data[i*4+2]); return out}
   if(mode==='col'){const T=SM.colTol||125; for(let i=0;i<n;i++){const r=data[i*4],g=data[i*4+1],b=data[i*4+2]; const d=Math.hypot(r-col[0],g-col[1],b-col[2]); out[i]=d>=T?0:255*(1-d/T)}}
   else for(let i=0;i<n;i++) out[i]=data[i*4]*.3+data[i*4+1]*.59+data[i*4+2]*.11; return out}
+// the ink channel as a grey canvas (value in R), computed at FULL resolution before any scaling: shrinking a sheet first blends thin
+// coloured CAD lines with the white paper (red → pink), the colour test then drops them and most copies of a red symbol were never found
+const SM_BG={lum:255,col:0,ink:0};
+function smChCanvas(src,mode,col){const W=src.width,H=src.height,c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d'), sg=src.getContext('2d');
+  for(let y=0;y<H;y+=512){const h=Math.min(512,H-y), im=sg.getImageData(0,y,W,h), d=im.data, ch=smChannel(d,mode,col); for(let i=0;i<ch.length;i++){const v=ch[i]; d[i*4]=d[i*4+1]=d[i*4+2]=v; d[i*4+3]=255} g.putImageData(im,0,y)} return c}
+function smPageCh(p,bm,mode,col){const key=p.id+'|'+mode+'|'+(col||''); const C=SM.chCache||(SM.chCache=new Map()); const o=C.get(key); if(o&&o.bm===bm) return o.c;
+  const c=smChCanvas(bm,mode,col); C.set(key,{bm,c}); while(C.size>2) C.delete(C.keys().next().value); return c}
+function smScaledCh(chc,f,bg){const W=Math.max(1,Math.round(chc.width*f)), H=Math.max(1,Math.round(chc.height*f)); const c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d'); g.fillStyle=`rgb(${bg},${bg},${bg})`; g.fillRect(0,0,W,H); g.imageSmoothingQuality='high'; g.drawImage(chc,0,0,W,H);
+  const d=g.getImageData(0,0,W,H).data, o=new Float32Array(W*H); for(let i=0;i<o.length;i++) o[i]=d[i*4]; return {img:o,W,H}}
 // 3×3 box blur: tolerates the half-pixel shifts of thin anti-aliased CAD lines (template and drawing get the same treatment)
 function smBlur(a,W,H){const t=new Float32Array(a.length), o=new Float32Array(a.length);
   for(let y=0;y<H;y++){const r=y*W; for(let x=0;x<W;x++){const l=x>0?a[r+x-1]:a[r+x], m=a[r+x], q=x<W-1?a[r+x+1]:a[r+x]; t[r+x]=(l+m+q)/3}}
@@ -3752,34 +3788,116 @@ async function smAddSample(p,box){
   SM.results={}; renderToolSec(); draw();
   if(SM.samples.length===1&&!SM.typeManual) smGuessType(p);
 }
-function smTemplates(sample,tw,th,f){
-  const c=sample.canvas; const w=Math.max(5,Math.round(tw*f)), h=Math.max(5,Math.round(th*f));
-  const rots=SM.rot?[0,90,180,270]:[0]; const out=[];
-  for(const r of rots){const W=r%180?h:w, H=r%180?w:h; const t=document.createElement('canvas'); t.width=W; t.height=H; const g=t.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,W,H); g.imageSmoothingQuality='high';
-    g.translate(W/2,H/2); g.rotate(r*Math.PI/180); g.drawImage(c,-w/2,-h/2,w,h);
-    const d=smBlur(smChannel(g.getImageData(0,0,W,H).data,sample.mode,sample.col),W,H); const n=d.length; let m=0; for(const v of d) m+=v; m/=n; let ss=0; for(const v of d) ss+=(v-m)*(v-m); const sd=Math.sqrt(ss)||1;
+// templates: 4 orientations, mirrored too (hose reels, valves and side-wall heads are drawn both ways round), each at the given sizes.
+// An orientation that looks the same as one already made (round / symmetric symbols) is dropped: same result, less work.
+const smRecallF=r=>Math.max(.3,Math.min(1,1-2.5*(1-r))), smPrecF=p=>Math.max(.3,Math.min(1,1-2*Math.max(0,.95-p)));
+function smTemplates(sample,tw,th,f,sizes){
+  const c=sample.chc||(sample.chc=smChCanvas(sample.canvas,sample.mode,sample.col)), bg=SM_BG[sample.mode]; const out=[], base=[];
+  const ors=SM.rot?[0,90,180,270,45,135,225,315].flatMap(r=>[[r,1],[r,-1]]):[[0,1]];
+  for(const sz of sizes||[1]) for(const [r,mi] of ors){const w=Math.max(5,Math.round(tw*f*sz)), h=Math.max(5,Math.round(th*f*sz)); const W=r%90?Math.round((w+h)*.7071):r%180?h:w, H=r%90?W:r%180?w:h; const t=document.createElement('canvas'); t.width=W; t.height=H; const g=t.getContext('2d'); g.fillStyle=`rgb(${bg},${bg},${bg})`; g.fillRect(0,0,W,H); g.imageSmoothingQuality='high';
+    g.translate(W/2,H/2); g.rotate(r*Math.PI/180); g.scale(mi,1); g.drawImage(c,-w/2,-h/2,w,h);
+    const raw=g.getImageData(0,0,W,H).data, d0=new Float32Array(W*H); for(let i=0;i<d0.length;i++) d0[i]=raw[i*4];
+    const d=smBlur(d0,W,H); const n=d.length; let m=0; for(const v of d) m+=v; m/=n; let ss=0; for(const v of d) ss+=(v-m)*(v-m); const sd=Math.sqrt(ss)||1;
     const tn=new Float32Array(n); for(let i=0;i<n;i++) tn[i]=(d[i]-m)/sd;
-    out.push({w:W,h:H,d:tn,minVar:Math.pow((sample.mode==='ink'?.12:.35)*Math.sqrt(ss/n),2),rot:r})}
+    if(sz===(sizes||[1])[0]){if(base.some(b=>b.w===W&&b.h===H&&b.d.reduce((a,v,i)=>a+v*tn[i],0)>.97)) continue; base.push({w:W,h:H,d:tn,key:r+'|'+mi})}
+    else if(!base.some(b=>b.key===r+'|'+mi)) continue;
+    // stroke pixels of the template: thin anti-aliased lines are far fainter than a solid fill, so the cut-off follows the typical stroke, not the darkest pixel
+    const con=[]; for(const v of d0){const c=Math.abs(v-bg); if(c>12) con.push(c)} con.sort((a,b)=>a-b); const cm=con.length?con[Math.floor(con.length*.6)]:1;
+    const ink=[], dil=new Uint8Array(W*H); let i0=W,j0=H,i1=0,j1=0; for(let i=0;i<d0.length;i++) if(Math.abs(d0[i]-bg)>=cm*.5){ink.push(i); const x=i%W, y=(i-x)/W; i0=Math.min(i0,x); i1=Math.max(i1,x); j0=Math.min(j0,y); j1=Math.max(j1,y);
+      for(let b=Math.max(0,y-1);b<=Math.min(H-1,y+1);b++) for(let a=Math.max(0,x-1);a<=Math.min(W-1,x+1);a++) dil[b*W+a]=1}
+    out.push({w:W,h:H,d:tn,minVar:Math.pow((sample.mode==='ink'?.12:.35)*Math.sqrt(ss/n),2),rot:r,mir:mi<0,sz,ink:Int32Array.from(ink),ci:cm*.35,g:r+'|'+mi,dil,ib:ink.length?[i0,j0,i1,j1]:[0,0,-1,-1]})}
   return out;
 }
-function smScaled(bm,f){const W=Math.max(1,Math.round(bm.width*f)), H=Math.max(1,Math.round(bm.height*f)); const c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,W,H); g.imageSmoothingQuality='high'; g.drawImage(bm,0,0,W,H); return {raw:g.getImageData(0,0,W,H).data,W,H}}
 async function smSearchPage(p,progress){
   const bm=await ensureBitmap(p); if(!bm||!SM.samples.length) return [];
   const k=bm.width/p.w; let all=[];
   for(let si=0;si<SM.samples.length;si++){const smp=SM.samples[si]; const sp=S.pages.find(q=>q.id===smp.page)||p;
     // sample size in this page's units: same real size if both pages are scaled, else same drawing units
-    let uw=smp.box[2]-smp.box[0], uh=smp.box[3]-smp.box[1]; if(sp!==p&&sp.mPerUnit&&p.mPerUnit){uw*=sp.mPerUnit/p.mPerUnit; uh*=sp.mPerUnit/p.mPerUnit}
+    const rs=sp!==p&&sp.mPerUnit&&p.mPerUnit?sp.mPerUnit/p.mPerUnit:1;
+    let uw=(smp.box[2]-smp.box[0])*rs, uh=(smp.box[3]-smp.box[1])*rs;
+    // 1) PDF line work: exact, any angle; trusted only once it finds the boxed sample itself
+    let vec=[]; if(p.kind==='pdf'&&sp.kind==='pdf'){try{if(smp.vt===undefined) smp.vt=await vsmTemplate(sp,smp.box,smp.mode==='ink');
+      if(smp.vt){const cx=(smp.box[0]+smp.box[2])/2, cy=(smp.box[1]+smp.box[3])/2;
+        if(smp.vok===undefined){const own=await vsmSearch(sp,smp.vt,1); smp.vok=own.some(m=>m.score>=.9&&Math.hypot(m.x-cx,m.y-cy)<smp.vt.R*.3); if(sp===p&&smp.vok) vec=own}
+        if(smp.vok&&!vec.length) vec=await vsmSearch(p,smp.vt,rs)}}catch(e){console.warn('vector search',e)}}
+    if(!SM.rot) vec=vec.filter(m=>!m.mir&&(m.rot<=3||m.rot>=357));
+    // 2) raster template matching (scans, images, symbols that are not line work)
     const tw=uw*k, th=uh*k; const fc=Math.min(1,12/Math.max(tw,th)), ff=Math.min(1,30/Math.max(tw,th));
-    const C=smScaled(bm,fc), F=smScaled(bm,ff);
-    const tc=smTemplates(smp,tw,th,fc), tf=smTemplates(smp,tw,th,ff);
+    const chc=smPageCh(p,bm,smp.mode,smp.col), bg=SM_BG[smp.mode]; const C=smScaledCh(chc,fc,bg), F=smScaledCh(chc,ff,bg);
+    const tc=smTemplates(smp,tw,th,fc), tf=smTemplates(smp,tw,th,ff,[1,.9,1.1]);
     const id=++smJob;
     const res=await new Promise(res=>{const w=smGetWorker(); const on=e=>{if(e.data.id!==id) return; if(e.data.progress!=null&&progress) progress((si+e.data.progress)/SM.samples.length); if(e.data.done){w.removeEventListener('message',on); res(e.data.matches)}}; w.addEventListener('message',on);
-      w.postMessage({coarse:{img:smBlur(smChannel(C.raw,smp.mode,smp.col),C.W,C.H),W:C.W,H:C.H,tpls:tc.map(t=>({w:t.w,h:t.h,d:t.d,minVar:t.minVar}))},fine:{img:smBlur(smChannel(F.raw,smp.mode,smp.col),F.W,F.H),W:F.W,H:F.H,tpls:tf.map(t=>({w:t.w,h:t.h,d:t.d,minVar:t.minVar}))},ratio:ff/fc,cMin:.42,id})});
-    all.push(...res.map(m=>({x:m[0]/ff/k,y:m[1]/ff/k,score:m[2],rot:tf[m[3]].rot,w:tf[m[3]].w/ff/k,h:tf[m[3]].h/ff/k,on:null})))}
+      w.postMessage({coarse:{img:smBlur(C.img,C.W,C.H),W:C.W,H:C.H,tpls:tc.map(t=>({w:t.w,h:t.h,d:t.d,minVar:t.minVar}))},fine:{img:smBlur(F.img,F.W,F.H),W:F.W,H:F.H,raw:F,bg,tpls:tf.map(t=>({w:t.w,h:t.h,d:t.d,minVar:t.minVar,ink:t.ink,ci:t.ci,g:t.g,sz:t.sz,dil:t.dil,ib:t.ib}))},ratio:ff/fc,cMin:.42,id})});
+    let ras=res.map(m=>({x:m[0]/ff/k,y:m[1]/ff/k,score:m[2]*smRecallF(m[4])*smPrecF(m[5]),ncc:m[2],rec:m[4],prec:m[5],rot:tf[m[3]].rot,mir:tf[m[3]].mir,w:tf[m[3]].w/ff/k,h:tf[m[3]].h/ff/k,on:null}));
+    if(vec.length){// where the line work already answered, the raster hit is a duplicate; elsewhere it is a weaker, picture-only hint
+      ras=ras.filter(m=>!vec.some(v=>Math.abs(v.x-m.x)<Math.min(v.w,v.h)*.6&&Math.abs(v.y-m.y)<Math.min(v.w,v.h)*.6)).map(m=>({...m,score:m.score*.9}))}
+    all.push(...vec,...ras)}
   all=all.filter(m=>m.score>=.5).sort((a,b)=>b.score-a.score); const keep=[]; for(const m of all){if(!keep.some(q=>Math.abs(q.x-m.x)<Math.min(q.w,q.h)*.6&&Math.abs(q.y-m.y)<Math.min(q.w,q.h)*.6)) keep.push(m)}
-  // the sample itself always counts once (never filtered by the threshold)
+  // symbols drawn in the legend / symbol key are reference drawings, not devices: flagged and left out unless clicked back in
+  const Z=await legendZones(p).catch(()=>[]); for(const m of keep) if(Z.some(z=>m.x>=z[0]&&m.x<=z[2]&&m.y>=z[1]&&m.y<=z[3])) m.zone='legend';
   return keep;
 }
+/* ---- vector symbol search for CAD PDFs: the boxed symbol's own line work is looked for in the page's line work at any angle, mirrored,
+   ±15 % in size. One template segment is the anchor; every page segment of that length and colour proposes a placement, which is scored by
+   how much of the symbol is really there (length-weighted) less any extra line work inside the symbol outline. ---- */
+async function vsmTemplate(sp,box,ink){if(sp.kind!=='pdf') return null; const V=await pdfVectors(sp); if(!V||!V.length) return null;
+  const [x0,y0,x1,y1]=box, cx=(x0+x1)/2, cy=(y0+y1)/2, pad=(x1-x0)*.02; const inB=q=>q[0]>=x0-pad&&q[0]<=x1+pad&&q[1]>=y0-pad&&q[1]<=y1+pad;
+  const seen=new Set(); let sg=[];
+  for(const s of [...V,...(V.fills||[])]){if(!inB(s.a)||!inB(s.b)) continue; const a=[s.a[0]-cx,s.a[1]-cy], b=[s.b[0]-cx,s.b[1]-cy];
+    const key=[a,b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(key)) continue; seen.add(key); sg.push({a,b,L:s.L,col:ink?'':(s.f?'':s.col)})}
+  if(sg.length<3||sg.length>400) return null;
+  // keep the symbol, not the label or hatching that shares its box: the line work joined to the segment nearest the centre, plus anything inside its outline
+  const R0=Math.max(x1-x0,y1-y0), tol=R0*.03, near=(q,s)=>{const dx=s.b[0]-s.a[0],dy=s.b[1]-s.a[1],L2=dx*dx+dy*dy||1; const t=Math.max(0,Math.min(1,((q[0]-s.a[0])*dx+(q[1]-s.a[1])*dy)/L2)); return Math.hypot(q[0]-s.a[0]-t*dx,q[1]-s.a[1]-t*dy)};
+  let st=0,bd=Infinity; sg.forEach((s,i)=>{const d=near([0,0],s); if(d<bd){bd=d; st=i}});
+  const inC=new Uint8Array(sg.length), q=[st]; inC[st]=1;
+  while(q.length){const i=q.pop(), s=sg[i]; sg.forEach((u,j)=>{if(!inC[j]&&(near(u.a,s)<tol||near(u.b,s)<tol||near(s.a,u)<tol||near(s.b,u)<tol)){inC[j]=1; q.push(j)}})}
+  let bx0=Infinity,by0=Infinity,bx1=-Infinity,by1=-Infinity; sg.forEach((s,i)=>{if(inC[i]) for(const p of [s.a,s.b]){bx0=Math.min(bx0,p[0]); by0=Math.min(by0,p[1]); bx1=Math.max(bx1,p[0]); by1=Math.max(by1,p[1])}});
+  const e=Math.max(bx1-bx0,by1-by0)*.08; sg=sg.filter(s=>[s.a,s.b].every(p=>p[0]>=bx0-e&&p[0]<=bx1+e&&p[1]>=by0-e&&p[1]<=by1+e));
+  if(sg.length<3) return null; const R=Math.max(...sg.flatMap(s=>[Math.hypot(...s.a),Math.hypot(...s.b)]));
+  return {segs:sg,tot:sg.reduce((a,s)=>a+s.L,0),R,ib:[bx0,by0,bx1,by1],bw:x1-x0,bh:y1-y0}}
+function vsmIndex(V){if(V._vsm) return V._vsm; const all=[...V,...(V.fills||[])]; const byL=all.slice().sort((a,b)=>a.L-b.L); return V._vsm={all,byL}}
+async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) return []; const {all,byL}=vsmIndex(V);
+  const lo=.85*rs, hi=1.18*rs, lb=v=>{let a=0,b=byL.length; while(a<b){const m=(a+b)>>1; if(byL[m].L<v) a=m+1; else b=m} return a};
+  const range=(a,b)=>{const out=[]; for(let i=lb(a);i<byL.length&&byL[i].L<=b;i++) out.push(byL[i]); return out};
+  const colOk=(t,s)=>!t.col||s.col===t.col;
+  // anchor: among the 6 longest template segments, the one with the fewest look-alike page segments
+  let anc=null; for(const t of T.segs.slice().sort((a,b)=>b.L-a.L).slice(0,6)){const list=range(t.L*lo,t.L*hi).filter(s=>colOk(t,s)); if(!anc||list.length<anc.list.length) anc={t,list}}
+  if(!anc||!anc.list.length||anc.list.length>60000) return [];
+  const cell=Math.max(1,T.R*rs*.5), G=new Map(); for(const s of all){if(s.L>T.R*rs*4) continue; const k=Math.floor((s.a[0]+s.b[0])/2/cell)+','+Math.floor((s.a[1]+s.b[1])/2/cell); let a=G.get(k); if(!a) G.set(k,a=[]); a.push(s)}
+  const around=(x,y,r)=>{const out=[]; for(let gx=Math.floor((x-r)/cell);gx<=Math.floor((x+r)/cell);gx++) for(let gy=Math.floor((y-r)/cell);gy<=Math.floor((y+r)/cell);gy++){const a=G.get(gx+','+gy); if(a) out.push(...a)} return out};
+  const tol=Math.max(.25,T.R*rs*.07), t=anc.t, hits=[];
+  for(const s of anc.list) for(const dir of [0,1]) for(const mi of [1,-1]){
+    const ps=dir?s.b:s.a, pe=dir?s.a:s.b, va=[(t.b[0]-t.a[0])*mi,t.b[1]-t.a[1]], vs=[pe[0]-ps[0],pe[1]-ps[1]];
+    const sg=Math.hypot(...vs)/(Math.hypot(...va)||1), th=Math.atan2(vs[1],vs[0])-Math.atan2(va[1],va[0]), c=Math.cos(th)*sg, n=Math.sin(th)*sg;
+    const map=q=>{const x=(q[0]-t.a[0])*mi, y=q[1]-t.a[1]; return [ps[0]+c*x-n*y, ps[1]+n*x+c*y]};
+    const ctr=map([0,0]); if(hits.some(h=>h.score>=.999&&Math.hypot(h.x-ctr[0],h.y-ctr[1])<T.R*sg*.3)) continue;
+    const near=around(ctr[0],ctr[1],T.R*sg+tol), used=new Set(); let got=0, left=T.tot;
+    for(const u of T.segs){const A=map(u.a), B=map(u.b); left-=u.L; let ok=null;
+      for(const w of near){if(used.has(w)||!colOk(u,w)) continue; if((Math.hypot(w.a[0]-A[0],w.a[1]-A[1])<tol&&Math.hypot(w.b[0]-B[0],w.b[1]-B[1])<tol)||(Math.hypot(w.a[0]-B[0],w.a[1]-B[1])<tol&&Math.hypot(w.b[0]-A[0],w.b[1]-A[1])<tol)){ok=w; break}}
+      if(ok){used.add(ok); got+=u.L} if((got+left)/T.tot<.6) break}
+    let fr=got/T.tot; if(fr<.6) continue;
+    // extra line work wholly inside the symbol outline (the boxed symbol is a simpler one than this copy) lowers the score
+    const inv=q=>{const dx=q[0]-ps[0], dy=q[1]-ps[1], d=sg*sg; const x=(c*dx+n*dy)/d, y=(-n*dx+c*dy)/d; return [x*mi+t.a[0], y+t.a[1]]}, ib=T.ib, e=tol/sg;
+    let extra=0; for(const w of near){if(used.has(w)||!colOk({col:t.col},w)) continue; const a=inv(w.a), b=inv(w.b); if([a,b].every(q=>q[0]>=ib[0]-e&&q[0]<=ib[2]+e&&q[1]>=ib[1]-e&&q[1]<=ib[3]+e)) extra+=w.L/sg}
+    fr*=1-.5*Math.min(1,extra/T.tot);
+    const cs=Math.abs(Math.cos(th)), sn=Math.abs(Math.sin(th)), w=(T.bw*cs+T.bh*sn)*sg, h=(T.bw*sn+T.bh*cs)*sg;
+    const o=hits.find(h0=>Math.hypot(h0.x-ctr[0],h0.y-ctr[1])<Math.min(h0.w,h0.h)*.5);
+    const hit={x:ctr[0],y:ctr[1],score:fr,rot:Math.round(((th*180/Math.PI)%360+360)%360),mir:mi<0,w,h,on:null,vec:true};
+    if(!o) hits.push(hit); else if(fr>o.score) Object.assign(o,hit)}
+  return hits}
+// text lines: pieces of text on one baseline joined left to right
+async function pdfTextLines(p){const items=await pdfTextItems(p).catch(()=>[]); if(!items.length) return [];
+  const its=items.slice().sort((a,b)=>a.y-b.y||a.x-b.x), lines=[]; for(const t of its){const l=lines.find(l=>Math.abs(l.y-t.y)<Math.max(l.h,t.h)*.5&&t.x>=l.x1-l.h*.3&&t.x-l.x1<l.h*1.6); if(l){l.s+=' '+t.s; l.x1=t.x+t.w} else lines.push({s:t.s,x:t.x,x1:t.x+t.w,y:t.y,h:t.h})}
+  return lines}
+// legend / symbol key: ≥ 3 left-aligned text lines stacked at line spacing, ≥ 2 of them device descriptions ('SMOKE DETECTOR', 'HOSE REEL' …).
+// The zone runs left of the text far enough to take in the symbols drawn beside each entry.
+const lzCache=new Map();
+async function legendZones(p){if(p.kind!=='pdf') return []; const c=lzCache.get(p.id); if(c&&c.v===txtCache.get(p.id)) return c.z;
+  const L=(await pdfTextLines(p)).filter(l=>l.s.length<90), used=new Set(), Z=[];
+  for(const l of L){if(used.has(l)) continue; const col=L.filter(o=>Math.abs(o.x-l.x)<Math.max(l.h,o.h)*.8&&Math.abs(o.h-l.h)<l.h*.4).sort((a,b)=>a.y-b.y);
+    let run=[]; const flush=()=>{if(run.length>=3&&run.filter(o=>symKwType(o.s)).length>=2){const h=Math.max(...run.map(o=>o.h)); Z.push([Math.min(...run.map(o=>o.x))-h*7,run[0].y-h*1.2,Math.max(...run.map(o=>o.x1)),run[run.length-1].y+h*1.2]); run.forEach(o=>used.add(o))} run=[]};
+    for(const o of col){if(run.length&&o.y-run[run.length-1].y>Math.max(o.h,run[run.length-1].h)*4) flush(); run.push(o)} flush()}
+  lzCache.set(p.id,{v:txtCache.get(p.id),z:Z}); return Z}
 async function smRun(){
   if(SM.busy||!SM.samples.length) return; SM.busy=true; const pages=SM.scope==='all'?S.pages.slice():[page()];
   const msg=$('#smMsg'); SM.results={};
@@ -3787,18 +3905,27 @@ async function smRun(){
       if(SM.scope==='view'&&p.id===curPage){const rc=cwrap.getBoundingClientRect(); const a=toU(0,0), b=toU(rc.width,rc.height); SM.results[p.id]=r.filter(m=>m.x>=a[0]&&m.x<=b[0]&&m.y>=a[1]&&m.y<=b[1])}
       else SM.results[p.id]=r}}
   catch(e){toast('搜索失败：'+(e.message||e))}
-  if(!SM.thrManual) SM.thr=smAutoThr(); if(smPhaseOn()) await smClassify().catch(e=>console.warn(e)); SM.busy=false; renderToolSec(); draw();
+  if(!SM.thrManual) SM.thr=smAutoThr(); if(smPhaseOn()) await smClassify().catch(e=>console.warn(e));
+  await smLegendHitType().catch(e=>console.warn(e)); SM.busy=false; renderToolSec(); draw();
 }
+// the search found this symbol inside the drawing's legend: the description on its row says what it is (firmer than the picture guess)
+async function smLegendHitType(){if(SM.typeManual) return; const g=SM.guess; if(g&&g.src==='lib'&&!g.unsure) return;
+  let best=null; for(const pid in SM.results){const p=S.pages.find(q=>q.id===pid); const hs=SM.results[pid].filter(m=>m.zone&&m.score>=Math.max(.8,SM.thr)); if(!p||!hs.length) continue;
+    const lines=await pdfTextLines(p); for(const m of hs) for(const l of lines){const dx=l.x-(m.x+m.w/2); if(dx<-m.w*.2||dx>Math.max(m.w,m.h)*4||Math.abs(l.y-m.y)>Math.max(m.h*.5,l.h)) continue; const t=symKwType(l.s); if(!t||!symTypeOk(t)) continue;
+      const c=m.score-dx/(Math.max(m.w,m.h)*20); if(!best||c>best.c) best={c,t,label:l.s.slice(0,40),score:m.score,page:p.name}}}
+  if(best){SM.guess={type:best.t,src:'legend',score:best.score,label:best.label,page:best.page}; SM.type=best.t; cur.item=best.t}}
 // automatic threshold: Otsu split of the score list (true matches vs look-alikes); if the upper group is still weak
 // (a few real symbols among many similar shapes), split that group again. Tuned on real CAD sheets (383 Kent St L9/L10).
 function smOtsu(v){let best=-1,thr=.7; const n=v.length; let sa=0; const tot=v.reduce((a,b)=>a+b,0);
   for(let i=1;i<n;i++){sa+=v[i-1]; const wa=i, wb=n-i, ma=sa/wa, mb=(tot-sa)/wb, bv=wa*wb*(ma-mb)*(ma-mb); if(bv>best){best=bv; thr=(v[i-1]+v[i])/2}} return thr}
-function smAutoThr(){const sc=Object.values(SM.results).flat().map(m=>m.score).filter(v=>v>=.45).sort((a,b)=>a-b); if(sc.length<2) return .8;
-  let t=smOtsu(sc); const L=sc.filter(v=>v<t); if(L.length&&L.reduce((a,b)=>a+b,0)/L.length>=.75) return Math.round((sc[0]-.01)*100)/100; // no look-alikes at all: every hit is the symbol
+function smAutoThr(){const sc=Object.values(SM.results).flat().filter(m=>!m.zone).map(m=>m.score).filter(v=>v>=.45).sort((a,b)=>a-b); if(sc.length<2) return .8;
+  let t=smOtsu(sc); const L=sc.filter(v=>v<t); const gap=Math.min(...sc.filter(v=>v>=t))-Math.max(...L,0);
+  if(L.length&&gap>=.1) return Math.round((t>=.95?.95:Math.max(.5,Math.max(...L)+gap/2))*100)/100; // two clearly separate groups (exact vector copies vs look-alikes)
+  if(L.length&&L.reduce((a,b)=>a+b,0)/L.length>=.75) return Math.round((sc[0]-.01)*100)/100; // no look-alikes at all: every hit is the symbol
   if(L.length<=Math.max(2,.12*sc.length)&&sc[0]>=.58) return Math.round((sc[0]-.01)*100)/100; // a handful of weaker copies but no look-alikes below .58
   const U=sc.filter(v=>v>=t); if(U.length>=4&&U.reduce((a,b)=>a+b,0)/U.length<.74) t=Math.max(t,smOtsu(U));
   if(sc[sc.length-1]-sc[0]<.06) t=Math.min(t,sc[0]-.01); return Math.round(Math.max(.5,Math.min(.95,t))*100)/100}
-const smAccepted=m=>m.on!=null?m.on:m.score>=SM.thr;
+const smAccepted=m=>m.on!=null?m.on:!m.zone&&m.score>=SM.thr;
 function smCounts(){let n=0,pages=0; for(const pid in SM.results){const c=SM.results[pid].filter(smAccepted).length; if(c){n+=c; pages++}} return {n,pages}}
 /* ---- refurbishment drawings: one symbol, many phases. Shape is matched in any colour ('ink'), then every match is sorted by
    the colour it is drawn in and by the letter tag beside it (N / E / D / R from the PDF text, or from letter samples boxed once). ---- */
@@ -3907,7 +4034,8 @@ async function symLegendGuess(smp,p0){const out=[]; const pages=[p0,...S.pages.f
         const X=Math.max(0,Math.floor(x0*k)), Y=Math.max(0,Math.floor(y0*k)), W=Math.min(bm.width-X,Math.ceil((x1-x0)*k)), H=Math.min(bm.height-Y,Math.ceil((y1-y0)*k)); if(W<4||H<4) continue;
         const RW=Math.max(tw+1,Math.round(W*f)), RH=Math.max(th+1,Math.round(H*f)); const rc=document.createElement('canvas'); rc.width=RW; rc.height=RH; const rg=rc.getContext('2d'); rg.fillStyle='#fff'; rg.fillRect(0,0,RW,RH); rg.imageSmoothingQuality='high'; rg.drawImage(bm,X,Y,W,H,0,0,RW,RH);
         const img=smChannel(rg.getImageData(0,0,RW,RH).data,'ink'); let best=0;
-        for(let y=0;y+th<=RH;y++) for(let x=0;x+tw<=RW;x++){let s1=0,s2=0,cc=0; for(let j=0;j<th;j++){const ro=(y+j)*RW+x, to=j*tw; for(let i=0;i<tw;i++){const v=img[ro+i]; s1+=v; s2+=v*v; cc+=T[to+i]*v}} const vr=s2-s1*s1/n; if(vr<n*60) continue; const v=cc/Math.sqrt(vr); if(v>best) best=v}
+        // the symbol sits on the line's own row: a match level with the neighbouring entry above / below scores lower
+        for(let y=0;y+th<=RH;y++){const dy=Math.min(1,Math.abs(Y/k+(y+th/2)*H/RH/k-L.y)/S0); for(let x=0;x+tw<=RW;x++){let s1=0,s2=0,cc=0; for(let j=0;j<th;j++){const ro=(y+j)*RW+x, to=j*tw; for(let i=0;i<tw;i++){const v=img[ro+i]; s1+=v; s2+=v*v; cc+=T[to+i]*v}} const vr=s2-s1*s1/n; if(vr<n*60) continue; const v=cc/Math.sqrt(vr)*(1-.3*dy); if(v>best) best=v}}
         out.push({t:c.t,score:best,label:L.s.slice(0,40),page:p.name})}}
     await new Promise(r=>setTimeout(r,0))}
   return out.sort((a,b)=>b.score-a.score)}
@@ -3934,7 +4062,7 @@ ${keys}`;
   const t=await callClaude(prompt,c.toDataURL('image/jpeg',.9).split(',')[1],null); const j=parseJSON(t); if(!j||!j.key||!symTypeOk(j.key)) return null;
   return {type:j.key,src:'ai',score:+j.confidence||null,label:String(j.why||'').slice(0,60),unsure:(+j.confidence||0)<.6}}
 function smSelHTML(){const m=SM.selRes; if(!m||!Object.values(SM.results).some(a=>a.includes(m))) return '';
-  return `<div class="selbox" style="margin:6px 0"><b>选中的框</b> <span class="note">${m.manual?'手动补加':m.moved?'已移动 · '+Math.round(m.score*100)+'%':Math.round(m.score*100)+'%'}${smAccepted(m)?'':' · 不计'}</span>
+  return `<div class="selbox" style="margin:6px 0"><b>选中的框</b> <span class="note">${m.manual?'手动补加':m.moved?'已移动 · '+Math.round(m.score*100)+'%':Math.round(m.score*100)+'%'}${m.vec?' · 矢量线条匹配':m.manual?'':' · 图像匹配'}${m.mir?' · 镜像':''}${m.zone?' · 在图例中':''}${smAccepted(m)?'':' · 不计'}</span>
    ${smPhaseOn()&&m.cls?`<label class="field">改造状态<select id="smSelAct">${['new','retain','remove','relocate','relfrom','skip'].filter(a=>PH_ACT[a]).map(a=>`<option value="${a}" ${m.pact===a?'selected':''}>${PH_ACT[a]}</option>`).join('')}</select></label>`:''}
    <div class="toolbar"><button class="btn sm" id="smSelTog">${smAccepted(m)?'不计这个':'恢复计入'}</button><button class="btn sm ghost" id="smSelDel">删除</button></div></div>`}
 function smGuessHTML(){const g=SM.guess; if(!g) return ''; if(g.busy) return `<div class="note">${g.ai?'图纸上没找到对应的图例文字，正在用 AI 识别这个图标…':'正在识别这个图标是什么设备…'}</div>`;
@@ -3958,12 +4086,13 @@ function smPanel(el){
    <label class="field">统计为<select id="smType">${Object.keys(SYS).filter(s=>(s!=='DEMO'||isRef())&&types.some(i=>i.sys===s)).map(s=>`<optgroup label="${SYS[s].zh}">${types.filter(i=>i.sys===s).map(i=>`<option value="${i.k}" ${(SM.type||cur.item)===i.k?'selected':''}>${i.zh}</option>`).join('')}</optgroup>`).join('')}</select></label>
    ${isRef()?`<label style="display:flex;gap:6px;align-items:center;font-size:12.5px"><input type="checkbox" id="smPhase" ${SM.phase!==false?'checked':''}> 自动区分 新装 / 既有 / 拆除 / 移位（按颜色和 N·E·D·R 字母）</label>${SM.phase===false?actSegHTML():''}`:''}
    <div class="row2"><label class="field">搜索范围<select id="smScope"><option value="page" ${SM.scope==='page'?'selected':''}>本页整张图纸</option><option value="view" ${SM.scope==='view'?'selected':''}>只在当前视图</option><option value="all" ${SM.scope==='all'?'selected':''}>项目所有图纸页</option></select></label>
-   <label class="field" style="flex-direction:row;display:flex;align-items:end;gap:6px"><input type="checkbox" id="smRot" ${SM.rot?'checked':''}> 包括旋转的图标</label></div>
+   <label class="field" style="flex-direction:row;display:flex;align-items:end;gap:6px"><input type="checkbox" id="smRot" ${SM.rot?'checked':''}> 包括旋转 / 镜像的图标</label></div>
    <div class="toolbar"><button class="btn sm primary" id="smGo" ${SM.busy?'disabled':''}>${SM.busy?'搜索中…':'搜索'}</button><button class="btn sm ghost" id="smReset">重新框选</button></div>
    <div class="note" id="smMsg"></div>
    ${Object.keys(SM.results).length?`<div class="selbox"><div class="kv"><span>找到</span><b class="num">${c.n} 个${SM.scope==='all'?` · ${c.pages} 页`:''}</b></div>
      ${smPhaseOn()?smPhaseHTML():''}
      <label class="field">相似度下限 <b class="num" id="smThrV">${Math.round(SM.thr*100)}%</b>${SM.thrManual?'':' <span class="note">（自动）</span>'}<input type="range" id="smThr" min="50" max="98" value="${Math.round(SM.thr*100)}"></label>
+     ${(()=>{const A=Object.values(SM.results).flat(), nz=A.filter(m=>m.zone&&m.on==null&&m.score>=SM.thr).length, nv=A.filter(m=>m.vec&&smAccepted(m)).length; return (nv?`<p class="note" style="margin:0 0 4px">其中 ${nv} 个由 PDF 矢量线条精确匹配（任意角度、镜像均可）。</p>`:'')+(nz?`<p class="note" style="margin:0 0 4px">${nz} 个在图例 / 符号表里，默认不计（点框可恢复）。</p>`:'')})()}
      <p class="note" style="margin:0">图上绿框 = 计入，灰框 = 不计。调低下限能找到画得不完全一样的，调高可以去掉误判。</p>
      <p class="note" style="margin:4px 0 0"><b>逐个修改：</b>点框 = 不计 / 恢复；拖动框 = 移到正确位置；<b>点空白处 = 补一个漏掉的</b>；选中后按 Delete 删除。</p>
      ${smSelHTML()}
@@ -3978,7 +4107,7 @@ function smPanel(el){
   $$('#toolSec [data-letter]').forEach(b=>b.onclick=()=>{SM.pickLetter=b.dataset.letter; toast(T('在图纸上框一个字母 ')+b.dataset.letter+T('（只框字母本身）'))});
   $('#smScope').onchange=e=>{SM.scope=e.target.value}; $('#smRot').onchange=e=>{SM.rot=e.target.checked};
   $('#smGo').onclick=()=>{SM.thrManual=false; smRun()}; $('#smReset').onclick=()=>{SM.samples=[]; SM.results={}; SM.selRes=null; SM.guess=null; SM.typeManual=false; renderToolSec(); draw()};
-  const thr=$('#smThr'); if(thr) thr.oninput=()=>{SM.thr=+thr.value/100; SM.thrManual=true; $('#smThrV').textContent=thr.value+'%'; for(const pid in SM.results) SM.results[pid].forEach(m=>{if(!m.manual&&!m.moved&&!m.fixAct) m.on=null}); draw(); const n=smCounts().n; const a=$('#smAdd'); if(a){a.textContent=`加入计数（${n} 个，待确认）`; a.disabled=!n}};
+  const thr=$('#smThr'); if(thr) thr.oninput=()=>{SM.thr=+thr.value/100; SM.thrManual=true; $('#smThrV').textContent=thr.value+'%'; for(const pid in SM.results) SM.results[pid].forEach(m=>{if(!m.manual&&!m.moved&&!m.fixAct&&!m.zone) m.on=null}); draw(); const n=smCounts().n; const a=$('#smAdd'); if(a){a.textContent=`加入计数（${n} 个，待确认）`; a.disabled=!n}};
   if(thr) thr.onchange=async()=>{if(smPhaseOn()){await smClassify().catch(e=>console.warn(e)); renderToolSec(); draw()}};
   const add=$('#smAdd'); if(add) add.onclick=smCommit;
   if($('#smSelAct')) $('#smSelAct').onchange=e=>{const m=SM.selRes; m.fixAct=e.target.value; m.on=true; smApplyActs(); renderToolSec(); draw()};
@@ -4017,7 +4146,7 @@ function drawSM(){
   const res=SM.results[p.id]||[]; ctx.font='600 9px "JetBrains Mono",monospace';
   for(const m of res){if(m.score<.5) continue; const ok=smAccepted(m); const a=toS(m.x-m.w/2,m.y-m.h/2), b=toS(m.x+m.w/2,m.y+m.h/2); if(m===SM.selRes){ctx.save(); ctx.strokeStyle='#00a3ff'; ctx.lineWidth=2; ctx.setLineDash([]); ctx.strokeRect(a[0]-3,a[1]-3,b[0]-a[0]+6,b[1]-a[1]+6); ctx.restore()}
     ctx.strokeStyle=ok?(m.pact?({new:'rgba(29,150,70,.95)',retain:'rgba(110,120,130,.9)',remove:'rgba(211,47,47,.95)',relocate:'rgba(239,138,23,.95)',relfrom:'rgba(156,39,176,.9)',skip:'rgba(120,120,120,.5)'}[m.pact]):'rgba(29,150,70,.95)'):'rgba(120,120,120,.6)'; ctx.lineWidth=ok?2:1; ctx.setLineDash(ok?[]:[3,3]); ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
-    if(V.s*m.w>26){ctx.fillStyle=ok?ctx.strokeStyle:'rgba(120,120,120,.9)'; ctx.fillText((ok&&m.pact?({new:'N',retain:'E',remove:'D',relocate:'R→',relfrom:'R○',skip:'–'}[m.pact])+' ':'')+(m.letter?'['+m.letter+'] ':'')+(m.manual?'+':Math.round(m.score*100)+'%'),a[0],a[1]-2)}}
+    if(V.s*m.w>26){ctx.fillStyle=ok?ctx.strokeStyle:'rgba(120,120,120,.9)'; ctx.fillText((ok&&m.pact?({new:'N',retain:'E',remove:'D',relocate:'R→',relfrom:'R○',skip:'–'}[m.pact])+' ':'')+(m.letter?'['+m.letter+'] ':'')+(m.zone&&!ok?T('图例')+' ':'')+(m.manual?'+':Math.round(m.score*100)+'%'),a[0],a[1]-2)}}
   if(SM.rect){const a=toS(SM.rect[0],SM.rect[1]), b=toS(SM.rect[2],SM.rect[3]); ctx.setLineDash([6,4]); ctx.strokeStyle='#C8102E'; ctx.lineWidth=2; ctx.fillStyle='rgba(200,16,46,.08)'; ctx.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]); ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}
   ctx.restore();
 }

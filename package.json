@@ -1,7 +1,7 @@
 {
   "name": "firetake",
   "productName": "FireTake",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "FireTake 消防算量报价 - Fire services takeoff and quoting",
   "main": "main.js",
   "author": "FireTake",
