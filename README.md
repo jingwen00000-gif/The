@@ -47,3 +47,7 @@ Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js`
 - 打开 PDF 时如果这张图有图例，识别区直接提示并给出一键计数按钮。
 - 修正：pdf.js 偶尔把一条路径拆成两条指令，矢量提取会丢掉其中的线段（影响符号匹配、按颜色提取管线、墙体识别）。
 - 快捷键面板（?）增加 G 和核对按键；“开始使用”第 3 步改为先用图例一键计数。
+
+网页版：`python3 make_web.py FireTake-web.html` 生成完整网页（带 doctype、`<meta charset="utf-8">`、UTF-8 BOM、手机 viewport），可直接在电脑 / 手机浏览器打开。
+需要放进会自己加外壳的宿主（例如 Claude Artifact）时用 `python3 make_web.py --fragment out.html`。
+（旧版网页只有片段，没有编码声明：Safari、Firefox、手机浏览器直接打开会把中文当西文读，主脚本解析失败，页面无法使用。）
