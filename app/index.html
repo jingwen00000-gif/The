@@ -455,7 +455,7 @@ kbd{font-family:var(--f-mono)}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><span>Fire<b>Take</b></span><small>v2.10.0</small></div>
+  <div class="brand"><span>Fire<b>Take</b></span><small>v2.11.0</small></div>
   <select id="projSel" class="projsel" aria-label="切换项目"></select>
   <span class="ptlbl">类型</span><div class="seg ptseg" id="ptypeSeg" role="group" aria-label="项目类型"><button data-pt="NEW" title="新建 / 在建工程">新建工程</button><button data-pt="REFURB" title="既有建筑改造">翻新装修</button></div>
   <nav class="tabs" role="tablist">
@@ -541,9 +541,10 @@ kbd{font-family:var(--f-mono)}
     <div class="sec" id="selSec" hidden></div>
     <div class="sec" id="detectSec">
       <h3>自动识别</h3>
+      <button class="btn sm primary" id="lgAuto" title="读取图纸上的图例（符号 + 设备说明），在所有图纸页上一次找出每种设备并计数（CAD 导出的矢量 PDF）" style="width:100%;margin-bottom:6px">按图例一键计数（全部图纸）</button>
       <div class="toolbar">
         <button class="btn sm" id="textDetect" title="读取 PDF 文字层：FHR / FH / EXT / DN100 / 1:100 等标注">读取图纸文字标注</button>
-        <button class="btn sm primary" id="aiDetect" title="把当前页图像发给 Claude 识别消防构件与管线">AI 识别本页</button>
+        <button class="btn sm" id="aiDetect" title="把当前页图像发给 Claude 识别消防构件与管线">AI 识别本页</button>
         <button class="btn sm" id="legendBtn" title="框选图纸上的图例，让 AI 先学会这套图的符号">读取图例</button>
       </div>
       <details class="aimore"><summary>AI 精度与对齐选项</summary><div class="aiopts"><label class="lvsel" style="font-weight:500">AI 精度<select id="aiMode"><option value="1">整页（快）</option><option value="2">2×2 分块</option><option value="3">3×3 高精度（大图 A1/A0）</option></select></label>
@@ -2570,6 +2571,7 @@ Object.assign(I18N,{"本页 ▾": "This sheet ▾", "更多导出 ▾": "More ex
 Object.assign(I18N,{"包括旋转 / 镜像的图标": "Include rotated / mirrored symbols", "矢量线条匹配": "vector line-work match", "图像匹配": "image match", "镜像": "mirrored", "在图例中": "in legend", "图例": "legend",
  "个由 PDF 矢量线条精确匹配（任意角度、镜像均可）。": " matched exactly on the PDF vector line work (any angle, mirrored too).", "其中 ": "Of these, ",
  "个在图例 / 符号表里，默认不计（点框可恢复）。": " are in the legend / symbol key and are not counted (click a box to count it).", "图例里的 ": "In the legend, ", "条说明文字已自动跳过。": " description labels were skipped automatically. ", "标题栏里的字也可能被读到，确认前请删掉多余的。": "Text in the title block may also be read – delete any extras before confirming."});
+Object.assign(I18N,{"按图例一键计数（全部图纸）": "Count from legend (all sheets)", "读取图纸上的图例（符号 + 设备说明），在所有图纸页上一次找出每种设备并计数（CAD 导出的矢量 PDF）": "Reads the drawing legend (symbol + description) and counts every device type on every sheet in one go (CAD vector PDFs)", "正在查找图例…": "Looking for the legend…", "没有在图纸里找到图例。需要 CAD 导出的矢量 PDF，图例是“符号 + 设备说明”的列表。可以用“框选图标 · 全图搜索”逐个计数，或用 AI 识别。": "No legend found. This needs a vector PDF exported from CAD with a legend listing symbol + description. Use “Box a symbol · search drawing” per device, or AI detection.", "正在搜索": "Searching", "读到了图例，但在平面图上没有找到相同的符号（可能图例符号和平面图画法不同）。请用“框选图标 · 全图搜索”。": "The legend was read, but none of its symbols were found on the plans (they may be drawn differently). Use “Box a symbol · search drawing”.", "按图例找到": "Found from the legend:", "种设备，共": "device types,", "按图例一键计数": "Count from legend", "图例符号": "Legend symbol", "图例说明": "Legend text", "数量": "Qty", "每行是图例里的一种设备和它在全部图纸上找到的数量（图例里的符号本身不计）。不对的取消勾选或改“统计为”。加入后为“待确认”，可以逐个核对。": "Each row is one device from the legend and how many were found on all sheets (the legend symbol itself is not counted). Untick or change “Count as” where wrong. They go in as “To review” for one-by-one checking.", "加入计数": "Add to count", "加入并逐个核对": "Add and review one by one", "已加入": "Added", "个构件（待确认）": "devices (to review)", "个已存在跳过": "already there, skipped", "这张图有图例": "This sheet has a legend", "有图例的 CAD 图纸先点“按图例一键计数”，再逐个核对；其余描管道 (P)、点构件 (C)、框选图标全图搜索或 AI 识别；只有建筑图时用自动设计 (D)": "CAD sheets with a legend: click “Count from legend”, then review one by one; otherwise trace pipes (P), count items (C), box a symbol to search, or AI detect; with architectural plans only use Auto design (D)", "核对时：确认 / 删除 / 跳过": "While reviewing: confirm / delete / skip"});
 const I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
 const CJK_RE=/[一-鿿　-〿＀-￯]/;
 const I18N_PUNCT={'（':' (','）':')','，':', ','。':'. ','：':': ','；':'; ','、':', ','“':'"','”':'"','　':' '};
@@ -3292,7 +3294,7 @@ async function buildBackup(){
   const fl=[]; for(const f of files){fl.push({...f,blob:undefined,b64:await blobToB64(f.blob)})}
   return JSON.stringify({app:'FireTake',type:'backup',version:APPVER,created:new Date().toISOString(),projects,meta,files:fl});
 }
-let APPVER='2.10.0';
+let APPVER='2.11.0';
 async function runBackup(force){
   if(!DB.ok) return; const today=todayISO(); let last=''; try{last=localStorage.getItem('firetake.lastBackup')||''}catch(e){}
   if(!force&&last===today) return;
@@ -3510,7 +3512,7 @@ async function pdfVectors(p){
   if(vecCache.has(p.id)) return vecCache.get(p.id); if(p.kind!=='pdf') return [];
   const pg=await pdfPageObj(p); if(!pg) return []; const vp=pg.getViewport({scale:1}); const ol=await pg.getOperatorList(); const O=pdfjsLib.OPS;
   const mul=(A,B)=>[A[0]*B[0]+A[2]*B[1],A[1]*B[0]+A[3]*B[1],A[0]*B[2]+A[2]*B[3],A[1]*B[2]+A[3]*B[3],A[0]*B[4]+A[2]*B[5]+A[4],A[1]*B[4]+A[3]*B[5]+A[5]];
-  let st={m:[1,0,0,1,0,0],col:'000000',fcol:'000000',lw:1}; const stack=[]; const segs=[], fills=[]; let path=[];
+  let st={m:[1,0,0,1,0,0],col:'000000',fcol:'000000',lw:1}; const stack=[]; const segs=[], fills=[]; let path=[], start=null, curP=null;
   const T=(x,y)=>{const m=st.m; return vp.convertToViewportPoint(m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5])};
   const hex=a=>[...a].slice(0,3).map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
   for(let i=0;i<ol.fnArray.length;i++){const fn=ol.fnArray[i], a=ol.argsArray[i];
@@ -3519,7 +3521,8 @@ async function pdfVectors(p){
     else if(fn===O.paintFormXObjectBegin){stack.push({...st,m:[...st.m]}); if(a&&a[0]) st.m=mul(st.m,a[0])} else if(fn===O.paintFormXObjectEnd){if(stack.length) st=stack.pop()}
     else if(fn===O.setStrokeRGBColor) st.col=hex(a); else if(fn===O.setFillRGBColor) st.fcol=hex(a);
     else if(fn===O.setLineWidth) st.lw=a[0];
-    else if(fn===O.constructPath){const ops=a[0], c=a[1]; let k=0, start=null, curP=null;
+    // the current point lives until the path is painted: pdf.js sometimes splits one path over two constructPath ops (moveTo | lineTo)
+    else if(fn===O.constructPath){const ops=a[0], c=a[1]; let k=0;
       for(const op of ops){
         if(op===O.moveTo){curP=T(c[k],c[k+1]); start=curP; k+=2}
         else if(op===O.lineTo){const n=T(c[k],c[k+1]); if(curP) path.push([curP,n]); curP=n; k+=2}
@@ -3530,10 +3533,10 @@ async function pdfVectors(p){
       }}
     else if(fn===O.stroke||fn===O.closeStroke||fn===O.fillStroke||fn===O.closeFillStroke||fn===O.eoFillStroke||fn===O.closeEOFillStroke){
       const sc=Math.sqrt(Math.abs(st.m[0]*st.m[3]-st.m[1]*st.m[2]))||1; const w=Math.max(.1,(st.lw||0)*sc);
-      for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) segs.push({a:s[0],b:s[1],col:st.col,w,L})} path=[]}
+      for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) segs.push({a:s[0],b:s[1],col:st.col,w,L})} path=[]; start=curP=null}
     // outlines of filled shapes (solid triangles / dots inside symbols) are kept apart in segs.fills, for symbol matching only
-    else if(fn===O.fill||fn===O.eoFill){for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) fills.push({a:s[0],b:s[1],col:st.fcol,w:0,L,f:1})} path=[]}
-    else if(fn===O.endPath) path=[];
+    else if(fn===O.fill||fn===O.eoFill){for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) fills.push({a:s[0],b:s[1],col:st.fcol,w:0,L,f:1})} path=[]; start=curP=null}
+    else if(fn===O.endPath){path=[]; start=curP=null}
   }
   segs.fills=fills; vecCache.set(p.id,segs); return segs;
 }
@@ -4844,7 +4847,7 @@ const redoStack=[];
 function redo(){const h=redoStack.pop(); if(!h) return toast('没有可重做的操作'); hist.push(JSON.stringify({runs:S.runs,marks:S.marks,pf:S.pf,rooms:S.rooms})); const o=JSON.parse(h); S.runs=o.runs; S.marks=o.marks; if(o.pf) S.pf=o.pf; if(o.rooms) S.rooms=o.rooms; sel=null; changed(); if(currentTab==='passive') renderPassive()}
 
 /* ---- shortcuts ---- */
-function showShortcuts(){const K=[['V','选择 / 编辑'],['H 或 空格+拖动','平移'],['S','比例校准'],['P','管道测量（双击或回车结束，Shift 画直角）'],['C','构件计数'],['D','按澳标自动设计'],['W','防火墙'],['X','穿透点'],['L','服务管线'],['J','防火缝'],['Ctrl+Z / Ctrl+Y','撤销 / 重做'],['Delete','删除选中'],['Esc','取消当前操作'],['滚轮','缩放'],['?','显示本帮助']];
+function showShortcuts(){const K=[['V','选择 / 编辑'],['H 或 空格+拖动','平移'],['S','比例校准'],['P','管道测量（双击或回车结束，Shift 画直角）'],['C','构件计数'],['D','按澳标自动设计'],['W','防火墙'],['X','穿透点'],['L','服务管线'],['J','防火缝'],['Ctrl+Z / Ctrl+Y','撤销 / 重做'],['Delete','删除选中'],['Esc','取消当前操作'],['滚轮','缩放'],['G','按图例一键计数（全部图纸）'],['Enter / Delete / →','核对时：确认 / 删除 / 跳过'],['?','显示本帮助']];
   ftModal('快捷键',`<table class="t">${K.map(([k,t])=>`<tr><td><kbd>${k}</kbd></td><td>${t}</td></tr>`).join('')}</table>`,[{t:'关闭',cls:'primary'}])}
 
 /* ---- count tool: search + recent ---- */
@@ -4854,7 +4857,7 @@ function itemCounts(){const c={}; S.marks.forEach(m=>{if(!m.pending&&(!isRef()||
 
 /* ---- quick start (shown while only the example project exists) ---- */
 function quickStartHTML(){if(liveProjects().some(p=>!/^示例|^Example/.test(p.name||''))) return '';
-  const steps=[['新建项目','报价页填客户、联系人，选报价公司','mpNew'],['打开图纸','图纸算量页：打开 PDF，输入比例（如 1:100）','takeoff'],['算量','描管道 (P)、点构件 (C)；或框选图标全图搜索、AI 识别；只有建筑图时用自动设计 (D)','takeoff'],['核对与单价','澳标核对页看提醒；单价库页导入供应商价格、设套件','checks'],['导出报价','报价页导出 PDF 报价信 / Excel BOQ，导出前会自动检查','quote']];
+  const steps=[['新建项目','报价页填客户、联系人，选报价公司','mpNew'],['打开图纸','图纸算量页：打开 PDF，输入比例（如 1:100）','takeoff'],['算量','有图例的 CAD 图纸先点“按图例一键计数”，再逐个核对；其余描管道 (P)、点构件 (C)、框选图标全图搜索或 AI 识别；只有建筑图时用自动设计 (D)','takeoff'],['核对与单价','澳标核对页看提醒；单价库页导入供应商价格、设套件','checks'],['导出报价','报价页导出 PDF 报价信 / Excel BOQ，导出前会自动检查','quote']];
   return `<div class="card qs"><h2>开始使用 <small>五步完成一份报价</small></h2><ol>${steps.map(([t,d,go])=>`<li><b>${t}</b><span class="note">${d}</span><button class="btn sm" data-qs="${go}">${go==='mpNew'?'新建项目':'前往'}</button></li>`).join('')}</ol></div>`}
 function wireQuickStart(){$$('[data-qs]').forEach(b=>b.onclick=async()=>{const g=b.dataset.qs; if(g==='mpNew'){await newProject(); showTab('quote')} else showTab(g)})}
 
@@ -5262,6 +5265,83 @@ function rvChip(){const w=document.getElementById('cwrap'); if(!w) return; let c
 /* add the button to the existing review box too */
 const _rr=renderReview; renderReview=function(){_rr(); const box=$('#reviewBox'); if(box&&!$('#rvGo')){const a=box.querySelector('.acts'); if(a) a.insertAdjacentHTML('afterbegin','<button class="btn sm primary" id="rvGo">逐个核对</button>'); const g=$('#rvGo'); if(g) g.onclick=rvStart; const ok=$('#rvOk'); if(ok) ok.classList.remove('primary')}};
 
+
+/* ---------- one-click count from the legend, every sheet at once ----------
+   Each row of a detected legend column that names a device ('SMOKE DETECTOR', 'HOSE REEL' …) supplies its own sample: the line work drawn
+   left of the text. Every sample is searched on every PDF sheet by vector matching (exact, any angle), the results are shown as one table
+   to tick / correct, then go in as 'to review' and the one-by-one review starts. */
+function segGroups(sg,tol){const near=(q,s)=>{const dx=s.b[0]-s.a[0],dy=s.b[1]-s.a[1],L2=dx*dx+dy*dy||1; const t=Math.max(0,Math.min(1,((q[0]-s.a[0])*dx+(q[1]-s.a[1])*dy)/L2)); return Math.hypot(q[0]-s.a[0]-t*dx,q[1]-s.a[1]-t*dy)};
+  const gid=new Int32Array(sg.length).fill(-1), out=[];
+  for(let i=0;i<sg.length;i++){if(gid[i]>=0) continue; const g=[], q=[i]; gid[i]=out.length;
+    while(q.length){const a=q.pop(), s=sg[a]; g.push(s); for(let j=0;j<sg.length;j++){if(gid[j]>=0) continue; const u=sg[j]; if(near(u.a,s)<tol||near(u.b,s)<tol||near(s.a,u)<tol||near(s.b,u)<tol){gid[j]=out.length; q.push(j)}}}
+    const xs=g.flatMap(s=>[s.a[0],s.b[0]]), ys=g.flatMap(s=>[s.a[1],s.b[1]]); out.push({segs:g,b:[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)]})}
+  return out}
+async function lgEntries(p){if(p.kind!=='pdf') return []; const Z=await legendZones(p); if(!Z.length) return [];
+  const lines=await pdfTextLines(p), V=await pdfVectors(p), all=[...V,...(V.fills||[])], out=[];
+  for(const z of Z) for(const l of lines){if(l.x<z[0]||l.x>z[2]||l.y<z[1]||l.y>z[3]) continue; const t=symKwType(l.s); if(!t||!symTypeOk(t)) continue;
+    const h=l.h, x0=l.x-h*7, x1=l.x-h*.15, y0=l.y-h*1.5, y1=l.y+h*1.5;
+    const sg=all.filter(s=>s.L<h*5&&[s.a,s.b].every(q=>q[0]>=x0&&q[0]<=x1&&q[1]>=y0&&q[1]<=y1)); if(sg.length<3) continue;
+    // the symbol is the group of joined line work level with the text (its own row), plus anything drawn inside it
+    const G=segGroups(sg,h*.12).filter(g=>g.segs.length>=1).sort((a,b)=>Math.abs((a.b[1]+a.b[3])/2-l.y)-Math.abs((b.b[1]+b.b[3])/2-l.y)||(b.b[2]-a.b[2]));
+    const g=G[0]; if(!g) continue; const b=g.b.slice(); for(const o of G) if(o!==g&&o.b[0]>=b[0]-h*.2&&o.b[2]<=b[2]+h*.2&&o.b[1]>=b[1]-h*.2&&o.b[3]<=b[3]+h*.2) o.segs.forEach(s=>g.segs.push(s));
+    const bw=b[2]-b[0], bh=b[3]-b[1]; if(g.segs.length<3||Math.min(bw,bh)<h*.25||Math.max(bw,bh)/Math.max(.01,Math.min(bw,bh))>3.5) continue; // a line type (pipe / cable), not a device symbol
+    const m=.3*Math.max(bw,bh); out.push({page:p.id,type:t,label:l.s.slice(0,60),box:[b[0]-m,b[1]-m,b[2]+m,b[3]+m]})}
+  return out}
+let LGA=null;
+async function legendAutoCount(){
+  if(LGA&&LGA.busy) return; const pages=S.pages.filter(p=>p.kind==='pdf'&&pdfPageRef.get(p.id)); const out=$('#detectOut');
+  if(!pages.length){toast('先打开 CAD 导出的 PDF 图纸'); return}
+  if(currentTab!=='takeoff') showTab('takeoff');
+  const say=t=>{if(out) out.innerHTML=`<div class="aiout">${t}</div>`}; LGA={busy:true}; const btn=$('#lgAuto'); if(btn) btn.disabled=true;
+  try{say(T('正在查找图例…')); const E=[]; for(const p of pages) E.push(...await lgEntries(p).catch(e=>{console.warn(e); return []}));
+    if(!E.length){if(out) out.innerHTML=T('没有在图纸里找到图例。需要 CAD 导出的矢量 PDF，图例是“符号 + 设备说明”的列表。可以用“框选图标 · 全图搜索”逐个计数，或用 AI 识别。'); return}
+    const ink=smPhaseOn(), groups=[]; let n=0;
+    for(const e of E){n++; const sp=S.pages.find(q=>q.id===e.page); const cx=(e.box[0]+e.box[2])/2, cy=(e.box[1]+e.box[3])/2;
+      const known=groups.find(g=>(g.hits[e.page]||[]).some(m=>m.zone&&Math.hypot(m.x-cx,m.y-cy)<Math.max(m.w,m.h)*.4)); if(known){if(!known.labels.includes(e.label)) known.labels.push(e.label); continue} // same symbol as an earlier entry (another sheet's legend)
+      const Tp=await vsmTemplate(sp,e.box,ink); if(!Tp) continue;
+      say(`${T('正在搜索')} ${esc(e.label)}（${n}/${E.length}）…`); await new Promise(r=>setTimeout(r,0));
+      const hits={}; let selfOk=false;
+      for(const q of pages){const rs=q!==sp&&sp.mPerUnit&&q.mPerUnit?sp.mPerUnit/q.mPerUnit:1; const Z=await legendZones(q);
+        const h=(await vsmSearch(q,Tp,rs)).filter(m=>m.score>=.88); for(const m of h) if(Z.some(z=>m.x>=z[0]&&m.x<=z[2]&&m.y>=z[1]&&m.y<=z[3])) m.zone=true;
+        if(q===sp&&h.some(m=>Math.hypot(m.x-cx,m.y-cy)<Tp.R*.3)) selfOk=true; hits[q.id]=h}
+      if(!selfOk) continue;
+      const g0=groups.find(g=>g.type===e.type); if(g0){for(const pid in hits){const a=g0.hits[pid]||(g0.hits[pid]=[]); for(const m of hits[pid]) if(!a.some(o=>Math.hypot(o.x-m.x,o.y-m.y)<Math.min(o.w,o.h)*.5)) a.push(m)} g0.labels.push(e.label); g0.tot=Math.max(g0.tot,Tp.tot)}
+      else groups.push({type:e.type,labels:[e.label],hits,tot:Tp.tot,page:e.page,box:e.box,on:true})}
+    // one spot, two devices (a simpler symbol found inside a fuller one): the better match keeps it, a tie goes to the fuller symbol
+    const flat=[]; groups.forEach(g=>{for(const pid in g.hits) for(const m of g.hits[pid]) if(!m.zone) flat.push({g,pid,m})});
+    for(const a of flat) for(const b of flat){if(a===b||a.g===b.g||a.pid!==b.pid||a.m.drop||b.m.drop) continue; if(Math.hypot(a.m.x-b.m.x,a.m.y-b.m.y)>Math.min(a.m.w,a.m.h)*.5) continue;
+      const lose=a.m.score>b.m.score+.02?b:b.m.score>a.m.score+.02?a:(a.g.tot>=b.g.tot?b:a); lose.m.drop=true}
+    groups.forEach(g=>{g.n=0; g.per={}; for(const pid in g.hits){const c=g.hits[pid].filter(m=>!m.zone&&!m.drop).length; if(c){g.n+=c; g.per[pid]=c}}});
+    LGA.groups=groups.filter(g=>g.n);
+    if(!LGA.groups.length){if(out) out.innerHTML=T('读到了图例，但在平面图上没有找到相同的符号（可能图例符号和平面图画法不同）。请用“框选图标 · 全图搜索”。'); return}
+    if(out) out.innerHTML=`${T('按图例找到')} <b>${LGA.groups.length}</b> ${T('种设备，共')} <b>${LGA.groups.reduce((a,g)=>a+g.n,0)}</b> ${T('个。')}`;
+    await lgaShow()}
+  finally{if(LGA) LGA.busy=false; if(btn) btn.disabled=false}}
+async function lgaThumb(g){const p=S.pages.find(q=>q.id===g.page); const bm=p&&await ensureBitmap(p); if(!bm) return ''; const k=bm.width/p.w, b=g.box, w=(b[2]-b[0])*k, h=(b[3]-b[1])*k;
+  const c=document.createElement('canvas'), N=40, f=N/Math.max(w,h); c.width=Math.max(1,Math.round(w*f)); c.height=Math.max(1,Math.round(h*f)); const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.imageSmoothingQuality='high'; x.drawImage(bm,b[0]*k,b[1]*k,w,h,0,0,c.width,c.height); return c.toDataURL()}
+async function lgaShow(){const G=LGA.groups, multi=Object.keys(G.reduce((o,g)=>Object.assign(o,g.per),{})).length>1; const th=await Promise.all(G.map(lgaThumb));
+  const types=ITEMS.filter(i=>symTypeOk(i.k)); const opt=k=>Object.keys(SYS).filter(s=>types.some(i=>i.sys===s)).map(s=>`<optgroup label="${SYS[s].zh}">${types.filter(i=>i.sys===s).map(i=>`<option value="${i.k}" ${i.k===k?'selected':''}>${i.zh}</option>`).join('')}</optgroup>`).join('');
+  const rows=G.map((g,i)=>`<tr><td><input type="checkbox" data-lgon="${i}" checked></td><td>${th[i]?`<img src="${th[i]}" alt="" style="max-height:32px;vertical-align:middle">`:''}</td><td style="max-width:220px">${esc(g.labels.join(' / '))}</td>
+     <td><select data-lgt="${i}" style="max-width:190px">${opt(g.type)}</select></td><td class="r num"><b>${g.n}</b>${multi?`<div class="note">${S.pages.filter(p=>g.per[p.id]).map(p=>`${esc(p.name)} ${g.per[p.id]}`).join('<br>')}</div>`:''}</td></tr>`).join('');
+  const d=ftModal(T('按图例一键计数'),`<p class="note" style="margin:0 0 8px">${T('每行是图例里的一种设备和它在全部图纸上找到的数量（图例里的符号本身不计）。不对的取消勾选或改“统计为”。加入后为“待确认”，可以逐个核对。')}</p>
+    <div style="max-height:52vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('图例符号')}</th><th>${T('图例说明')}</th><th>${T('统计为')}</th><th class="r">${T('数量')}</th></tr></thead><tbody>${rows}</tbody></table></div>`,
+    [{t:T('取消')},{t:T('加入计数'),fn:()=>lgaCommit(d,false)},{t:T('加入并逐个核对'),cls:'primary',fn:()=>lgaCommit(d,true)}])}
+async function lgaCommit(d,review){const G=LGA.groups; G.forEach((g,i)=>{const c=d.querySelector(`[data-lgon="${i}"]`), t=d.querySelector(`[data-lgt="${i}"]`); g.on=!c||c.checked; if(t&&ITEM[t.value]) g.type=t.value});
+  snap(); let n=0, dup=0; const ref=isRef();
+  for(const g of G){if(!g.on) continue; for(const pid in g.hits){let bm=null, k=1; const p=S.pages.find(q=>q.id===pid); if(ref&&p){bm=await ensureBitmap(p); if(bm) k=bm.width/p.w}
+    for(const m of g.hits[pid]){if(m.zone||m.drop) continue; if(S.marks.some(q=>q.page===pid&&q.type===g.type&&Math.hypot(q.x-m.x,q.y-m.y)<Math.min(m.w,m.h)*.6)){dup++; continue}
+      const mk={id:uid(),page:pid,type:g.type,x:m.x,y:m.y,pending:true,src:'match',score:Math.round(m.score*100)/100};
+      if(ref&&bm){const X=Math.max(0,Math.round((m.x-m.w*.42)*k)), Y=Math.max(0,Math.round((m.y-m.h*.42)*k)); const cls=phColorOf(bm.getContext('2d').getImageData(X,Y,Math.max(1,Math.min(Math.round(m.w*.84*k),bm.width-X)),Math.max(1,Math.min(Math.round(m.h*.84*k),bm.height-Y))).data); const a=legendColAct(cls)||PH_DEF[cls]||'new'; if(a!=='new') mk.act=a}
+      S.marks.push(mk); n++}}}
+  changed(); draw(); toast(`${T('已加入')} ${n} ${T('个构件（待确认）')}${dup?`，${dup} ${T('个已存在跳过')}`:''}`);
+  if(review&&n) rvStart()}
+$('#lgAuto').onclick=legendAutoCount;
+document.addEventListener('keydown',e=>{if((e.key==='g'||e.key==='G')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&currentTab==='takeoff'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&!($('#ftModal')&&$('#ftModal').open)&&!RV.on){e.preventDefault(); legendAutoCount()}});
+// after a PDF is opened: if the sheet carries a legend, say so right away and offer the one-click count
+const _openFiles=openFiles; openFiles=async function(files){await _openFiles.apply(this,arguments); const p=page(); if(!p||p.kind!=='pdf') return;
+  const E=await lgEntries(p).catch(()=>[]); const out=$('#detectOut'); if(!E.length||!out) return; const ty=[...new Set(E.map(e=>e.type))];
+  out.innerHTML=`<div class="selbox" style="margin:0"><b>${T('这张图有图例')}</b>：${ty.slice(0,6).map(t=>esc(ITEM[t].zh)).join('、')}${ty.length>6?' …':''}<div class="toolbar" style="margin-top:6px"><button class="btn sm primary" id="lgAuto2">${T('按图例一键计数（全部图纸）')}</button></div></div>`;
+  $('#lgAuto2').onclick=legendAutoCount};
 /* ---------- checks: show what needs attention first ---------- */
 const _rc=renderChecks; renderChecks=function(){_rc.apply(this,arguments); const box=$('#checks'); if(!box) return; const rank=el=>el.querySelector('.pill.bad')?0:el.querySelector('.pill.warn')?1:2; [...box.children].map((el,i)=>[rank(el),i,el]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).forEach(x=>box.appendChild(x[2]))};
 /* ---------- hooks ---------- */

@@ -1,0 +1,14 @@
+const {chromium}=require('playwright'); const fs=require('fs');
+(async()=>{const b=await chromium.launch(); const pg=await b.newPage({viewport:{width:1500,height:950}}); const errs=[]; pg.on('pageerror',e=>errs.push(e.message));
+  await pg.goto('file://'+process.argv[2]); await pg.waitForTimeout(1200); await pg.getByText('图纸算量').first().click(); await pg.waitForTimeout(300);
+  const b64=fs.readFileSync(process.argv[3]).toString('base64'); const pages=process.argv.slice(4);
+  await pg.evaluate(async b64=>{const bin=atob(b64),u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+    S.marks=[]; await openFiles([new File([u],'plan.pdf',{type:'application/pdf'})]); renderAll&&0},b64).catch(e=>errs.push(e.message));
+  await pg.waitForTimeout(500); console.log('BANNER:',await pg.evaluate(()=>$('#detectOut').innerText));
+  const t0=Date.now(); await pg.keyboard.press('g'); await pg.waitForSelector('#ftModal[open]',{timeout:60000}); console.log('ms',Date.now()-t0);
+  console.log('MODAL:',(await pg.evaluate(()=>$('#ftModal').innerText)).replace(/\n+/g,' | ').slice(0,700));
+  await pg.screenshot({path:'lga_modal.png'});
+  await pg.getByText('加入并逐个核对').click(); await pg.waitForTimeout(1000);
+  console.log('MARKS:',await pg.evaluate(()=>JSON.stringify(S.marks.reduce((o,m)=>(o[m.type+(m.pending?'*':'')]=(o[m.type+(m.pending?'*':'')]||0)+1,o),{}))));
+  console.log('RVBAR:',await pg.evaluate(()=>(document.querySelector('#rvBar')||{}).innerText));
+  await pg.screenshot({path:'lga_review.png'}); console.log('ERR',errs); await b.close()})();
