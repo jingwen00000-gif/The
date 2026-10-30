@@ -418,7 +418,7 @@ const GENS = [
         const h = int(r, 1, 12), m = age === 4 ? 0 : (r() < .5 ? 0 : 30);
         const t = `${h}:${m ? '30' : '00'}`, draw = age === 6 && i >= 3;
         ans.push(`${i + 1}. ${t}`);
-        cells.push(`<div style="text-align:center">${clockSvg(h, m, 58, !draw)}
+        cells.push(`<div style="text-align:center">${clockSvg(h, m, 54, !draw)}
           <div style="font-size:7mm;margin-top:2mm">${draw ? L.drawTime(t) : '<span class="box" style="width:16mm"></span> : <span class="box" style="width:16mm"></span>'}</div></div>`);
       }
       return {

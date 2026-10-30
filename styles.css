@@ -137,7 +137,10 @@ button { font-family: inherit; }
   #ui { display: none !important; }
   #pages { padding: 0; gap: 0; display: block; }
   #pages .zoom { zoom: 1 !important; display: block; }
-  .page { box-shadow: none; break-after: page; page-break-after: always; }
-  .page:last-child { break-after: auto; page-break-after: auto; }
+  /* Safari (iOS/macOS) adds its own margins + header/footer and shrinks the page to fit;
+     a full 297mm box then spills a sliver onto the next sheet, giving a blank page after every page.
+     Keep the box shorter than A4 and break *before* each page instead of after. */
+  .page { box-shadow: none; height: 286mm; padding: 10mm 15mm 6mm; margin: 0 auto; break-inside: avoid; page-break-inside: avoid; }
+  .page + .page { break-before: page; page-break-before: always; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
