@@ -1,0 +1,14 @@
+{
+  "name": "宝贝练习本",
+  "short_name": "练习本",
+  "description": "1–6 岁儿童学习题目生成器，打印或保存为 PDF",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff8f0",
+  "theme_color": "#ff8a3d",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

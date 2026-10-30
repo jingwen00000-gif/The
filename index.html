@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>宝贝练习本</title>
+<meta name="description" content="1–6 岁儿童学习题目生成器：按年龄选择题型，一键生成 A4 练习页，打印或保存为 PDF。">
+<meta name="theme-color" content="#ff8a3d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="宝贝练习本">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="ui">
+  <header class="app-head">
+    <img src="icon.svg" alt="" width="40" height="40">
+    <div>
+      <h1>宝贝练习本</h1>
+      <p>1–6 岁 · 按年龄出题 · 打印 / 存为 PDF</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2><span class="step">1</span>孩子年龄</h2>
+    <div id="ages" class="chips"></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">2</span>选择题型</h2>
+    <p class="hint">点选需要的题型（灰色表示不适合当前年龄）。</p>
+    <div id="cats"></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">3</span>打印设置</h2>
+    <label class="row">孩子姓名（可选）
+      <input id="childName" type="text" maxlength="12" placeholder="印在每页抬头">
+    </label>
+    <label class="row">总页数
+      <span class="stepper">
+        <button type="button" data-d="-1" aria-label="减少">−</button>
+        <output id="pagesOut">4</output>
+        <button type="button" data-d="1" aria-label="增加">＋</button>
+      </span>
+    </label>
+    <label class="row check"><input id="withAnswers" type="checkbox" checked> 附答案页（给家长）</label>
+  </section>
+
+  <div class="actions">
+    <button id="genBtn" class="primary" type="button">生成练习题</button>
+  </div>
+
+  <section id="previewWrap" hidden>
+    <div class="preview-bar">
+      <strong id="previewInfo"></strong>
+      <span class="spacer"></span>
+      <button id="reBtn" type="button">换一批</button>
+      <button id="printBtn" class="primary" type="button">打印 / 存为 PDF</button>
+    </div>
+    <p class="hint">iPhone：打印界面里双指放大预览 → 分享 → 存储到“文件”即得 PDF；安卓：打印机选“另存为 PDF”。纸张选 A4，边距选“无”。</p>
+  </section>
+</div>
+
+<div id="pages" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
