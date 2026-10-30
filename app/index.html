@@ -4993,7 +4993,7 @@ ${t.terms?`<div class="page"><h2>Schedule C: Terms and Conditions</h2>${schedHTM
 /* company quote sheet (e.g. a contractor's own per-level pricing workbook) */
 function sheetQty(lv){const C=compute(lv), R=S.rates; const q={...C.cnt}; for(const k in C.g){const [, mat, dn]=k.split('|'); const key='P|'+mat+'|'+dn; q[key]=(q[key]||0)+C.g[k]} return {q,C}}
 function costRateOf(key){const R=S.rates, L=labourRate(+R.labour||0); if(key.startsWith('P|')){const [,m,d]=key.split('|'); const r=R.pipe[m+'-'+d]||{m:0,h:0}; return r.m*(1+(R.waste||0)/100)*(1+(R.fit||0)/100)+r.h*L}
-  const [k,a]=key.split('@'); const it=ITEM[k]; const rt=R.items[k]||(it?{m:it.m,h:it.h}:{m:0,h:0}); if(!a) return rt.m+rt.h*L; const ov=(R.actRates||{})[key]; if(ov) return (+ov.m||0)+(+ov.h||0)*L; const F=actF(a); return rt.m*F.m+F.x+rt.h*F.h*L}
+  const [k,a]=key.split('@'); const it=ITEM[k]; const rt=R.items[k]||(it?{m:it.m,h:it.h}:{m:0,h:0}); if(!a) return rt.m+rt.h*L; if(a==='retain') return 0; const ov=(R.actRates||{})[key]; if(ov) return (+ov.m||0)+(+ov.h||0)*L; const F=actF(a); return rt.m*F.m+F.x+rt.h*F.h*L}
 function keyLabel(key){if(key.startsWith('P|')){const [,m,d]=key.split('|'); return `${pipeLbl(m,d,'en')} – supply and install (m)`} const [k,a]=key.split('@'); const it=ITEM[k]; const n=it?it.en.split(/ incl\./)[0]:k; return a==='remove'?'Remove existing '+n.toLowerCase():a==='relocate'?'Relocate existing '+n.toLowerCase():n}
 function keySec(key,sheet){const ids=sheet.sections.map(s=>s.id); const pick=id=>ids.includes(id)?id:ids[0]; if(key.startsWith('P|')) return pick('WET'); const it=ITEM[key.split('@')[0]]; const s=it?it.sys:'SPR';
   return pick({SPR:'WET',DEMO:'WET',HYD:'HYD',HR:'HYD',DET:'DRY',PORT:'PORT',EM:'EM'}[s]||'WET')}
@@ -5008,7 +5008,8 @@ function exportCoSheet(){const c=co(), sh=c.sheet; if(!sh) return; const mk=(+sh
       for(const r of sh.rows.filter(x=>x.sec===sec.id)){const qty=r.keys.reduce((a,k)=>a+(q[k]||0),0); const n=rows.length+1; r.keys.forEach(k=>{if(q[k]) used.add(k)});
         rows.push([r.text,{v:Math.round(qty*10)/10,s:5},r.rate==null?'':{v:r.rate,s:2},{f:`B${n}*C${n}`,s:2},{f:`C${n}*(1+$F$${mkRef})`,s:2},{f:`D${n}*$F$${mkRef}`,s:2},{f:`D${n}+F${n}`,s:2}])}
       // FireTake quantities that the sheet has no row for
-      Object.keys(q).filter(k=>q[k]>0&&!usedKeys.has(k)).filter(k=>keySec(k,sh)===sec.id).forEach(k=>{const n=rows.length+1; used.add(k);
+      // existing-to-remain devices are not priced
+      Object.keys(q).filter(k=>q[k]>0&&!usedKeys.has(k)&&!/@retain$/.test(k)).filter(k=>keySec(k,sh)===sec.id).forEach(k=>{const n=rows.length+1; used.add(k);
         rows.push([keyLabel(k)+' (from FireTake)',{v:Math.round(q[k]*10)/10,s:5},{v:Math.round(costRateOf(k)*100)/100,s:2},{f:`B${n}*C${n}`,s:2},{f:`C${n}*(1+$F$${mkRef})`,s:2},{f:`D${n}*$F$${mkRef}`,s:2},{f:`D${n}+F${n}`,s:2}])});
       const r1=rows.length; rows.push([{v:`${(sec.title||sec.name).toUpperCase()} - SUB-TOTALS`,s:1},'','',{f:`SUM(D${r0}:D${r1})`,s:3},'',{f:`SUM(F${r0}:F${r1})`,s:3},{f:`SUM(G${r0}:G${r1})`,s:3}]); secRef[sec.id]=rows.length}
     rows.push([]); rows.push(['','','',{v:'Cost',s:1},'','',{v:'Sell',s:1}]); rows.push(['','','',{f:sh.sections.map(s=>'D'+secRef[s.id]).join('+'),s:3},'','',{f:sh.sections.map(s=>'G'+secRef[s.id]).join('+'),s:3}]);
