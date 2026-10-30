@@ -1,5 +1,5 @@
 // Offline cache: the app works without network once opened.
-const CACHE = 'bblx-v1';
+const CACHE = 'bblx-v2';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'icon.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));

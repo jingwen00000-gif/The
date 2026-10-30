@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>宝贝练习本</title>
-<meta name="description" content="1–6 岁儿童学习题目生成器：按年龄选择题型，一键生成 A4 练习页，打印或保存为 PDF。">
+<meta name="description" content="1–6 岁儿童学习题目生成器（中文 / English）：按年龄选择题型，一键生成 A4 练习页，打印或保存为 PDF。">
 <meta name="theme-color" content="#ff8a3d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="宝贝练习本">
@@ -21,49 +21,50 @@
   <header class="app-head">
     <img src="icon.svg" alt="" width="40" height="40">
     <div>
-      <h1>宝贝练习本</h1>
-      <p>1–6 岁 · 按年龄出题 · 打印 / 存为 PDF</p>
+      <h1 data-i18n="app">宝贝练习本</h1>
+      <p data-i18n="sub">1–6 岁 · 按年龄出题 · 打印 / 存为 PDF</p>
     </div>
+    <div id="langs" class="chips lang-switch" role="group" aria-label="Language / 语言"></div>
   </header>
 
   <section class="card">
-    <h2><span class="step">1</span>孩子年龄</h2>
+    <h2><span class="step">1</span><span data-i18n="age">孩子年龄</span></h2>
     <div id="ages" class="chips"></div>
   </section>
 
   <section class="card">
-    <h2><span class="step">2</span>选择题型</h2>
-    <p class="hint">点选需要的题型（灰色表示不适合当前年龄）。</p>
+    <h2><span class="step">2</span><span data-i18n="types">选择题型</span></h2>
+    <p class="hint" data-i18n="typesHint">点选需要的题型（灰色表示不适合当前年龄）。</p>
     <div id="cats"></div>
   </section>
 
   <section class="card">
-    <h2><span class="step">3</span>打印设置</h2>
-    <label class="row">孩子姓名（可选）
+    <h2><span class="step">3</span><span data-i18n="settings">打印设置</span></h2>
+    <label class="row"><span data-i18n="nameL">孩子姓名（可选）</span>
       <input id="childName" type="text" maxlength="12" placeholder="印在每页抬头">
     </label>
-    <label class="row">总页数
+    <label class="row"><span data-i18n="pages">总页数</span>
       <span class="stepper">
         <button type="button" data-d="-1" aria-label="减少">−</button>
         <output id="pagesOut">4</output>
         <button type="button" data-d="1" aria-label="增加">＋</button>
       </span>
     </label>
-    <label class="row check"><input id="withAnswers" type="checkbox" checked> 附答案页（给家长）</label>
+    <label class="row check"><input id="withAnswers" type="checkbox" checked> <span data-i18n="answers">附答案页（给家长）</span></label>
   </section>
 
   <div class="actions">
-    <button id="genBtn" class="primary" type="button">生成练习题</button>
+    <button id="genBtn" class="primary" type="button" data-i18n="gen">生成练习题</button>
   </div>
 
   <section id="previewWrap" hidden>
     <div class="preview-bar">
       <strong id="previewInfo"></strong>
       <span class="spacer"></span>
-      <button id="reBtn" type="button">换一批</button>
-      <button id="printBtn" class="primary" type="button">打印 / 存为 PDF</button>
+      <button id="reBtn" type="button" data-i18n="re">换一批</button>
+      <button id="printBtn" class="primary" type="button" data-i18n="print">打印 / 存为 PDF</button>
     </div>
-    <p class="hint">iPhone：打印界面里双指放大预览 → 分享 → 存储到“文件”即得 PDF；安卓：打印机选“另存为 PDF”。纸张选 A4，边距选“无”。</p>
+    <p class="hint" data-i18n="printHint">iPhone：打印界面里双指放大预览 → 分享 → 存储到“文件”即得 PDF；安卓：打印机选“另存为 PDF”。纸张选 A4，边距选“无”。</p>
   </section>
 </div>
 

@@ -1,5 +1,5 @@
 'use strict';
-/* 宝贝练习本 — worksheet generator for ages 1–6.
+/* 宝贝练习本 / Little Learner — bilingual (zh/en) worksheet generator for ages 1–6.
  * Every worksheet type is a generator: gen(rand, age) -> { tip, body, answers?, answerSvg? }.
  * Pages are plain HTML at A4 size; printing uses the browser's own print / Save-as-PDF. */
 
@@ -28,11 +28,12 @@ const emo = (e, mm, cls = '') => `<span class="emo ${cls}" style="font-size:${mm
 const PICS = ['🍎', '🍌', '🍓', '🍊', '🍇', '🍉', '🍒', '🥕', '🐶', '🐱', '🐰', '🐻', '🐼', '🐸', '🐥', '🐟', '🦋', '🐞', '🚗', '🚌', '⭐', '🌸', '🎈', '⚽'];
 const ANIMALS = ['🐶', '🐱', '🐰', '🐻', '🐼', '🐸', '🐥', '🐟', '🦋', '🐞', '🐘', '🦒', '🐢', '🦆', '🐌', '🦀'];
 
+// category colors; names live in I18N.cats
 const CATS = {
-  math:  { name: '数学启蒙', color: '#ff8a3d' },
-  lang:  { name: '语言识字', color: '#e2557a' },
-  motor: { name: '精细动作', color: '#2fa37a' },
-  logic: { name: '认知逻辑', color: '#4a7bd8' },
+  math:  { color: '#ff8a3d' },
+  lang:  { color: '#e2557a' },
+  motor: { color: '#2fa37a' },
+  logic: { color: '#4a7bd8' },
 };
 
 // ---------- SVG pieces ----------
@@ -58,8 +59,8 @@ function shapeSvg(kind, cx, cy, s, stroke = '#222', sw = 1.4, fill = 'none') {
   }
   return '';
 }
-const SHAPE_NAMES = { circle: '圆形', square: '正方形', triangle: '三角形', diamond: '菱形', star: '星星', heart: '爱心' };
-const COLORS = [['红色', '#e53935'], ['黄色', '#fdd835'], ['蓝色', '#1e88e5'], ['绿色', '#43a047'], ['橙色', '#fb8c00'], ['紫色', '#8e24aa']];
+// color swatches; names live in I18N.colors (same order)
+const COLORS = [['red', '#e53935'], ['yellow', '#fdd835'], ['blue', '#1e88e5'], ['green', '#43a047'], ['orange', '#fb8c00'], ['purple', '#8e24aa']];
 
 function clockSvg(h, m, size, hands = true) {
   const c = 50, out = [];
@@ -151,81 +152,139 @@ function mazeSvg(m, cs, showPath, start, goal) {
   return L.join('');
 }
 
+// ---------- i18n ----------
+const I18N = {
+  zh: {
+    app: '宝贝练习本', sub: '1–6 岁 · 按年龄出题 · 打印 / 存为 PDF',
+    age: '孩子年龄', types: '选择题型', typesHint: '点选需要的题型（灰色表示不适合当前年龄）。',
+    settings: '打印设置', nameL: '孩子姓名（可选）', namePh: '印在每页抬头', pages: '总页数',
+    answers: '附答案页（给家长）', gen: '生成练习题', re: '换一批', print: '打印 / 存为 PDF',
+    printHint: 'iPhone：打印界面里双指放大预览 → 分享 → 存储到“文件”即得 PDF；安卓：打印机选“另存为 PDF”。纸张选 A4，边距选“无”。',
+    ageChip: n => `${n} 岁`, ageRange: (a, b) => `${a}–${b}岁`,
+    info: (a, p, ans) => `${a} 岁 · ${p} 页${ans ? ' + 答案' : ''}`,
+    name: '姓名', date: '日期', footer: (a, n) => `宝贝练习本 · 适合 ${a} 岁 · 第 ${n} 页`,
+    key: '参考答案', parents: '家长用', pageN: n => `第 ${n} 页`, sep: '、',
+    cats: { math: '数学启蒙', lang: '语言识字', motor: '精细动作', logic: '认知逻辑' },
+    shapes: { circle: '圆形', square: '正方形', triangle: '三角形', diamond: '菱形', star: '星星', heart: '爱心' },
+    colors: ['红色', '黄色', '蓝色', '绿色', '橙色', '紫色'],
+    nth: n => `第${n}个`, left: '左', right: '右', big: '大', small: '小',
+    circleBig: '圈出最<b>大</b>的', circleSmall: '圈出最<b>小</b>的', empty: '（空）',
+    drawTime: t => `请画出 <b>${t}</b>`,
+  },
+  en: {
+    app: 'Little Learner', sub: 'Ages 1–6 · Level-matched worksheets · Print / Save as PDF',
+    age: 'Child’s age', types: 'Worksheet types', typesHint: 'Tap to choose (greyed out = not for this age).',
+    settings: 'Print settings', nameL: 'Child’s name (optional)', namePh: 'Printed on every page', pages: 'Pages',
+    answers: 'Include answer key (for parents)', gen: 'Make worksheets', re: 'New set', print: 'Print / Save as PDF',
+    printHint: 'iPhone: in the print screen, pinch out on the preview → Share → Save to Files for a PDF. Android: choose “Save as PDF” as the printer. Use A4 paper, margins “None”.',
+    ageChip: n => `Age ${n}`, ageRange: (a, b) => `${a}–${b}`,
+    info: (a, p, ans) => `Age ${a} · ${p} page${p > 1 ? 's' : ''}${ans ? ' + answers' : ''}`,
+    name: 'Name', date: 'Date', footer: (a, n) => `Little Learner · Age ${a} · Page ${n}`,
+    key: 'Answer key', parents: 'Parents', pageN: n => `Page ${n}`, sep: ', ',
+    cats: { math: 'Math', lang: 'Language', motor: 'Fine motor', logic: 'Thinking' },
+    shapes: { circle: 'Circle', square: 'Square', triangle: 'Triangle', diamond: 'Diamond', star: 'Star', heart: 'Heart' },
+    colors: ['red', 'yellow', 'blue', 'green', 'orange', 'purple'],
+    nth: n => `#${n}`, left: 'left', right: 'right', big: 'big', small: 'small',
+    circleBig: 'Circle the <b>biggest</b>', circleSmall: 'Circle the <b>smallest</b>', empty: '(none)',
+    drawTime: t => `Draw <b>${t}</b>`,
+  },
+};
+let lang = 'zh', L = I18N.zh;
+const tr = (zh, en) => (lang === 'en' ? en : zh);
+
 // ---------- content data ----------
 const HANZI_4 = '一yī 二èr 三sān 人rén 口kǒu 大dà 小xiǎo 上shàng 下xià 日rì 月yuè 山shān 水shuǐ 火huǒ 木mù 田tián 中zhōng 天tiān 十shí 土tǔ';
 const HANZI_5 = '手shǒu 目mù 耳ěr 牛niú 羊yáng 马mǎ 鸟niǎo 云yún 雨yǔ 花huā 草cǎo 我wǒ 你nǐ 他tā 爸bà 妈mā 子zǐ 女nǚ 门mén 不bù 来lái 去qù 出chū 入rù 左zuǒ 右yòu 白bái 石shí 禾hé 竹zhú 米mǐ 飞fēi 车chē 王wáng 文wén 心xīn 个gè 头tóu 足zú 力lì';
 const parseHanzi = s => s.split(' ').map(t => [t[0], t.slice(1)]);
 const PINYIN = [
-  { name: '单韵母', items: ['a', 'o', 'e', 'i', 'u', 'ü'], age: 5 },
-  { name: '声母（一）', items: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l'], age: 5 },
-  { name: '声母（二）', items: ['g', 'k', 'h', 'j', 'q', 'x'], age: 5 },
-  { name: '声母（三）', items: ['zh', 'ch', 'sh', 'r', 'z', 'c', 's', 'y', 'w'], age: 6 },
-  { name: '复韵母', items: ['ai', 'ei', 'ui', 'ao', 'ou', 'iu', 'ie', 'üe', 'er'], age: 6 },
-  { name: '鼻韵母', items: ['an', 'en', 'in', 'un', 'ün', 'ang', 'eng', 'ing', 'ong'], age: 6 },
+  { name: ['单韵母', 'Simple finals'], items: ['a', 'o', 'e', 'i', 'u', 'ü'], age: 5 },
+  { name: ['声母（一）', 'Initials (1)'], items: ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l'], age: 5 },
+  { name: ['声母（二）', 'Initials (2)'], items: ['g', 'k', 'h', 'j', 'q', 'x'], age: 5 },
+  { name: ['声母（三）', 'Initials (3)'], items: ['zh', 'ch', 'sh', 'r', 'z', 'c', 's', 'y', 'w'], age: 6 },
+  { name: ['复韵母', 'Compound finals'], items: ['ai', 'ei', 'ui', 'ao', 'ou', 'iu', 'ie', 'üe', 'er'], age: 6 },
+  { name: ['鼻韵母', 'Nasal finals'], items: ['an', 'en', 'in', 'un', 'ün', 'ang', 'eng', 'ing', 'ong'], age: 6 },
 ];
+const WORDS = [['🐱', 'cat', '猫'], ['🐶', 'dog', '狗'], ['☀️', 'sun', '太阳'], ['🐷', 'pig', '猪'], ['🚌', 'bus', '公交车'], ['🎩', 'hat', '帽子'],
+  ['🐝', 'bee', '蜜蜂'], ['🥚', 'egg', '鸡蛋'], ['🦊', 'fox', '狐狸'], ['🐔', 'hen', '母鸡'], ['🛏️', 'bed', '床'], ['📦', 'box', '盒子'],
+  ['🚗', 'car', '汽车'], ['🐮', 'cow', '奶牛'], ['🐜', 'ant', '蚂蚁'], ['👜', 'bag', '包'], ['🖊️', 'pen', '笔'], ['🐟', 'fish', '鱼'],
+  ['🍎', 'apple', '苹果'], ['⭐', 'star', '星星'], ['🌙', 'moon', '月亮'], ['🐸', 'frog', '青蛙'], ['🦆', 'duck', '鸭子'], ['🎂', 'cake', '蛋糕']];
+
+// four-line writing rows (pinyin / English); each row: optional label, model, 2 grey copies, empty space
+function fourLineSvg(items, labels, slotW = 29) {
+  const rowH = 21, x0 = labels ? 18 : 0;
+  const out = [`<svg viewBox="0 0 180 ${rowH * items.length}" width="180mm" height="${rowH * items.length}mm" font-family="Andika, Arial, sans-serif">`];
+  items.forEach((it, i) => {
+    const y = i * rowH + 3;
+    out.push([0, 5, 10, 15].map((d, k) => `<line x1="${x0}" x2="180" y1="${y + d}" y2="${y + d}" stroke="${k === 2 ? '#e7a3b8' : '#bbb'}" stroke-width="${k === 2 ? .5 : .35}"/>`).join(''));
+    if (labels) out.push(`<text x="8" y="${y + 12}" font-size="12" text-anchor="middle" class="emo">${labels[i]}</text>`);
+    for (let j = 0; j < 3; j++) out.push(`<text x="${x0 + 3 + j * slotW}" y="${y + 10}" font-size="11" fill="${j === 0 ? '#222' : '#cfcfcf'}">${it}</text>`);
+  });
+  out.push('</svg>');
+  return out.join('');
+}
 
 // ---------- worksheet generators ----------
 const GENS = [
   {
-    id: 'coloring', name: '形状涂色', cat: 'motor', ages: [1, 3],
+    id: 'coloring', name: ['形状涂色', 'Color the Shapes'], cat: 'motor', ages: [1, 3],
     gen(r, age) {
       const n = age <= 2 ? 4 : 6;
-      const shapes = sample(r, Object.keys(SHAPE_NAMES), n), cols = sample(r, COLORS, n);
+      const shapes = sample(r, Object.keys(L.shapes), n), cols = sample(r, range(0, 5), n);
       const cells = shapes.map((s, i) => `<div style="text-align:center">
         <svg viewBox="0 0 80 80" width="${age <= 2 ? 72 : 52}mm" height="${age <= 2 ? 72 : 52}mm">${shapeSvg(s, 40, 41, 32, '#222', 2.2)}</svg>
-        <div style="font-size:5.5mm"><span style="display:inline-block;width:5mm;height:5mm;border-radius:50%;background:${cols[i][1]};vertical-align:-0.6mm"></span> ${SHAPE_NAMES[s]} · ${cols[i][0]}</div></div>`);
-      return { tip: '按照下面的提示，给每个图形涂上颜色。', body: `<div class="${age <= 2 ? 'grid2' : 'grid2'}" style="grid-template-columns:repeat(${age <= 2 ? 2 : 3},1fr)">${cells.join('')}</div>` };
+        <div style="font-size:5.5mm"><span style="display:inline-block;width:5mm;height:5mm;border-radius:50%;background:${COLORS[cols[i]][1]};vertical-align:-0.6mm"></span> ${L.shapes[s]} · ${L.colors[cols[i]]}</div></div>`);
+      return { tip: tr('按照下面的提示，给每个图形涂上颜色。', 'Color each shape with the color shown.'), body: `<div class="grid2" style="grid-template-columns:repeat(${age <= 2 ? 2 : 3},1fr)">${cells.join('')}</div>` };
     },
   },
   {
-    id: 'traceLines', name: '描线练习', cat: 'motor', ages: [1, 4],
+    id: 'traceLines', name: ['描线练习', 'Tracing Lines'], cat: 'motor', ages: [1, 4],
     gen(r, age) {
       const pool = ['straight', 'bumps'].concat(age >= 2 ? ['wave', 'zigzag'] : [], age >= 3 ? ['square'] : [], age >= 4 ? ['loops'] : []);
       const rows = age <= 2 ? 4 : 6, H = age <= 2 ? 52 : 36, A = age <= 2 ? 12 : 8;
       const out = [];
       for (let i = 0; i < rows; i++) {
         const type = i < pool.length ? pool[(i + int(r, 0, pool.length - 1)) % pool.length] : pick(r, pool);
-        const pts = tracePoints(type, 24, 156, H / 2, A).map(p => p.map(v => v.toFixed(2)).join(',')).join(' ');
+        const tp = tracePoints(type, 24, 156, H / 2, A), pts = tp.map(p => p.map(v => v.toFixed(2)).join(',')).join(' ');
         const [a, b] = sample(r, PICS, 2);
         out.push(`<svg viewBox="0 0 180 ${H}" width="180mm" height="${H}mm">
           <polyline points="${pts}" fill="none" stroke="#9a9a9a" stroke-width="${age <= 2 ? 1.6 : 1.1}" stroke-dasharray="1.6 2.2" stroke-linecap="round"/>
-          <circle cx="24" cy="${tracePoints(type, 24, 156, H / 2, A)[0][1]}" r="1.8" fill="#2fa37a"/>
+          <circle cx="${tp[0][0]}" cy="${tp[0][1]}" r="1.8" fill="#2fa37a"/>
           <text x="10" y="${H / 2 + 4.5}" font-size="13" text-anchor="middle" class="emo">${a}</text>
           <text x="170" y="${H / 2 + 4.5}" font-size="13" text-anchor="middle" class="emo">${b}</text></svg>`);
       }
-      return { tip: '从绿点出发，沿着虚线画到另一边。', body: out.join('') };
+      return { tip: tr('从绿点出发，沿着虚线画到另一边。', 'Start at the green dot and follow the dotted line.'), body: out.join('') };
     },
   },
   {
-    id: 'matching', name: '连一连', cat: 'logic', ages: [1, 4],
+    id: 'matching', name: ['连一连', 'Match Up'], cat: 'logic', ages: [1, 4],
     gen(r, age) {
       const n = age <= 2 ? 3 : age === 3 ? 4 : 5;
       const left = sample(r, ANIMALS, n), right = shuffle(r, left), shadow = age >= 3, size = n <= 3 ? 26 : 19;
       const col = (arr, dotRight, sh) => `<div>${arr.map(e => `<div class="mitem">${dotRight ? '' : '<span class="dot"></span>'}${emo(e, size, sh ? 'shadow' : '')}${dotRight ? '<span class="dot"></span>' : ''}</div>`).join('')}</div>`;
       return {
-        tip: shadow ? '找一找每个小动物的影子，用线连起来。' : '把一样的小动物用线连起来。',
+        tip: shadow ? tr('找一找每个小动物的影子，用线连起来。', 'Draw a line from each animal to its shadow.') : tr('把一样的小动物用线连起来。', 'Draw a line between the matching animals.'),
         body: `<div class="mcol" style="padding:0 12mm">${col(left, true, false)}${col(right, false, shadow)}</div>`,
-        answers: left.map(e => `${e}→第${right.indexOf(e) + 1}个`),
+        answers: left.map(e => `${e}→${L.nth(right.indexOf(e) + 1)}`),
       };
     },
   },
   {
-    id: 'sizeCompare', name: '比大小', cat: 'logic', ages: [1, 3],
+    id: 'sizeCompare', name: ['比大小', 'Big & Small'], cat: 'logic', ages: [1, 3],
     gen(r, age) {
       const rows = 5, k = age <= 2 ? 2 : 3, ans = [], out = [];
       for (let i = 0; i < rows; i++) {
         const e = pick(r, PICS), big = i % 2 === 0;
         const sizes = shuffle(r, k === 2 ? [12, 26] : [10, 17, 26]);
         const target = big ? Math.max(...sizes) : Math.min(...sizes);
-        ans.push(`${i + 1}.${big ? '大' : '小'}:第${sizes.indexOf(target) + 1}个`);
-        out.push(`<div class="rowline"><span style="font-size:6mm;width:30mm">圈出最${big ? '<b>大</b>' : '<b>小</b>'}的</span>
+        ans.push(`${i + 1}. ${big ? L.big : L.small}: ${L.nth(sizes.indexOf(target) + 1)}`);
+        out.push(`<div class="rowline"><span style="font-size:6mm;width:42mm">${big ? L.circleBig : L.circleSmall}</span>
           <span class="items" style="flex:1;justify-content:space-around;align-items:flex-end">${sizes.map(s => emo(e, s)).join('')}</span></div>`);
       }
-      return { tip: '看一看，按要求圈一圈。', body: out.join(''), answers: ans };
+      return { tip: tr('看一看，按要求圈一圈。', 'Look carefully and circle the right one.'), body: out.join(''), answers: ans };
     },
   },
   {
-    id: 'patterns', name: '找规律', cat: 'logic', ages: [2, 6],
+    id: 'patterns', name: ['找规律', 'Patterns'], cat: 'logic', ages: [2, 6],
     gen(r, age) {
       const units = age <= 3 ? ['AB'] : age === 4 ? ['AB', 'AAB', 'ABB'] : ['ABC', 'AABB', 'ABB', 'ABCC', 'AAB'];
       const rows = age <= 3 ? 4 : 6, sz = age <= 3 ? 14 : 11, out = [], ans = [];
@@ -235,15 +294,15 @@ const GENS = [
         const seq = range(0, len - 1).map(j => map(u[j % u.length]));
         const correct = seq[len - 1];
         const opts = shuffle(r, Array.from(new Set([correct, ...sym, pick(r, PICS)])).slice(0, 3));
-        ans.push(`${i + 1}.${correct}`);
+        ans.push(`${i + 1}. ${correct}`);
         out.push(`<div class="rowline"><span class="items">${seq.slice(0, -1).map(e => emo(e, sz)).join('')}<span class="box" style="width:${sz + 2}mm;height:${sz + 2}mm;border-style:dashed"></span></span>
           <span style="white-space:nowrap;border-left:.3mm solid #ddd;padding-left:3mm">${opts.map(e => emo(e, sz * .8)).join(' ')}</span></div>`);
       }
-      return { tip: '下一个应该是谁？在右边圈出来，或画在方框里。', body: out.join(''), answers: ans };
+      return { tip: tr('下一个应该是谁？在右边圈出来，或画在方框里。', 'What comes next? Circle it on the right or draw it in the box.'), body: out.join(''), answers: ans };
     },
   },
   {
-    id: 'count', name: '数一数', cat: 'math', ages: [2, 6],
+    id: 'count', name: ['数一数', 'Counting'], cat: 'math', ages: [2, 6],
     gen(r, age) {
       const max = age <= 3 ? 5 : age <= 5 ? 10 : 15, rows = age <= 3 ? 4 : 6, sz = age <= 3 ? 14 : 9;
       const out = [], ans = [];
@@ -256,59 +315,60 @@ const GENS = [
           while (opts.size < 3) opts.add(int(r, 1, max));
           right = [...opts].sort((a, b) => a - b).map(v => `<span class="opt">${v}</span>`).join('');
         } else right = '<span class="box"></span>';
-        ans.push(`${i + 1}.${n}`);
+        ans.push(`${i + 1}. ${n}`);
         out.push(`<div class="rowline"><span class="items" style="flex:1">${items}</span><span style="white-space:nowrap">${right}</span></div>`);
       }
-      return { tip: age <= 3 ? '数一数有几个，圈出正确的数字。' : '数一数有几个，把数字写在方框里。', body: out.join(''), answers: ans };
+      return {
+        tip: age <= 3 ? tr('数一数有几个，圈出正确的数字。', 'Count them and circle the right number.') : tr('数一数有几个，把数字写在方框里。', 'Count them and write the number in the box.'),
+        body: out.join(''), answers: ans,
+      };
     },
   },
   {
-    id: 'traceNumbers', name: '数字描红', cat: 'motor', ages: [3, 5],
+    id: 'traceNumbers', name: ['数字描红', 'Number Tracing'], cat: 'motor', ages: [3, 5],
     gen(r, age) {
       const digits = age === 3 ? [1, 2, 3, 4, 5] : sample(r, range(0, 9), 8).sort((a, b) => a - b);
       const out = digits.map(d => `<div class="tracecells">
         <span class="emo" style="width:22mm;font-size:4.2mm;color:#888;text-align:center">${'●'.repeat(d) || '○'}</span>
         ${range(0, 6).map(j => `<div class="tz" style="width:21.5mm;height:${age === 3 ? 30 : 23}mm"><span class="digit ${j === 0 ? '' : j <= 4 ? 'gray' : ''}">${j <= 4 ? d : ''}</span></div>`).join('')}</div>`);
-      return { tip: '先描灰色的数字，再在空格里自己写一写。', body: out.join('') };
+      return { tip: tr('先描灰色的数字，再在空格里自己写一写。', 'Trace the grey numbers, then write your own in the empty boxes.'), body: out.join('') };
     },
   },
   {
-    id: 'compare', name: '比多少', cat: 'math', ages: [3, 6],
+    id: 'compare', name: ['比多少', 'More or Less'], cat: 'math', ages: [3, 6],
     gen(r, age) {
       const out = [], ans = [];
       if (age === 3) {
         for (let i = 0; i < 4; i++) {
           let a = int(r, 1, 5), b = int(r, 1, 5); while (a === b) b = int(r, 1, 5);
           const [e1, e2] = sample(r, PICS, 2);
-          ans.push(`${i + 1}.${a > b ? '左' : '右'}`);
+          ans.push(`${i + 1}. ${a > b ? L.left : L.right}`);
           const grp = (n, e) => `<span class="items" style="border:.4mm solid #bbb;border-radius:3mm;padding:3mm;width:72mm;min-height:22mm;justify-content:center">${range(1, n).map(() => emo(e, 12)).join('')}</span>`;
           out.push(`<div class="rowline" style="justify-content:space-around">${grp(a, e1)}${grp(b, e2)}</div>`);
         }
-        return { tip: '哪一组多？把多的那一组圈起来。', body: out.join(''), answers: ans };
+        return { tip: tr('哪一组多？把多的那一组圈起来。', 'Which group has more? Circle it.'), body: out.join(''), answers: ans };
       }
-      const cells = [];
-      const n = age === 4 ? 6 : 12;
+      const cells = [], n = age === 4 ? 6 : 12;
       for (let i = 0; i < n; i++) {
-        const max = age === 4 ? 9 : age === 5 ? 20 : 20;
+        const max = age === 4 ? 9 : 20;
         let a = int(r, 0, max), b = int(r, 0, max);
         if (r() < .15) b = a;
-        let la = a, lb = b;
+        let la = a;
         if (age === 6 && i % 2) { const x = int(r, 0, Math.min(a, 10)); la = `${x}+${a - x}`; }
-        const sign = a > b ? '>' : a < b ? '<' : '=';
-        ans.push(`${i + 1}. ${sign}`);
+        ans.push(`${i + 1}. ${a > b ? '>' : a < b ? '<' : '='}`);
         if (age === 4) {
           const [e1, e2] = sample(r, PICS, 2);
-          cells.push(`<div class="rowline"><span class="items" style="width:70mm">${range(1, a).map(() => emo(e1, 7)).join('') || '（空）'}</span><span class="opt" style="width:13mm;height:13mm;border-color:#555"></span><span class="items" style="width:70mm;justify-content:flex-end">${range(1, b).map(() => emo(e2, 7)).join('') || '（空）'}</span></div>`);
-        } else cells.push(`<div class="eq"><b style="min-width:20mm;text-align:right">${la}</b><span class="opt" style="width:12mm;height:12mm;border-color:#555"></span><b>${lb}</b></div>`);
+          cells.push(`<div class="rowline"><span class="items" style="width:70mm">${range(1, a).map(() => emo(e1, 7)).join('') || L.empty}</span><span class="opt" style="width:13mm;height:13mm;border-color:#555"></span><span class="items" style="width:70mm;justify-content:flex-end">${range(1, b).map(() => emo(e2, 7)).join('') || L.empty}</span></div>`);
+        } else cells.push(`<div class="eq"><b style="min-width:20mm;text-align:right">${la}</b><span class="opt" style="width:12mm;height:12mm;border-color:#555"></span><b>${b}</b></div>`);
       }
       return {
-        tip: '在圆圈里填上 “>”、“<” 或 “=”。',
+        tip: tr('在圆圈里填上 “>”、“<” 或 “=”。', 'Write “>”, “<” or “=” in each circle.'),
         body: age === 4 ? cells.join('') : `<div class="grid2">${cells.join('')}</div>`, answers: ans,
       };
     },
   },
   {
-    id: 'addSub', name: '加减法', cat: 'math', ages: [4, 6],
+    id: 'addSub', name: ['加减法', 'Add & Subtract'], cat: 'math', ages: [4, 6],
     gen(r, age) {
       const ans = [];
       if (age === 4) {
@@ -322,20 +382,20 @@ const GENS = [
           out.push(`<div class="rowline" style="justify-content:flex-start"><span class="eq">${g(a)}<b>${sub ? '−' : '+'}</b>${g(b)}<b>=</b><span class="box"></span></span>
             <span style="margin-left:auto;font-size:6.5mm;color:#888">${a} ${sub ? '−' : '+'} ${b} = ___</span></div>`);
         }
-        return { tip: '看图算一算，把答案写在方框里。', body: out.join(''), answers: ans };
+        return { tip: tr('看图算一算，把答案写在方框里。', 'Use the pictures to work it out. Write the answer in the box.'), body: out.join(''), answers: ans };
       }
       const n = age === 5 ? 20 : 30, max = age === 5 ? 10 : 20, cells = [];
       for (let i = 0; i < n; i++) {
-        let a, b, op = r() < .5 ? '+' : '−';
+        let a, b; const op = r() < .5 ? '+' : '−';
         if (op === '+') { a = int(r, 0, max); b = int(r, 0, max - a); } else { a = int(r, 1, max); b = int(r, 0, a); }
         ans.push(`${i + 1}. ${op === '+' ? a + b : a - b}`);
         cells.push(`<div class="eq" style="font-size:${age === 5 ? 8 : 7}mm"><span style="min-width:30mm;text-align:right">${a} ${op} ${b} =</span><span class="box"></span></div>`);
       }
-      return { tip: `${max} 以内加减法，认真算一算！`, body: `<div class="${age === 5 ? 'grid2' : 'grid3'}">${cells.join('')}</div>`, answers: ans };
+      return { tip: tr(`${max} 以内加减法，认真算一算！`, `Adding and subtracting within ${max}.`), body: `<div class="${age === 5 ? 'grid2' : 'grid3'}">${cells.join('')}</div>`, answers: ans };
     },
   },
   {
-    id: 'missingNumber', name: '数字填空', cat: 'math', ages: [4, 6],
+    id: 'missingNumber', name: ['数字填空', 'Missing Numbers'], cat: 'math', ages: [4, 6],
     gen(r, age) {
       const rows = 10, out = [], ans = [];
       for (let i = 0; i < rows; i++) {
@@ -344,14 +404,14 @@ const GENS = [
         const start = int(r, desc ? step * (len - 1) : 0, desc ? max : max - step * (len - 1));
         const seq = range(0, len - 1).map(j => start + (desc ? -1 : 1) * step * j);
         const blanks = sample(r, range(1, len - 1), age === 4 ? 1 : 2);
-        ans.push(`${i + 1}. ${blanks.sort((a, b) => a - b).map(b => seq[b]).join('、')}`);
+        ans.push(`${i + 1}. ${blanks.sort((a, b) => a - b).map(b => seq[b]).join(L.sep)}`);
         out.push(`<div class="eq" style="justify-content:center;gap:3mm">${seq.map((v, j) => blanks.includes(j) ? '<span class="box" style="width:15mm;height:13mm"></span>' : `<span style="display:inline-grid;place-items:center;width:15mm;height:13mm">${v}</span>`).join('<span style="color:#bbb">→</span>')}</div>`);
       }
-      return { tip: '按顺序想一想，空格里应该填几？', body: out.join(''), answers: ans };
+      return { tip: tr('按顺序想一想，空格里应该填几？', 'Which numbers are missing? Fill in the boxes.'), body: out.join(''), answers: ans };
     },
   },
   {
-    id: 'clock', name: '认识钟表', cat: 'math', ages: [4, 6],
+    id: 'clock', name: ['认识钟表', 'Telling Time'], cat: 'math', ages: [4, 6],
     gen(r, age) {
       const cells = [], ans = [];
       for (let i = 0; i < 6; i++) {
@@ -359,69 +419,87 @@ const GENS = [
         const t = `${h}:${m ? '30' : '00'}`, draw = age === 6 && i >= 3;
         ans.push(`${i + 1}. ${t}`);
         cells.push(`<div style="text-align:center">${clockSvg(h, m, 58, !draw)}
-          <div style="font-size:7mm;margin-top:2mm">${draw ? `请画出 <b>${t}</b>` : '<span class="box" style="width:16mm"></span> : <span class="box" style="width:16mm"></span>'}</div></div>`);
+          <div style="font-size:7mm;margin-top:2mm">${draw ? L.drawTime(t) : '<span class="box" style="width:16mm"></span> : <span class="box" style="width:16mm"></span>'}</div></div>`);
       }
-      return { tip: age === 6 ? '读出钟面上的时间；后三个请画上时针和分针。' : '短针（红）指几点，长针（蓝）指分钟，写出时间。', body: `<div class="grid2">${cells.join('')}</div>`, answers: ans };
+      return {
+        tip: age === 6 ? tr('读出钟面上的时间；后三个请画上时针和分针。', 'Write the time. On the last three clocks, draw the hands.')
+          : tr('短针（红）指几点，长针（蓝）指分钟，写出时间。', 'The short red hand shows the hour, the long blue hand the minutes. Write the time.'),
+        body: `<div class="grid2">${cells.join('')}</div>`, answers: ans,
+      };
     },
   },
   {
-    id: 'maze', name: '走迷宫', cat: 'motor', ages: [3, 6],
+    id: 'maze', name: ['走迷宫', 'Mazes'], cat: 'motor', ages: [3, 6],
     gen(r, age) {
       const [w, h] = { 3: [5, 6], 4: [7, 9], 5: [10, 12], 6: [13, 16] }[age];
       const cs = Math.min(160 / (w + 2), 205 / (h + 2));
       const m = makeMaze(r, w, h), pair = pick(r, [['🐰', '🥕'], ['🐶', '🦴'], ['🐻', '🍯'], ['🐥', '🌽'], ['🐱', '🐟']]);
       return {
-        tip: `帮 ${pair[0]} 找到 ${pair[1]}，用笔画出路线吧！`,
+        tip: tr(`帮 ${pair[0]} 找到 ${pair[1]}，用笔画出路线吧！`, `Help ${pair[0]} find the ${pair[1]}. Draw the path!`),
         body: `<div style="display:grid;place-items:center;flex:1">${mazeSvg(m, cs, false, ...pair)}</div>`,
         answerSvg: mazeSvg(m, Math.min(60 / (w + 2), 80 / (h + 2)), true),
       };
     },
   },
   {
-    id: 'hanzi', name: '汉字描红', cat: 'lang', ages: [4, 6],
+    id: 'hanzi', name: ['汉字描红', 'Chinese Characters'], cat: 'lang', ages: [4, 6],
     gen(r, age) {
       const pool = parseHanzi(HANZI_4).concat(age >= 5 ? parseHanzi(HANZI_5) : []);
-      const chars = sample(r, pool, 9);
-      const out = chars.map(([c, py]) => `<div class="tracecells"><span class="py-label">${py}</span>
+      const out = sample(r, pool, 9).map(([c, py]) => `<div class="tracecells"><span class="py-label">${py}</span>
         ${range(0, 6).map(j => `<div class="tz"><span class="${j === 0 ? '' : 'gray'}">${j <= 3 ? c : ''}</span></div>`).join('')}</div>`);
-      return { tip: '先看第一个字，再描灰色的字，最后自己写。', body: out.join('') };
+      return { tip: tr('先看第一个字，再描灰色的字，最后自己写。', 'Look at the first character, trace the grey ones, then write it yourself.'), body: out.join('') };
     },
   },
   {
-    id: 'pinyin', name: '拼音书写', cat: 'lang', ages: [5, 6],
+    id: 'pinyin', name: ['拼音书写', 'Pinyin'], cat: 'lang', ages: [5, 6],
     gen(r, age) {
       const g = pick(r, PINYIN.filter(p => p.age <= age));
-      const lines = y => [0, 5, 10, 15].map((d, k) => `<line x1="0" x2="180" y1="${y + d}" y2="${y + d}" stroke="${k === 2 ? '#e7a3b8' : '#bbb'}" stroke-width="${k === 2 ? .5 : .35}"/>`).join('');
-      const rowH = 21, out = [`<svg viewBox="0 0 180 ${rowH * g.items.length}" width="180mm" height="${rowH * g.items.length}mm" font-family="Andika, Arial, sans-serif">`];
-      g.items.forEach((it, i) => {
-        const y = i * rowH + 3;
-        out.push(lines(y));
-        for (let j = 0; j < 6; j++) out.push(`<text x="${6 + j * 29}" y="${y + 10}" font-size="11" fill="${j === 0 ? '#222' : j <= 2 ? '#cfcfcf' : 'none'}">${it}</text>`);
-      });
-      out.push('</svg>');
-      return { tip: `${g.name}：先描再写，注意占格（写在四线三格里）。`, body: out.join('') };
+      return { tip: tr(`${g.name[0]}：先描再写，注意占格（写在四线三格里）。`, `${g.name[1]}: trace, then write. Keep letters on the lines.`), body: fourLineSvg(g.items) };
+    },
+  },
+  {
+    id: 'letters', name: ['字母描写', 'Letters ABC'], cat: 'lang', ages: [3, 6],
+    gen(r, age) {
+      const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      const n = 9, start = int(r, 0, 26 - n);
+      const items = ABC.slice(start, start + n).map(c => (age === 3 ? c : `${c}${c.toLowerCase()}`));
+      return { tip: tr('先描灰色的字母，再在后面空白处自己写。', 'Trace the grey letters, then write them on your own.'), body: fourLineSvg(items, null, age === 3 ? 29 : 32) };
+    },
+  },
+  {
+    id: 'words', name: ['英文单词', 'Word Tracing'], cat: 'lang', ages: [5, 6],
+    gen(r, age) {
+      const ws = sample(r, WORDS.filter(w => age >= 6 || w[1].length <= 3), 9);
+      return {
+        tip: tr('看图读单词，先描再写。', 'Say the word for each picture, then trace and write it.'),
+        body: fourLineSvg(ws.map(w => w[1]), ws.map(w => w[0]), 42),
+        answers: ws.map(w => `${w[0]} ${w[1]}${lang === 'zh' ? `（${w[2]}）` : ''}`),
+      };
     },
   },
 ];
+const gname = g => g.name[lang === 'en' ? 1 : 0];
 
 // ---------- page assembly ----------
 function pageHtml(g, res, age, no, name) {
-  const c = CATS[g.cat];
-  return `<section class="page" style="--pc:${c.color}">
-    <header class="ph"><div class="ph-title"><span class="badge">${c.name}</span>${g.name}</div>
-      <div class="ph-meta">姓名 <u>${esc(name)}</u>　日期 <u></u></div></header>
+  return `<section class="page" style="--pc:${CATS[g.cat].color}">
+    <header class="ph"><div class="ph-title"><span class="badge">${L.cats[g.cat]}</span>${gname(g)}</div>
+      <div class="ph-meta">${L.name} <u>${esc(name)}</u>　${L.date} <u></u></div></header>
     <p class="tip">${res.tip}</p>
     <div class="pbody">${res.body}</div>
-    <footer class="pf">宝贝练习本 · 适合 ${age} 岁 · 第 ${no} 页</footer></section>`;
+    <footer class="pf">${L.footer(age, no)}</footer></section>`;
 }
 function answersHtml(list, age, no) {
-  const blocks = list.map(({ no, g, res }) => `<h4>第 ${no} 页 · ${g.name}</h4>` +
+  const blocks = list.map(({ no, g, res }) => `<h4>${L.pageN(no)} · ${gname(g)}</h4>` +
     (res.answers ? `<p>${res.answers.map(esc).join('　')}</p>` : '') + (res.answerSvg ? `<div>${res.answerSvg}</div>` : ''));
-  return `<section class="page" style="--pc:#777"><header class="ph"><div class="ph-title"><span class="badge">家长用</span>参考答案</div></header>
-    <div class="ans">${blocks.join('')}</div><footer class="pf">宝贝练习本 · 适合 ${age} 岁 · 第 ${no} 页</footer></section>`;
+  return `<section class="page" style="--pc:#777"><header class="ph"><div class="ph-title"><span class="badge">${L.parents}</span>${L.key}</div></header>
+    <div class="ans">${blocks.join('')}</div><footer class="pf">${L.footer(age, no)}</footer></section>`;
 }
 
-function buildPages({ age, ids, pages, name, withAnswers, seed }) {
+function setLang(l) { lang = I18N[l] ? l : 'zh'; L = I18N[lang]; }
+
+function buildPages({ age, ids, pages, name, withAnswers, seed, lang: l = lang }) {
+  setLang(l);
   const r = makeRand(seed);
   const gens = shuffle(r, GENS.filter(g => ids.includes(g.id)));
   const done = [], html = [];
@@ -436,23 +514,30 @@ function buildPages({ age, ids, pages, name, withAnswers, seed }) {
 }
 
 // ---------- UI ----------
-const state = { age: 3, pages: 4, selected: {}, name: '', withAnswers: true, seed: Date.now() >>> 0 };
+const defaultLang = (navigator.language || 'zh').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+const state = { lang: defaultLang, age: 3, pages: 4, selected: {}, name: '', withAnswers: true, seed: Date.now() >>> 0 };
 const store = {
   load() { try { Object.assign(state, JSON.parse(localStorage.getItem('bblx') || '{}')); } catch (e) { /* storage unavailable */ } },
-  save() { try { localStorage.setItem('bblx', JSON.stringify({ age: state.age, pages: state.pages, selected: state.selected, name: state.name, withAnswers: state.withAnswers })); } catch (e) { /* ignore */ } },
+  save() { try { localStorage.setItem('bblx', JSON.stringify({ lang: state.lang, age: state.age, pages: state.pages, selected: state.selected, name: state.name, withAnswers: state.withAnswers })); } catch (e) { /* ignore */ } },
 };
 const fits = (g, age) => age >= g.ages[0] && age <= g.ages[1];
+const DEFAULT_OFF = { zh: ['letters', 'words'], en: ['hanzi', 'pinyin'] };
 function selectedIds() {
-  const sel = state.selected[state.age];
-  const ids = (sel || GENS.filter(g => fits(g, state.age)).map(g => g.id)).filter(id => fits(GENS.find(g => g.id === id), state.age));
-  return ids;
+  const sel = state.selected[state.age] || GENS.filter(g => !DEFAULT_OFF[state.lang].includes(g.id)).map(g => g.id);
+  return sel.filter(id => { const g = GENS.find(x => x.id === id); return g && fits(g, state.age); });
 }
 
 function renderControls() {
-  $('#ages').innerHTML = range(1, 6).map(a => `<button class="chip" type="button" data-age="${a}" aria-pressed="${a === state.age}">${a} 岁</button>`).join('');
+  setLang(state.lang);
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.title = L.app;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = L[el.dataset.i18n]; });
+  $('#childName').placeholder = L.namePh;
+  $('#langs').innerHTML = [['zh', '中文'], ['en', 'English']].map(([k, v]) => `<button class="chip" type="button" data-lang="${k}" aria-pressed="${k === state.lang}">${v}</button>`).join('');
+  $('#ages').innerHTML = range(1, 6).map(a => `<button class="chip" type="button" data-age="${a}" aria-pressed="${a === state.age}">${L.ageChip(a)}</button>`).join('');
   const ids = selectedIds();
-  $('#cats').innerHTML = Object.entries(CATS).map(([k, c]) => `<div class="cat" style="--cc:${c.color}"><h3>${c.name}</h3><div class="chips">
-    ${GENS.filter(g => g.cat === k).map(g => `<button class="chip" type="button" data-gen="${g.id}" ${fits(g, state.age) ? '' : 'disabled'} aria-pressed="${ids.includes(g.id)}">${g.name}<small>${g.ages[0]}–${g.ages[1]}岁</small></button>`).join('')}
+  $('#cats').innerHTML = Object.entries(CATS).map(([k, c]) => `<div class="cat" style="--cc:${c.color}"><h3>${L.cats[k]}</h3><div class="chips">
+    ${GENS.filter(g => g.cat === k).map(g => `<button class="chip" type="button" data-gen="${g.id}" ${fits(g, state.age) ? '' : 'disabled'} aria-pressed="${ids.includes(g.id)}">${gname(g)}<small>${L.ageRange(...g.ages)}</small></button>`).join('')}
   </div></div>`).join('');
   $('#pagesOut').textContent = state.pages;
   $('#childName').value = state.name;
@@ -463,9 +548,9 @@ function renderControls() {
 function generate() {
   const ids = selectedIds();
   if (!ids.length) return;
-  $('#pages').innerHTML = `<div class="zoom">${buildPages({ age: state.age, ids, pages: state.pages, name: state.name, withAnswers: state.withAnswers, seed: state.seed })}</div>`;
+  $('#pages').innerHTML = `<div class="zoom">${buildPages({ lang: state.lang, age: state.age, ids, pages: state.pages, name: state.name, withAnswers: state.withAnswers, seed: state.seed })}</div>`;
   $('#previewWrap').hidden = false;
-  $('#previewInfo').textContent = `${state.age} 岁 · ${state.pages} 页${state.withAnswers ? ' + 答案' : ''}`;
+  $('#previewInfo').textContent = L.info(state.age, state.pages, state.withAnswers);
   fitZoom();
 }
 function fitZoom() {
@@ -478,7 +563,10 @@ function $(s) { return document.querySelector(s); }
 
 document.addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return;
-  if (t.dataset.age) { state.age = +t.dataset.age; renderControls(); }
+  if (t.dataset.lang) {
+    state.lang = t.dataset.lang; renderControls();
+    if (!$('#previewWrap').hidden) generate(); // same seed → same puzzles, new language
+  } else if (t.dataset.age) { state.age = +t.dataset.age; renderControls(); }
   else if (t.dataset.gen) {
     const ids = selectedIds(), id = t.dataset.gen;
     state.selected[state.age] = ids.includes(id) ? ids.filter(x => x !== id) : ids.concat(id);
