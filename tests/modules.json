@@ -288,7 +288,10 @@
     {
      "id": "as1670",
      "name": "AS 1670 compliance checks per room",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/compliance/",
+     "accept": "unit",
+     "note": "AS 1670.4, AS 2444, AS 2441 limits checked against the supplied standards; AS 1670.1 limits are common values, not verified (standard not supplied)"
     }
    ]
   },

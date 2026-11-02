@@ -66,3 +66,11 @@ test('Rooms: closed spaces with names and areas', () => {
   const s = scoreRooms(GT.rooms, R.rooms); assert.equal(s.roomDetection, 100); assert.equal(s.areaAccuracy, 100);
   assert.ok(R.rooms.find(r => r.type === 'PLANT ROOM').devices.heat >= 1);
 });
+test('AS 1670: a room whose half-diagonal exceeds the detector reach fails coverage; smoke in a kitchen is flagged; no panel noted', () => {
+  const C = R.compliance; assert.ok(C.findings.every(f => f.rule && f.level && f.msg));
+  // synthetic rooms are 8.2 × 7.9 m: half-diagonal 5.7 m > heat reach 7.2 / √2 = 5.09 m, so one heat detector cannot cover one
+  const oneHeat = R.rooms.filter(r => r.devices.heat === 1 && !r.devices.smoke); assert.ok(oneHeat.length >= 1);
+  for (const r of oneHeat) assert.ok(C.findings.some(f => f.rule === 'coverage' && f.level === 'fail' && f.room === r.name && f.page === r.page), r.name);
+  const kitchenSmoke = R.rooms.filter(r => r.type === 'KITCHEN' && r.devices.smoke); assert.equal(C.findings.filter(f => f.rule === 'detector-type').length, kitchenSmoke.length);
+  assert.ok(C.findings.some(f => f.rule === 'fip')); assert.ok(!C.findings.some(f => f.rule === 'mcp'), 'every plan has a call point');
+});

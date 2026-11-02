@@ -2,7 +2,7 @@
 // npm run test:validation — every project with a ground-truth.json (validation-projects/* and tests/datasets/*):
 // runs the engine, compares with ground truth, writes tests/results/validation/<project>.json and a summary.
 // Gates (tests/modules.json): device recognition F1 and cable accuracy on scored projects. Modules that do not exist yet
-// (compliance) is reported NOT IMPLEMENTED; --strict makes that a failure too. Loops and rooms are scored against ground truth when it has them.
+// Loops, rooms and AS 1670 findings are scored against ground truth when it has them (otherwise reported).
 const fs = require('fs'), path = require('path');
 const { openApp, analyse } = require('../lib/harness');
 const { scoreLoops, scoreRooms, scoreDevices, scoreLength } = require('../lib/metrics');
@@ -40,7 +40,10 @@ const scored = gt => (gt.generated || /^verified/.test(gt.status || '')) && (gt.
     const cables = Object.entries(p.gt.lines || {}).map(([k, exp]) => { const got = R.lines.find(l => l.desc === k); return { loop: k, ...scoreLength(exp, got ? got.total_m : 0) }; });
     const network = (p.gt.networks || []).length ? { project: p.name, ...scoreLoops(p.gt.networks, R.loops) } : null;
     const rooms = (p.gt.rooms || []).length ? scoreRooms(p.gt.rooms, R.rooms) : null;
-    const compliance = p.gt.compliance ? { expectedIssues: p.gt.compliance.length, detectedIssues: null, falseWarnings: null, status: 'NOT IMPLEMENTED' } : null;
+    // AS 1670 findings: scored when the ground truth lists the expected ones ({rule, room?}), otherwise reported
+    const found = R.compliance.findings; const exp = p.gt.compliance || null;
+    const hit = exp ? exp.filter(e => found.some(f => f.rule === e.rule && (!e.room || f.room === e.room) && (e.page == null || f.page === e.page))).length : null;
+    const compliance = { findings: found.length, summary: R.compliance.summary, isolators: R.compliance.isolators, ...(exp ? { expectedIssues: exp.length, detectedIssues: hit, falseWarnings: found.filter(f => f.level === 'fail' && !exp.some(e => e.rule === f.rule && (!e.room || f.room === e.room))).length } : {}) };
     const cableAcc = cables.length ? Math.round(10 * (100 - cables.reduce((a, c) => a + (c.errorPct || 0), 0) / cables.length)) / 10 : null;
     const gates = { device: s.f1 >= GATES.deviceRecognitionF1, cable: cableAcc == null || cableAcc >= GATES.cableAccuracy, network: !network || network.accuracy >= GATES.loopDetection, rooms: !rooms || rooms.roomDetection >= GATES.roomDetection };
     const ok = Object.values(gates).every(Boolean); if (!ok) failed = true;

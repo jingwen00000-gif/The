@@ -26,7 +26,7 @@ function extract(models,devices,ctx){ctx=ctx||{}; const FVE=ctx.FVE||root.FVE; c
       const enc=m.index.search(q[0],q[1],q[0],q[1]).filter(o=>o.closed&&o.stroke&&!o.fill&&grey(o.stroke)&&(o.k==='rect'||o.k==='polygon')&&o.pts.length>=4).map(o=>({o,A:polyArea(o.pts)})).filter(x=>x.A>400&&x.A<sheetA*.25&&inPoly(q,x.o.pts)).sort((a,b)=>a.A-b.A)[0];
       if(!enc) continue; const P=enc.o.pts, dv={}; devices.filter(d=>d.page===pi&&inPoly([d.x,d.y],P)).forEach(d=>dv[d.type]=(dv[d.type]||0)+1);
       if(out.some(r=>r.page===pi&&r._o===enc.o)) continue;
-      out.push({page:pi,name:l.s.trim(),type,area_m2:mpu?Math.round(enc.A*mpu*mpu*100)/100:null,bb:enc.o.bb.slice(),devices:dv,_o:enc.o})}});
+      out.push({page:pi,name:l.s.trim(),type,area_m2:mpu?Math.round(enc.A*mpu*mpu*100)/100:null,bb:enc.o.bb.slice(),pts:enc.o.pts.map(p=>[+p[0].toFixed(2),+p[1].toFixed(2)]),devices:dv,_o:enc.o})}});
   return out.map(({_o,...r})=>r)}
 
 NS.rooms={extract,roomType,ROOMS};

@@ -24,10 +24,10 @@ test('G key: FVE + MSME run on all sheets and the results table opens', async ()
   await page.keyboard.press('g');
   await page.waitForFunction(() => window.FX && FX.last && document.querySelector('#ftModal[open]'), null, { timeout: 120000 });
   const r = await page.evaluate(() => ({ title: document.querySelector('#ftModal').textContent, rows: document.querySelectorAll('#ftModal [data-fxon]').length,
-    lines: document.querySelectorAll('#ftModal [data-fxl]').length, loops: document.querySelectorAll('#ftModal [data-fxloop]').length, drawn: FX.last.loops.filter(l => l.source === 'drawn').map(l => [l.devices, l.length_m]), rooms: FX.last.rooms.length, dets: FX.last.dets.length, models: FX.models.size }));
+    lines: document.querySelectorAll('#ftModal [data-fxl]').length, loops: document.querySelectorAll('#ftModal [data-fxloop]').length, drawn: FX.last.loops.filter(l => l.source === 'drawn').map(l => [l.devices, l.length_m]), rooms: FX.last.rooms.length, as1670: FX.last.compliance && FX.last.compliance.findings.length, as1670ui: /规范检查/.test(document.querySelector('#ftModal').textContent) && /限值未核对标准原文/.test(document.querySelector('#ftModal').textContent), dets: FX.last.dets.length, models: FX.models.size }));
   assert.match(r.title, /FVE/); assert.ok(r.rows >= 4, 'one row per device type'); assert.equal(r.lines, 3); assert.equal(r.models, 4);
   assert.ok(r.dets > 50, 'detections ' + r.dets);
-  assert.deepEqual(r.drawn.map(x => x[1]), GT.networks.map(n => n.length_m)); assert.ok(r.loops >= 2, 'estimated loops offered'); assert.equal(r.rooms, GT.rooms.length);
+  assert.deepEqual(r.drawn.map(x => x[1]), GT.networks.map(n => n.length_m)); assert.ok(r.loops >= 2, 'estimated loops offered'); assert.equal(r.rooms, GT.rooms.length); assert.ok(r.as1670 > 0 && r.as1670ui, 'AS 1670 findings shown');
 });
 
 test('加入计数: detections become pending marks matching ground truth; line types become pending runs', async () => {

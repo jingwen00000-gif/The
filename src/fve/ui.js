@@ -70,7 +70,8 @@ async function fveCount(){
     // loops (drawn cable traced; estimated where no cable reaches) and rooms; room expectations from finished jobs become questions
     const loops=root.FVE_LOOPS?FVE_LOOPS.run(models,D,dets,{knowledge:K}):[], rooms=root.FVE_ROOMS?FVE_ROOMS.detect(models,dets):[];
     if(root.FVE_ROOMS) warn.push(...FVE_ROOMS.expectations(rooms,K));
-    FX.last={models,D,dets,warn,lines,loops,rooms,consultant:FX.consultant,ms:performance.now()-t0};
+    const compliance=root.FVE_COMPLIANCE&&FVE_COMPLIANCE.check?FVE_COMPLIANCE.check(models,dets,rooms,loops):null;
+    FX.last={models,D,dets,warn,lines,loops,rooms,compliance,consultant:FX.consultant,ms:performance.now()-t0};
     if(!dets.length&&!lines.length){say(T('读到了图例，但在平面图上没有找到相同的符号。可以用“框选图标 · 全图搜索”。')); return}
     say(`${T('FVE 识别完成')}：<b>${dets.length}</b> ${T('个设备')}${lines.length?`，${lines.length} ${T('种管线 / 电缆')}`:''}（${Math.round(FX.last.ms/100)/10}s）`);
     showResults(FX.last)}
@@ -132,6 +133,9 @@ function showResults(R){const G=groupsOf(R); FX.groups=G; const multi=new Set(R.
     ${lrows?`<h4 style="margin:12px 0 4px">${T('管线 / 电缆（按图例线型量取）')}</h4><div style="max-height:22vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('图例线型')}</th><th>${T('系统')}</th><th class="r">${T('长度')}</th></tr></thead><tbody>${lrows}</tbody></table></div>`:''}
     ${looprows?`<h4 style="margin:12px 0 4px">${T('回路与回路长度')}</h4><div style="max-height:22vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('回路')}</th><th class="r">${T('设备')}</th><th class="r">${T('长度')}</th><th>${T('顺序')}</th></tr></thead><tbody>${looprows}</tbody></table></div><p class="note" style="margin:4px 0 0">${T('按图纸画的回路电缆已在上面的管线 / 电缆中计入；勾选的估算回路会加入为待确认电缆（正交走线 + 10% 余量 + 每个设备 1.5 m）。')}</p>`:''}
     ${RM.length?`<p class="note" style="margin:8px 0 0">${T('识别到房间')} ${RM.length} ${T('个')}${RM.some(r=>r.area_m2)?`，${T('总面积')} ${Math.round(RM.reduce((a,r)=>a+(r.area_m2||0),0))} m²`:''}</p>`:''}
+    ${R.compliance&&R.compliance.findings.length?`<details style="margin-top:10px" ${R.compliance.summary.fail?'open':''}><summary>${T('规范检查')}：${[['fail','不符合'],['warn','需确认'],['advisory','建议'],['info','提示']].filter(([k])=>R.compliance.summary[k]).map(([k,t])=>`${T(t)} ${R.compliance.summary[k]}`).join(' · ')}${R.compliance.isolators?` · ${T('需短路隔离器')} ${R.compliance.isolators}`:''}</summary>
+      <div class="note" style="max-height:24vh;overflow:auto">${R.compliance.standards.filter(s=>R.compliance.byStandard[s.id]).map(s=>`<div style="margin-top:6px"><b>${esc(s.id)}</b> ${esc(s.title)}${s.verified?'':` <span style="color:#b45309">（${T('限值未核对标准原文')}）</span>`}<ul style="margin:2px 0">${R.compliance.findings.filter(f=>f.standard===s.id).slice(0,25).map(f=>`<li><b>${T({fail:'不符合',warn:'需确认',advisory:'建议',info:'提示'}[f.level])}</b>${f.clause?` [${esc(f.clause)}]`:''} ${f.page?pname(f.page)+' · ':''}${esc(f.msg)}</li>`).join('')}</ul></div>`).join('')}</div>
+      <p class="note" style="margin:2px 0 0">${T('检查的是识别出的布置。直线距离是行走 / 水带路线的下限：超出即不符合，未超出仍需按实际路线核对。吊顶高度、坡顶 / 梁格、危险等级等请设计确认。')}</p></details>`:''}
     ${W.length?`<details style="margin-top:10px"><summary>${T('需要注意')}（${W.length}）</summary><ul class="note">${W.map(w=>`<li>${esc(w.msg)}</li>`).join('')}</ul></details>`:''}`,
     [{t:T('取消')},{t:T('加入计数'),fn:()=>commit(d,false)},{t:T('加入并逐个核对'),cls:'primary',fn:()=>commit(d,true)}]);
   d.style.width='min(980px,96vw)'; d.addEventListener('close',()=>{d.style.width=''},{once:true}); return d}

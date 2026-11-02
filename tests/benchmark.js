@@ -23,7 +23,9 @@ L.push('', '## Loop detection', '', 'Drawn loops matched to ground truth on thei
 for (const r of V.rows) { const d = det(r.project); if (d && d.network) for (const l of d.network.loops) L.push(`| ${r.project} | ${l.id} | ${l.expectedDevices} | ${l.devices ?? '–'} | ${l.devicesErrorPct ?? '–'} | ${l.expected_m} | ${l.length_m ?? '–'} | ${l.lengthErrorPct ?? '–'} | ${l.matched ? 'yes' : 'no'} |`); }
 L.push('', '## Room detection', '', '| Project | Expected | Found | Matched by name | Detection % | Area accuracy % |', '|---|---|---|---|---|---|');
 for (const r of V.rows) { const d = det(r.project); if (d && d.rooms) L.push(`| ${r.project} | ${d.rooms.expected} | ${d.rooms.found} | ${d.rooms.matched} | ${d.rooms.roomDetection} | ${d.rooms.areaAccuracy ?? '–'} |`); }
-L.push('', '## Compliance', '', 'AS 1670 checks: not implemented yet.', '');
+L.push('', '## Standards checks', '', 'AS 1670.1 (limits not verified — standard not supplied), AS 1670.4, AS 2444, AS 2441 on the recognised layout; see docs/compliance.md.', '', '| Project | Fail | Warn | Advisory | Info | Isolators needed | Expected found |', '|---|---|---|---|---|---|---|');
+for (const r of V.rows) { const d = det(r.project); if (d && d.compliance) { const c = d.compliance, s = c.summary || {}; L.push(`| ${r.project} | ${s.fail || 0} | ${s.warn || 0} | ${s.advisory || 0} | ${s.info || 0} | ${c.isolators} | ${c.expectedIssues != null ? c.detectedIssues + ' / ' + c.expectedIssues : '–'} |`); } }
+L.push('');
 L.push('## Processing time', '', '| Project | Geometry s | Legend s | Detection s | Network s | Total s | Target ≤ 60 s |', '|---|---|---|---|---|---|---|');
 for (const r of P.rows) L.push(`| ${r.project} | ${r.geometry_s} | ${r.legend_s} | ${r.detect_s} | n/a | ${r.total_s} | ${r.ok.total ? 'PASS' : 'FAIL'} |`);
 fs.mkdirSync(path.join(ROOT, 'benchmarks'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'benchmarks/latest.md'), L.join('\n') + '\n');

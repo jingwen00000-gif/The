@@ -43,7 +43,7 @@ async function analyse(page, pdfs, opts = {}) {
     } });
     const t4 = performance.now(); const warn = FVE.verify(models, D, dets); const lines = FVE.measureLines(models, D);
     // loops (drawn + estimated) and rooms; room expectations from the knowledge base become questions
-    const loops = FVE_LOOPS.run(models, D, dets, { knowledge: K }); const rooms = FVE_ROOMS.detect(models, dets); warn.push(...FVE_ROOMS.expectations(rooms, K));
+    const loops = FVE_LOOPS.run(models, D, dets, { knowledge: K }); const rooms = FVE_ROOMS.detect(models, dets); warn.push(...FVE_ROOMS.expectations(rooms, K)); const compliance = FVE_COMPLIANCE.check(models, dets, rooms, loops);
     const t5 = performance.now();
     const idx = id => pages.findIndex(p => p.id === id);
     return {
@@ -58,6 +58,7 @@ async function analyse(page, pdfs, opts = {}) {
       warnings: warn.map(w => ({ ...w, page: w.page ? idx(w.page) : undefined })),
       loops: loops.map(l => ({ id: l.id, page: idx(l.page), source: l.source, circuit: l.circuit, closed: l.closed, panel: l.panel, devices: l.devices, mix: l.mix, pattern: l.pattern, length_m: l.length_m, paper: l.paper, chains: l.chains, historical_m: l.historical_m, note: l.note, members: l.members.map(d => [Math.round(d.x * 10) / 10, Math.round(d.y * 10) / 10, d.type]) })),
       rooms: rooms.map(r => ({ page: idx(r.page), name: r.name, type: r.type, area_m2: r.area_m2, devices: r.devices })),
+      compliance: { summary: compliance.summary, isolators: compliance.isolators, findings: compliance.findings.map(f => ({ ...f, page: f.page ? idx(f.page) : undefined })) },
       lines: lines.map(l => ({ id: l.id, desc: l.desc, cls: l.cls, status: l.status, dashed: l.dashed, total_m: l.total, unscaled: l.unscaled,
         pages: Object.fromEntries(Object.entries(l.pages).map(([k, v]) => [idx(k), { m: v.m, paper: v.paper, chains: v.chains.length, ratio: v.ratio }])) }))
     };

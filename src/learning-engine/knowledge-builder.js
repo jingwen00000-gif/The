@@ -23,7 +23,7 @@ function build(input,ex,pricing){const at=new Date().toISOString(); pricing=pric
     provenance:{diff:ex.diffStats,legend:ex.legend,generatedBy:'src/learning-engine'}};
   const contributions={projectId:input.projectId,at,consultant:ex.consultant&&ex.consultant.consultant||null,
     consultantKeys:{aliases:(ex.consultant&&ex.consultant.aliases)||[],emailDomains:(ex.consultant&&ex.consultant.emailDomains)||[],logoHash:ex.consultant&&ex.consultant.logoHash||null},
-    symbols:ex.symbols,abbreviations:ex.abbreviations,conventions:ex.conventions,networks:ex.networks.map(({page,...n})=>n),rooms:ex.rooms.map(({page,bb,...r})=>r),
+    symbols:ex.symbols,abbreviations:ex.abbreviations,conventions:ex.conventions,networks:ex.networks.map(({page,...n})=>n),rooms:ex.rooms.map(({page,bb,pts,...r})=>r),
     pricing:{items,totals},summary:graph.summary};
   return {graph,contributions}}
 
