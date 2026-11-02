@@ -77,7 +77,16 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
     /* an exact match knows its own size; a symbol size from elsewhere only merges pieces of the same device (a CO2 and a dry powder
        extinguisher side by side stay two) */
     if(keep.some(k=>k.page===d.page&&family(k.type)===family(d.type)&&hyp(k.x-d.x,k.y-d.y)<Math.max(k.type===d.type?big:own,Math.max(k.w,k.h))*1.2)) continue; keep.push(d)}
-  dets.length=0; dets.push(...keep);
+  // two devices of different families on one spot (a dashed heat-detector template accepting a solid sprinkler disc): the one whose
+  // legend symbol matches the drawing better stays — the higher exact score, then the higher confidence
+  const gone=new Set();
+  for(let i=0;i<keep.length;i++) for(let j=i+1;j<keep.length;j++){const a=keep[i], b=keep[j]; if(gone.has(a)||gone.has(b)||a.page!==b.page||family(a.type)===family(b.type)) continue;
+    const r=Math.min(Math.max(a.w,a.h),Math.max(b.w,b.h))*.35; if(hyp(a.x-b.x,a.y-b.y)>r) continue;
+    const sa=a.score||0, sb=b.score||0; const lose=Math.abs(sa-sb)>.02?(sa>sb?b:a):(a.conf>=b.conf?b:a); gone.add(lose)}
+  // a match centred off the sheet (a symbol clipped at the sheet edge, content outside the media box) is not a device
+  const dims=new Map(models.map(m=>[m.page.id,m.page]));
+  const onSheet=d=>{const pg=dims.get(d.page); return !pg||(d.x>=0&&d.y>=0&&d.x<=pg.w&&d.y<=pg.h)};
+  dets.length=0; dets.push(...keep.filter(d=>!gone.has(d)&&onSheet(d)));
   for(const c of all){delete c.m; delete c._l}
   dets.learn=[...learn.values()]; dets.rejected=rejected; dets.candidates=all.length; Object.defineProperty(dets,"pool",{value:all,enumerable:false}); return dets}
 

@@ -1,0 +1,1590 @@
+{
+ "project": "44-market",
+ "status": "verified-markups",
+ "files": [
+  "project.pdf"
+ ],
+ "source": "Estimator's Bluebeam count markups on 'Combined drawing - take off' (one polygon per device). Colour \u2192 device read by inspecting the symbol under a sample of each colour against the drawing's own legend (F1000).",
+ "notes": "Sheet 2 (ground floor demolition) markups count existing items to be removed (mixed types) and are not scored. Sprinklers (semi-recessed red, upright orange, concealed-space black) and speakers (recessed dark green, surface light green) are scored at family level.",
+ "generatedBy": "tests/validation/truth-from-markups.js",
+ "summary": {
+  "GF-DRY:smoke": 26,
+  "GF-DRY:speaker": 13,
+  "B1-DRY:smoke": 17,
+  "B1-DRY:speaker": 10,
+  "B1-DRY:heat": 3,
+  "GF-WET:sprinkler": 61,
+  "B1-WET:sprinkler": 31
+ },
+ "devices": [
+  {
+   "id": "smoke-4-001",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1492.32,
+   "y": 1212.43,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-002",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1554.92,
+   "y": 1175.41,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-003",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1727.23,
+   "y": 1172.72,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-004",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1336.47,
+   "y": 404.01,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-005",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1415.22,
+   "y": 338.04,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-006",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1548.22,
+   "y": 213.04,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-007",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1488.03,
+   "y": 392.24,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-008",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1538.51,
+   "y": 392.24,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-009",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1598.42,
+   "y": 391.56,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-010",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1420.72,
+   "y": 357.24,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-011",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1334.56,
+   "y": 446.09,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-012",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1322.44,
+   "y": 508.68,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-013",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1387.06,
+   "y": 510.03,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-014",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1564.76,
+   "y": 502.63,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-015",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1564.76,
+   "y": 538.97,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-016",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1214.63,
+   "y": 660.57,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-017",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1430.69,
+   "y": 660.57,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-018",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1638.01,
+   "y": 660.57,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-019",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1214.37,
+   "y": 914.6,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-020",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1430.32,
+   "y": 915.16,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-021",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1636.12,
+   "y": 909.24,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-022",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1536.74,
+   "y": 1175.41,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-023",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1707.71,
+   "y": 1174.74,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-024",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1510.49,
+   "y": 1211.09,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-025",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1407.06,
+   "y": 212.57,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-4-026",
+   "type": "smoke",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1529.06,
+   "y": 213.04,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "speaker-4-001",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1564.52,
+   "y": 213.82,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-002",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1518.96,
+   "y": 391.19,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-003",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1420.1,
+   "y": 378.59,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-004",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1337.71,
+   "y": 428.99,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-005",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1631.31,
+   "y": 1174.88,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-006",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1530.34,
+   "y": 1213.59,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-001",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1612.63,
+   "y": 907.63,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-002",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1407.14,
+   "y": 916.36,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-003",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1239.46,
+   "y": 914.42,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-004",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1238.49,
+   "y": 659.5,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-005",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1407.14,
+   "y": 659.5,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-006",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1613.6,
+   "y": 659.5,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-4-007",
+   "type": "speaker",
+   "level": "GF-DRY",
+   "page": 4,
+   "x": 1428.79,
+   "y": 212.52,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "smoke-5-001",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 484.48,
+   "y": 665.84,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-002",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 532.13,
+   "y": 732.88,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-003",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 721.14,
+   "y": 665.03,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-004",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 567.67,
+   "y": 945.31,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-005",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 765.57,
+   "y": 946.12,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-006",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 633.91,
+   "y": 1025.28,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-007",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 875.42,
+   "y": 828.19,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-008",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 889.15,
+   "y": 665.03,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-009",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 465.09,
+   "y": 665.84,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-010",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 702.56,
+   "y": 665.84,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-011",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 891.57,
+   "y": 649.68,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-012",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 562.83,
+   "y": 992.97,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-013",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 750.22,
+   "y": 945.31,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-014",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 705.79,
+   "y": 1086.66,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-015",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 611.29,
+   "y": 1092.32,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-016",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 532.94,
+   "y": 1071.32,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "smoke-5-017",
+   "type": "smoke",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 876.23,
+   "y": 808.8,
+   "source": "Polygon#ff0000"
+  },
+  {
+   "id": "speaker-5-001",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 505.48,
+   "y": 665.84,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-002",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 741.33,
+   "y": 666.64,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-003",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 888.34,
+   "y": 685.22,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-004",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 875.42,
+   "y": 846.77,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-005",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 731.64,
+   "y": 945.31,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-006",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 566.06,
+   "y": 966.31,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-007",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 532.13,
+   "y": 1110.89,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-008",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 631.48,
+   "y": 1089.89,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-009",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 729.22,
+   "y": 1090.7,
+   "source": "Polygon#008040",
+   "typeLevel": "family"
+  },
+  {
+   "id": "speaker-5-001",
+   "type": "speaker",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 530.52,
+   "y": 754.69,
+   "source": "Polygon#80ff80",
+   "typeLevel": "family"
+  },
+  {
+   "id": "heat-5-001",
+   "type": "heat",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 533.75,
+   "y": 1091.51,
+   "source": "Polygon#ffff00"
+  },
+  {
+   "id": "heat-5-002",
+   "type": "heat",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 592.71,
+   "y": 1090.7,
+   "source": "Polygon#ffff00"
+  },
+  {
+   "id": "heat-5-003",
+   "type": "heat",
+   "level": "B1-DRY",
+   "page": 5,
+   "x": 692.06,
+   "y": 1087.47,
+   "source": "Polygon#ffff00"
+  },
+  {
+   "id": "sprinkler-6-001",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1529.71,
+   "y": 1180.92,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-002",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1639.62,
+   "y": 1179.56,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-003",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1753.61,
+   "y": 1179.56,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-004",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1517.49,
+   "y": 1216.2,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-005",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1556.37,
+   "y": 218.66,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-006",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1543.18,
+   "y": 327.03,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-007",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1493.23,
+   "y": 327.03,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-008",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1487.58,
+   "y": 441.99,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-009",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1537.52,
+   "y": 503.25,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-010",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1546.95,
+   "y": 444.82,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-011",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1595.01,
+   "y": 443.88,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-012",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1596.89,
+   "y": 326.09,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-013",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1630.82,
+   "y": 507.02,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-014",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1422.56,
+   "y": 408.07,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-015",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1418.79,
+   "y": 321.37,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-016",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1338.69,
+   "y": 359.07,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-017",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1335.86,
+   "y": 479.69,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-018",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1318.9,
+   "y": 516.44,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-019",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1387.69,
+   "y": 514.56,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-020",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1440.46,
+   "y": 479.69,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-001",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1171.39,
+   "y": 659.52,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-002",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1278.82,
+   "y": 662.34,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-003",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1394.73,
+   "y": 665.17,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-004",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1494.62,
+   "y": 561.51,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-005",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1498.39,
+   "y": 667.05,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-006",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1588.86,
+   "y": 569.99,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-007",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1584.14,
+   "y": 664.23,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-008",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1682.15,
+   "y": 663.29,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-009",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1685.92,
+   "y": 573.76,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-010",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1767.9,
+   "y": 566.22,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-011",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1767.9,
+   "y": 659.52,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-012",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1778.27,
+   "y": 762.23,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-013",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1677.44,
+   "y": 766,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-014",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1595.45,
+   "y": 765.06,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-015",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1504.99,
+   "y": 761.29,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-016",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1492.74,
+   "y": 857.41,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-017",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1388.13,
+   "y": 915.83,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-018",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1270.34,
+   "y": 919.6,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-019",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1166.68,
+   "y": 919.6,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-020",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1586.97,
+   "y": 857.41,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-021",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1686.86,
+   "y": 860.24,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-022",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1767.9,
+   "y": 859.29,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-023",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1489.37,
+   "y": 1059.81,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-024",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1591.15,
+   "y": 1062.64,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-025",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1687.27,
+   "y": 1064.52,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-026",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1771.14,
+   "y": 1061.69,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-027",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1771.14,
+   "y": 970.29,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-028",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1686.33,
+   "y": 958.04,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-029",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1587.38,
+   "y": 958.98,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-030",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1485.6,
+   "y": 964.63,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-031",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1421.62,
+   "y": 214.89,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-001",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1408.42,
+   "y": 478.75,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-002",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1333.47,
+   "y": 380.47,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-003",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1425.38,
+   "y": 427.86,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-004",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1416.9,
+   "y": 310.07,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-005",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1531.87,
+   "y": 219.6,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-006",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1494,
+   "y": 1219.31,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-007",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1496.72,
+   "y": 1161.5,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-008",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1591.61,
+   "y": 1160.95,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-009",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1690.87,
+   "y": 1159.86,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-6-010",
+   "type": "sprinkler",
+   "level": "GF-WET",
+   "page": 6,
+   "x": 1767.21,
+   "y": 1160.41,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-001",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 437.35,
+   "y": 673.33,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-002",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 562.99,
+   "y": 673.33,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-003",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 675.29,
+   "y": 668.62,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-004",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 787.59,
+   "y": 670.98,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-005",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 898.31,
+   "y": 656.06,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-006",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 873.97,
+   "y": 762.07,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-007",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 880.25,
+   "y": 877.51,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-008",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 823.71,
+   "y": 944.26,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-009",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 680,
+   "y": 949.76,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-010",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 558.28,
+   "y": 948.97,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-011",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 562.99,
+   "y": 1018.86,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-012",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 682.36,
+   "y": 1014.94,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-013",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 535.51,
+   "y": 1094.25,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-014",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 616.39,
+   "y": 1096.61,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-015",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 716.12,
+   "y": 1096.61,
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-001",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 534.2,
+   "y": 741.31,
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-001",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 564.56,
+   "y": 1036.92,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-002",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 508.81,
+   "y": 1099.75,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-003",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 596.76,
+   "y": 1095.04,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-004",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 699.63,
+   "y": 1097.39,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-005",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 676.07,
+   "y": 1038.49,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-006",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 556.71,
+   "y": 963.89,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-007",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 676.86,
+   "y": 966.25,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-008",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 803.29,
+   "y": 952.11,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-009",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 877.11,
+   "y": 899.5,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-010",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 875.54,
+   "y": 777.78,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-011",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 905.38,
+   "y": 674.12,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-012",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 816.64,
+   "y": 667.84,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-013",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 694.14,
+   "y": 673.33,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-014",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 581.05,
+   "y": 674.12,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  },
+  {
+   "id": "sprinkler-7-015",
+   "type": "sprinkler",
+   "level": "B1-WET",
+   "page": 7,
+   "x": 457.76,
+   "y": 670.19,
+   "source": "Polygon#000000",
+   "typeLevel": "family"
+  }
+ ],
+ "networks": [],
+ "rooms": [],
+ "name": "Lobby & EOT refurbishment, 44 Market St Sydney (Nutbrook, D&C tender)",
+ "tolerance": 20,
+ "toleranceNote": "the estimator ticks beside each symbol rather than around it: tick centres are 5 pt from the symbol on average, up to 24 pt"
+}

@@ -1,0 +1,11 @@
+{
+ "source": "Estimator's Bluebeam count markups on 'Combined drawing - take off' (one polygon per device). Colour → device read by inspecting the symbol under a sample of each colour against the drawing's own legend (F1000).",
+ "pages": {
+  "4": {"level": "GF-DRY", "Polygon#ff0000": "smoke", "Polygon#008040": "speaker", "Polygon#80ff80": "speaker", "Polygon#ffff00": "heat"},
+  "5": {"level": "B1-DRY", "Polygon#ff0000": "smoke", "Polygon#008040": "speaker", "Polygon#80ff80": "speaker", "Polygon#ffff00": "heat"},
+  "6": {"level": "GF-WET", "Polygon#ff0000": "sprinkler", "Polygon#ffb680": "sprinkler", "Polygon#000000": "sprinkler"},
+  "7": {"level": "B1-WET", "Polygon#ff0000": "sprinkler", "Polygon#ffb680": "sprinkler", "Polygon#000000": "sprinkler"}
+ },
+ "notes": "Sheet 2 (ground floor demolition) markups count existing items to be removed (mixed types) and are not scored. Sprinklers (semi-recessed red, upright orange, concealed-space black) and speakers (recessed dark green, surface light green) are scored at family level.",
+ "familyOnly": ["sprinkler", "speaker"]
+}

@@ -1,6 +1,6 @@
 {
  "project": "44-mandarin",
- "accepted": "2026-11-02T02:29:41.564Z",
+ "accepted": "2026-11-02T05:08:53.969Z",
  "sheets": [
   "cover",
   "legend",
@@ -23,7 +23,7 @@
  ],
  "dictionary": {
   "symbols": 78,
-  "typed": 44,
+  "typed": 45,
   "lineTypes": 9,
   "abbrev": 36
  },

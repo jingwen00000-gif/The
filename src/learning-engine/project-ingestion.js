@@ -45,7 +45,7 @@ async function ingestInApp(input){const L=NS, FVE=root.FVE; const b64=s=>{const 
   const consultant=L.consultant.extract(MO,{FVE,metadata:input.metadata,known});
   const rec=K?L.db.forRecognition(K,{consultant:consultant.consultant,excludeProject:input.projectId}):null;
   const D=FVE.projectDictionary(MO,{library:rec?rec.library.filter(e=>e.consultant):null,knowledge:rec});
-  const dets=await FVE.detect(MO,D,{library:null,knowledge:rec,match:async(e,m,q)=>{const p=S.pages.find(x=>x.id===m.page.id); const T=await fveTemplate(e); if(!T) return []; return (await vsmSearch(p,T,q||1)).filter(h=>h.score>=.85)}});
+  const dets=await FVE.detect(MO,D,{library:null,knowledge:rec,match:async(e,m,q)=>{const p=S.pages.find(x=>x.id===m.page.id); return fveMatch(e,p,q,.85)}});
   // the app's own segments around a symbol (same curve flattening as every plan it will be searched on), each stroke once
   const V={}; for(const [i,p] of PO.entries()) V[i]=await pdfVectors(p);
   const vectorsAt=(pi,bb,objs)=>{const own=FVE.segments(objs), t=.3, seen=new Set(); const dS=(q,A,B)=>FVE.geom.segDist(q,A,B);

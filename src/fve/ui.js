@@ -64,8 +64,7 @@ async function fveCount(){
     let calls=0; const lib=libFor(FX.consultant);
     const dets=await FVE.detect(models,D,{library:lib,consultant:null,knowledge:K,match:async(e,m,q)=>{
       if(++calls%4===0){say(`${T('正在全图搜索图例符号')} · ${calls}`); await new Promise(r=>setTimeout(r,0))}
-      const p=S.pages.find(x=>x.id===m.page.id); const Tp=await fveTemplate(e); if(!p||!Tp) return [];
-      return (await vsmSearch(p,Tp,q||1)).filter(h=>h.score>=.85)}});
+      const p=S.pages.find(x=>x.id===m.page.id); if(!p) return []; return fveMatch(e,p,q,.85)}});
     const warn=FVE.verify(models,D,dets), lines=FVE.measureLines(models,D);
     // loops (drawn cable traced; estimated where no cable reaches) and rooms; room expectations from finished jobs become questions
     const loops=root.FVE_LOOPS?FVE_LOOPS.run(models,D,dets,{knowledge:K}):[], rooms=root.FVE_ROOMS?FVE_ROOMS.detect(models,dets):[];

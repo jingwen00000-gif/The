@@ -38,8 +38,7 @@ async function analyse(page, pdfs, opts = {}) {
     const t2 = performance.now(); const D = FVE.projectDictionary(models, { library: library.length ? library : null, knowledge: K });
     const t3 = performance.now();
     const dets = await FVE.detect(models, D, { library: opts.library || null, knowledge: K, match: async (e, m, q) => {
-      const p = S.pages.find(x => x.id === m.page.id); const T = await fveTemplate(e); if (!T) return [];
-      return (await vsmSearch(p, T, q || 1)).filter(h => h.score >= (opts.minScore || .85));
+      const p = S.pages.find(x => x.id === m.page.id); return fveMatch(e, p, q, opts.minScore || .85);
     } });
     const t4 = performance.now(); const warn = FVE.verify(models, D, dets); const lines = FVE.measureLines(models, D);
     // loops (drawn + estimated) and rooms; room expectations from the knowledge base become questions

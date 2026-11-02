@@ -36,6 +36,12 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
     if(ctx.markupMap){c.items.forEach(a=>a.mtype=mapType(ctx.markupMap,a)); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length){c.type=mode(mt); c.how='markup-map'; c.confidence=1; c.perItem=true} else {c.type=null; c.how='not in markup-map'} continue}
     const ws=Object.entries(c.words).sort((a,b)=>b[1]-a[1]); const wt=ws.map(([w])=>wordType(w,FVE,D)).find(Boolean); if(wt){c.type=wt; c.how='markup text'; c.confidence=.95; continue}
     const under=c.items.map(detAt).filter(Boolean).map(d=>d.type); if(under.length){const t=mode(under), share=under.filter(x=>x===t).length/c.items.length; if(share>=.6){c.type=t; c.how='legend under markups'; c.confidence=Math.round(share*100)/100; continue}}
+    // one colour can count different devices on different sheets (red: smoke detectors on the dry sheet, sprinklers on the wet one):
+    // name it sheet by sheet when each sheet agrees on its own
+    {const pages=[...new Set(c.items.map(a=>a.page))], per={}; let ok=0;
+      for(const pg of pages){const it=c.items.filter(a=>a.page===pg), u=it.map(detAt).filter(Boolean).map(d=>d.type); if(!u.length) continue; const t=mode(u), sh=u.filter(x=>x===t).length/it.length; if(sh>=.6){per[pg]={t,sh}; ok+=it.length}}
+      if(Object.keys(per).length&&ok>=c.items.length*.6){c.items.forEach(a=>a.mtype=per[a.page]?per[a.page].t:null); c.perItem=true; c.type=mode(Object.values(per).map(x=>x.t)); c.how='legend under markups, per sheet';
+        c.perPage=Object.fromEntries(Object.entries(per).map(([k,v])=>[k,v.t])); c.confidence=Math.round(100*Object.values(per).reduce((a,v)=>a+v.sh,0)/Object.keys(per).length)/100; continue}}
     c.type=null; c.how='unknown'}
   // devices: the answer, snapped to the symbol the original drawing has there
   const devices=[];
@@ -86,7 +92,7 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
       symbols.push({fingerprint:FP.fingerprint({device:type,geoHash,text:text.join(' ')}),geoHash,deviceType:type,code:CODE[type]||null,text,status:[...new Set(g.map(x=>x.d.status).filter(Boolean))],
         n:g.length,confidence:cls?cls.confidence||1:1,desc,template:{objs:rel,segs,vsegs,bb:[bb[0]-cc[0],bb[1]-cc[1],bb[2]-cc[0],bb[3]-cc[1]],cols:[...new Set(rel.map(o=>o.stroke||o.fill).filter(Boolean))],key,shapes:[...new Set(rel.map(o=>o.k))]}})}}
   const abbreviations={}; for(const [tok,c] of Object.entries(abbrev)) abbreviations[tok]=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
-  return {classes:[...classes.values()].map(c=>({key:c.key,src:c.src,kind:c.kind,colour:c.colour,type:c.type,how:c.how,confidence:c.confidence||0,n:c.items.length,words:Object.keys(c.words)})),
+  return {classes:[...classes.values()].map(c=>({key:c.key,src:c.src,kind:c.kind,colour:c.colour,type:c.type,how:c.how,perPage:c.perPage||null,confidence:c.confidence||0,n:c.items.length,words:Object.keys(c.words)})),
     devices:devices.map(({box,...d})=>d),symbols,abbreviations,trace,unknownClasses:[...classes.values()].filter(c=>!c.type).map(c=>c.key)}}
 const family=t=>/^spk_(pend|up|side|semi|space|conc|duct)/.test(t)?'sprinkler':/^ext_/.test(t)?'extinguisher':/^(speaker|spk_surf|horn|proj_spk)$/.test(t)?'speaker':/^(smoke|cs_smoke|duct_probe)$/.test(t)?'smoke':t;
 const liteOf=o=>({k:o.k,bb:o.bb,c:o.c,r:o.r,pts:o.pts,stroke:o.stroke,fill:o.fill,closed:o.closed,len:o.len,w:o.w});

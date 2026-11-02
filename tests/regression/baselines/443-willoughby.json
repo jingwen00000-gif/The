@@ -1,6 +1,6 @@
 {
  "project": "443-willoughby",
- "accepted": "2026-11-02T02:29:56.079Z",
+ "accepted": "2026-11-02T05:09:27.513Z",
  "sheets": [
   "cover",
   "legend",
@@ -22,9 +22,9 @@
   null
  ],
  "dictionary": {
-  "symbols": 62,
-  "typed": 29,
-  "lineTypes": 7,
+  "symbols": 63,
+  "typed": 30,
+  "lineTypes": 6,
   "abbrev": 1
  },
  "detections": {

@@ -35,7 +35,7 @@ const scored = gt => (gt.generated || /^verified/.test(gt.status || '')) && (gt.
     if (!scored(p.gt)) { row.result = 'NOT SCORED (no verified ground truth — runs in regression)'; rows.push(row); continue; }
     app = app || await openApp();
     const R = await analyse(app.page, p.files, { library: p.library, knowledgeBase: KB, projectId: p.name });
-    const s = scoreDevices(p.gt.devices, R.detections);
+    const s = scoreDevices(p.gt.devices, R.detections, { tol: p.gt.tolerance || 12 });
     const detection = { project: p.name, precision: s.precision, recall: s.recall, f1: s.f1, falsePositive: s.falsePositive, falseNegative: s.falseNegative, typeAccuracy: s.typeAccuracy, byType: s.byType, confusion: s.confusion };
     const cables = Object.entries(p.gt.lines || {}).map(([k, exp]) => { const got = R.lines.find(l => l.desc === k); return { loop: k, ...scoreLength(exp, got ? got.total_m : 0) }; });
     const network = (p.gt.networks || []).length ? { project: p.name, ...scoreLoops(p.gt.networks, R.loops) } : null;

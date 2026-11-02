@@ -3908,7 +3908,10 @@ function vsmBuild(sg,bw,bh){if(sg.length<3) return null; const ps=sg.flatMap(s=>
   const pe=sg.flatMap(s=>[[s.a,s],[s.b,s]]), oc=new Set([q=>q[0],q=>-q[0],q=>q[1],q=>-q[1]].map(f=>pe.reduce((m,x)=>f(x[0])<f(m[0])?x:m)[1].c));
   const ix0=bx0+(bx1-bx0)*.1, ix1=bx1-(bx1-bx0)*.1, iy0=by0+(by1-by0)*.1, iy1=by1-(by1-by0)*.1; let fill=sg.filter(s=>!s.h&&!oc.has(s.c)&&s.L<D*.25&&[s.a,s.b].every(p=>p[0]>=ix0&&p[0]<=ix1&&p[1]>=iy0&&p[1]<=iy1));
   const fc={}; fill.forEach(s=>fc[s.c]=(fc[s.c]||0)+1); fill=fill.filter(s=>fc[s.c]>=4); fill.forEach(s=>{s.h=1; hatch[s.c]=(hatch[s.c]||0)+1});
-  const geo=sg.filter(s=>!s.h); if(geo.length<3) return null; const R=Math.max(...sg.flatMap(s=>[Math.hypot(...s.a),Math.hypot(...s.b)]));
+  let geo=sg.filter(s=>!s.h);
+  // a symbol that is only a fill (a solid disc: concealed-space sprinkler): its filled outline is the geometry
+  if(geo.length<3){const fl=sg.filter(s=>s.f); if(fl.length>=3&&fl.length===sg.length){fl.forEach(s=>{s.h=0}); for(const k of Object.keys(hatch)) if(k.startsWith('F')) delete hatch[k]; geo=fl}}
+  if(geo.length<3) return null; const R=Math.max(...sg.flatMap(s=>[Math.hypot(...s.a),Math.hypot(...s.b)]));
   return {segs:geo,hatch,fillLen:sg.filter(s=>s.h).reduce((a,s)=>a+s.L,0),tot:geo.reduce((a,s)=>a+s.L,0),R,D,ib:[bx0,by0,bx1,by1],bw,bh,cols:new Set(geo.map(s=>s.c))}}
 // the same stroke plotted two or three times over (heavy pens) counts once, or the copies would read as extra line work
 function vsmIndex(V){if(V._vsm) return V._vsm; const seen=new Set(), all=[]; for(const s of [...V,...(V.fills||[])]){const k=s.col+'|'+[s.a,s.b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(k)) continue; seen.add(k); all.push(s)}
@@ -3927,6 +3930,11 @@ async function fveTemplate(e){if(e._T!==undefined) return e._T; const bw=e.bb[2]
   if((!sg||sg.length<3)&&e.vsegs&&e.vsegs.length>=3) sg=e.vsegs.map(s=>({...s,a:s.a.slice(),b:s.b.slice()}));
   if(!sg||sg.length<3) sg=e.segs.map(s=>({...s}));
   return e._T=vsmBuild(sg,bw*1.6,bh*1.6)}
+// one legend entry on one sheet: the app's vector matcher with the entry's template, hits at or above minScore
+async function fveMatch(e,p,q,minScore){const min=minScore||.85; const T=await fveTemplate(e); if(!T) return [];
+  // (a second template cut from the legend sheet's own vectors, for rows whose curves are flattened differently, was measured: +0.4 F1
+  // on 44-mandarin and +0.7 on 44-market for ~15 s more on mandarin, past the 60 s gate — not used)
+  return (await vsmSearch(p,T,q||1)).filter(x=>x.score>=min)}
 async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) return []; const {all,byL}=vsmIndex(V);
   const lo=.85*rs, hi=1.18*rs, lb=v=>{let a=0,b=byL.length; while(a<b){const m=(a+b)>>1; if(byL[m].L<v) a=m+1; else b=m} return a};
   const range=(a,b)=>{const out=[]; for(let i=lb(a);i<byL.length&&byL[i].L<=b;i++) out.push(byL[i]); return out};

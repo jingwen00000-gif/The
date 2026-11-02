@@ -1,0 +1,3691 @@
+{
+ "schema": "firetake.project-graph/1",
+ "projectId": "44-market",
+ "at": "2026-11-02T05:10:19.760Z",
+ "metadata": {},
+ "files": {
+  "original": [
+   "original.pdf"
+  ],
+  "takeoff": [
+   "takeoff.pdf"
+  ],
+  "boq": null,
+  "quote": null
+ },
+ "consultant": {
+  "consultant": "Nutbrook Engineering Group Pty Ltd.",
+  "key": "nutbrookengineeringgroup",
+  "known": true,
+  "score": 603,
+  "evidence": [
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "SAFETY IN DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "SAFETY IN DESIGN - SID",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "SECTION 3.5.1 OF FIRE ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "SECTION 3.5.1 OF FIRE ENGINEERING",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "SECTION 3.5.1 OF FIRE ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "SECTION 3.5.1 OF FIRE ENGINEERING",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONCEPT DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONCEPT DESIGN",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "consultant field",
+    "value": "AZ",
+    "w": 6
+   },
+   {
+    "src": "consultant field",
+    "value": "N",
+    "w": 6
+   },
+   {
+    "src": "copyright / prepared by",
+    "value": "COPYRIGHT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 5
+   },
+   {
+    "src": "company line",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "COPYRIGHT. THIS DOCUMENT AND DESIGN REMAIN THE COPYRIGHT OF",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK ENGINEERING GROUP PTY LTD. THIS DRAWING MUST NOT BE REPRODUCED",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "IN ANY FORM WITHOUT THE CONSENT OF NUTBROOK ENGINEERING GROUP PTY LTD.",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "DIAGRAMMATIC DESIGN",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "DIAGRAMMATIC DESIGN INTENT AND SCOPE OF WORKS REQUIRED FOR THE",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "CONSULTING ENGINEERS",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "CONSULTING ENGINEERS:",
+    "w": 4
+   },
+   {
+    "src": "company line",
+    "value": "NUTBROOK GROUP",
+    "w": 2
+   },
+   {
+    "src": "known name",
+    "value": "NUTBROOK GROUP PTY LTD",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "info@nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known name",
+    "value": "www.nutbrookgroup.com",
+    "w": 4
+   },
+   {
+    "src": "known e-mail domain",
+    "value": "nutbrookgroup",
+    "w": 5
+   }
+  ],
+  "emailDomains": [
+   "nutbrookgroup"
+  ],
+  "logoHash": null,
+  "aliases": [
+   "Az",
+   "Copyright. This Document And Design",
+   "Nutbrook Engineering",
+   "In Any Form Without The Consent Of Nutbrook Engineering",
+   "Diagrammatic Design",
+   "Concept Design",
+   "Consulting Engineers",
+   "Millimetre Consulting Engineers",
+   "Nutbrook Group",
+   "Safety In Design",
+   "N",
+   "Section 3.5.1 Of Fire Engineering"
+  ]
+ },
+ "sheets": [
+  {
+   "i": 0,
+   "name": "original.pdf · p1",
+   "kind": "legend",
+   "title": "TITLE SHEET, LEGEND & · DRAWING SCHEDULE · SAFETY IN DESIGN - SID",
+   "scale": null
+  },
+  {
+   "i": 1,
+   "name": "original.pdf · p2",
+   "kind": "notes",
+   "title": "SPECIFICATION · TAPPING · SETTING.",
+   "scale": null
+  },
+  {
+   "i": 2,
+   "name": "original.pdf · p3",
+   "kind": "plan",
+   "title": "DEMOLITION PLAN · GROUND FLOOR · PLAZA",
+   "scale": 100
+  },
+  {
+   "i": 3,
+   "name": "original.pdf · p4",
+   "kind": "plan",
+   "title": "DEMOLITION PLAN · BASEMENT FLOOR · STAIR",
+   "scale": 100
+  },
+  {
+   "i": 4,
+   "name": "original.pdf · p5",
+   "kind": "plan",
+   "title": "PROPOSED DRY FIRE · SERVICES LAYOUT · GROUND FLOOR",
+   "scale": 100
+  },
+  {
+   "i": 5,
+   "name": "original.pdf · p6",
+   "kind": "plan",
+   "title": "PROPOSED DRY FIRE · SERVICES LAYOUT · BASEMENT FLOOR",
+   "scale": 100
+  },
+  {
+   "i": 6,
+   "name": "original.pdf · p7",
+   "kind": "plan",
+   "title": "PROPOSED WET FIRE · SERVICES LAYOUT · GROUND FLOOR",
+   "scale": 100
+  },
+  {
+   "i": 7,
+   "name": "original.pdf · p8",
+   "kind": "plan",
+   "title": "PROPOSED WET FIRE · SERVICES LAYOUT · BASEMENT FLOOR",
+   "scale": 100
+  },
+  {
+   "i": 8,
+   "name": "original.pdf · p9",
+   "kind": "plan",
+   "title": "PROPOSED FIRE HOSE REEL & · FIRE HYDRANT CHECK LAYOUT · GROUND FLOOR",
+   "scale": 100
+  },
+  {
+   "i": 9,
+   "name": "original.pdf · p10",
+   "kind": "plan",
+   "title": "PROPOSED FIRE HOSE REEL & · FIRE HYDRANT CHECK LAYOUT · BASEMENT FLOOR",
+   "scale": 100
+  }
+ ],
+ "devices": [
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1492.98,
+   "y": 1213.3,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1554.06,
+   "y": 1174.3,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1726.02,
+   "y": 1174.3,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1335.06,
+   "y": 408.58,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1418.1,
+   "y": 340.18,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1545.3,
+   "y": 213.1,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1490.28,
+   "y": 391.24,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1538.94,
+   "y": 391.18,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1598.76,
+   "y": 391.24,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1418.04,
+   "y": 357.16,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1335,
+   "y": 445.48,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1321.08,
+   "y": 510.28,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1386.78,
+   "y": 510.22,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1565.22,
+   "y": 503.62,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1565.22,
+   "y": 538.78,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1214.64,
+   "y": 660.4,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1431.24,
+   "y": 660.4,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1637.4,
+   "y": 661.36,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1214.64,
+   "y": 915.52,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1431.24,
+   "y": 915.52,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1637.46,
+   "y": 909.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1536.96,
+   "y": 1174.36,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1708.92,
+   "y": 1174.36,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1509.84,
+   "y": 1213.24,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1406.88,
+   "y": 213.04,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "smoke",
+   "x": 1528.32,
+   "y": 213.16,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 483.48,
+   "y": 666.04,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 533.1,
+   "y": 733.06,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 722.04,
+   "y": 666.04,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 564.78,
+   "y": 946.3,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 767.22,
+   "y": 946.3,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 631.32,
+   "y": 1026.28,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 874.92,
+   "y": 827.92,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 889.5,
+   "y": 665.98,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 466.5,
+   "y": 665.98,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 705.06,
+   "y": 665.98,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 889.5,
+   "y": 648.94,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 564.78,
+   "y": 992.68,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 750.18,
+   "y": 946.3,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 707.64,
+   "y": 1089.58,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 611.22,
+   "y": 1089.58,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 531.42,
+   "y": 1073.26,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 5,
+   "type": "smoke",
+   "x": 874.86,
+   "y": 810.94,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1525.5,
+   "y": 1177.18,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1636.62,
+   "y": 1177.18,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1749.9,
+   "y": 1177.18,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1509.3,
+   "y": 1212.58,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1553.94,
+   "y": 213.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1539.78,
+   "y": 324.94,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_semi",
+   "x": 1490.1,
+   "y": 324.94,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1490.1,
+   "y": 437.5,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "sprinkler",
+   "x": 1537.52,
+   "y": 503.25,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "sprinkler",
+   "x": 1546.95,
+   "y": 444.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "sprinkler",
+   "x": 1595.01,
+   "y": 443.88,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_semi",
+   "x": 1596.9,
+   "y": 324.94,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "sprinkler",
+   "x": 1630.82,
+   "y": 507.02,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1419.06,
+   "y": 405.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1418.94,
+   "y": 303.94,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1335.42,
+   "y": 351.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1335.42,
+   "y": 475.06,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1319.46,
+   "y": 508.78,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1385.58,
+   "y": 508.78,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 6,
+   "type": "spk_conc",
+   "x": 1433.22,
+   "y": 475.06,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "sprinkler",
+   "x": 437.35,
+   "y": 673.33,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 573.78,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 691.38,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "sprinkler",
+   "x": 787.59,
+   "y": 670.98,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 899.46,
+   "y": 652.9,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.98,
+   "y": 762.1,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.98,
+   "y": 881.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 803.94,
+   "y": 947.74,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 679.74,
+   "y": 961.65,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.5,
+   "y": 950.02,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.5,
+   "y": 1014.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 679.74,
+   "y": 1014.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 517.02,
+   "y": 1092.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 598.74,
+   "y": 1092.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 7,
+   "type": "sprinkler",
+   "x": 716.12,
+   "y": 1096.61,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000"
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1565.11,
+   "y": 213.04,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1518.96,
+   "y": 391.19,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1417.91,
+   "y": 374.69,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1335.06,
+   "y": 426.94,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1626.54,
+   "y": 1174.3,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1529.82,
+   "y": 1213.18,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 503.23,
+   "y": 665.92,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 741.79,
+   "y": 665.92,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 889.5,
+   "y": 685.78,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 874.98,
+   "y": 847.66,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 731.64,
+   "y": 945.31,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 564.78,
+   "y": 963.37,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 531.31,
+   "y": 1110.04,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 631.03,
+   "y": 1089.52,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 725.17,
+   "y": 1089.39,
+   "status": null,
+   "cls": "annotation:Polygon#008040"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1611.6,
+   "y": 909.28,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1406.13,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1237.65,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1237.65,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1406.13,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1611.69,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1424.16,
+   "y": 212.92,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 5,
+   "type": "spk_surf",
+   "x": 532.05,
+   "y": 752.86,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80"
+  },
+  {
+   "page": 5,
+   "type": "heat",
+   "x": 533.75,
+   "y": 1091.51,
+   "status": null,
+   "cls": "annotation:Polygon#ffff00"
+  },
+  {
+   "page": 5,
+   "type": "heat",
+   "x": 594.24,
+   "y": 1089.58,
+   "status": null,
+   "cls": "annotation:Polygon#ffff00"
+  },
+  {
+   "page": 5,
+   "type": "heat",
+   "x": 690.66,
+   "y": 1089.58,
+   "status": null,
+   "cls": "annotation:Polygon#ffff00"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1167.36,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1274.76,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1383.12,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1383.12,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1274.76,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1167.42,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "sprinkler",
+   "x": 1421.62,
+   "y": 214.89,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 7,
+   "type": "sprinkler",
+   "x": 534.2,
+   "y": 741.31,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1407.18,
+   "y": 473.14,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1335.42,
+   "y": 376.42,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1418.94,
+   "y": 422.5,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1537.02,
+   "y": 215.38,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1490.82,
+   "y": 1214.14,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1491.9,
+   "y": 1159.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1589.58,
+   "y": 1159.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1687.5,
+   "y": 1159.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1765.2,
+   "y": 1156.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.38,
+   "y": 1033.9,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 695.46,
+   "y": 1092.34,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 679.74,
+   "y": 1033.9,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.38,
+   "y": 965.74,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.86,
+   "y": 897.58,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.86,
+   "y": 777.82,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 899.34,
+   "y": 674.14,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 809.7,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 458.46,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#000000"
+  }
+ ],
+ "rooms": [
+  {
+   "page": 2,
+   "name": "PLANTER",
+   "type": "PLANT ROOM",
+   "area_m2": 408.46,
+   "bb": [
+    1421.52,
+    216.6400000000001,
+    1789.2,
+    1523.92
+   ],
+   "pts": [
+    [
+     1789.2,
+     1523.92
+    ],
+    [
+     1789.2,
+     239.32
+    ],
+    [
+     1664.4,
+     239.32
+    ],
+    [
+     1649.16,
+     253.72
+    ],
+    [
+     1501.2,
+     253.72
+    ],
+    [
+     1501.2,
+     216.64
+    ],
+    [
+     1421.52,
+     216.64
+    ],
+    [
+     1421.52,
+     521.2
+    ],
+    [
+     1545.84,
+     521.2
+    ],
+    [
+     1545.84,
+     543.04
+    ],
+    [
+     1565.64,
+     543.04
+    ],
+    [
+     1565.64,
+     1504
+    ],
+    [
+     1545.84,
+     1504
+    ],
+    [
+     1545.84,
+     1523.92
+    ],
+    [
+     1789.2,
+     1523.92
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 2,
+   "name": "'GAMI' ''RESTAURANT' TENANCY",
+   "type": "RETAIL",
+   "area_m2": 112.46,
+   "bb": [
+    379.56,
+    986.44,
+    839.76,
+    1207.8400000000001
+   ],
+   "pts": [
+    [
+     387.96,
+     1207.84
+    ],
+    [
+     567.48,
+     1207.6
+    ],
+    [
+     567.36,
+     1186
+    ],
+    [
+     839.52,
+     1185.4
+    ],
+    [
+     839.76,
+     1036.72
+    ],
+    [
+     757.56,
+     1036.6
+    ],
+    [
+     757.32,
+     987.4
+    ],
+    [
+     379.68,
+     986.44
+    ],
+    [
+     379.56,
+     1073.56
+    ],
+    [
+     388.08,
+     1073.56
+    ],
+    [
+     387.96,
+     1207.84
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 2,
+   "name": "FIRE STAIR",
+   "type": "STAIR",
+   "area_m2": 19.98,
+   "bb": [
+    1052.28,
+    1041.76,
+    1235.8799999999999,
+    1132.6
+   ],
+   "pts": [
+    [
+     1235.64,
+     1041.76
+    ],
+    [
+     1052.28,
+     1044.64
+    ],
+    [
+     1052.28,
+     1132.6
+    ],
+    [
+     1235.88,
+     1128.76
+    ],
+    [
+     1235.64,
+     1041.76
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 2,
+   "name": "FIRE STAIR",
+   "type": "STAIR",
+   "area_m2": 10.92,
+   "bb": [
+    934.1999999999999,
+    1040.8000000000002,
+    1045.8,
+    1119.6399999999999
+   ],
+   "pts": [
+    [
+     934.2,
+     1040.8
+    ],
+    [
+     1045.8,
+     1040.92
+    ],
+    [
+     1045.68,
+     1119.64
+    ],
+    [
+     934.2,
+     1119.4
+    ],
+    [
+     934.2,
+     1040.8
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 2,
+   "name": "TENANCY",
+   "type": "RETAIL",
+   "area_m2": 74.61,
+   "bb": [
+    701.64,
+    1240.72,
+    1021.68,
+    1524.16
+   ],
+   "pts": [
+    [
+     1021.44,
+     1241.92
+    ],
+    [
+     702.48,
+     1240.72
+    ],
+    [
+     701.64,
+     1467.16
+    ],
+    [
+     706.56,
+     1467.16
+    ],
+    [
+     706.32,
+     1524.16
+    ],
+    [
+     835.8,
+     1524.04
+    ],
+    [
+     835.92,
+     1361.8
+    ],
+    [
+     1021.68,
+     1361.68
+    ],
+    [
+     1021.44,
+     1241.92
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 3,
+   "name": "DDA WC",
+   "type": "BATHROOM",
+   "area_m2": 152.66,
+   "bb": [
+    385.2,
+    611.44,
+    1011.36,
+    1137.04
+   ],
+   "pts": [
+    [
+     496.2,
+     1127.8
+    ],
+    [
+     496.2,
+     963.88
+    ],
+    [
+     465.96,
+     963.88
+    ],
+    [
+     465.96,
+     925.84
+    ],
+    [
+     710.76,
+     925.84
+    ],
+    [
+     710.76,
+     909.4
+    ],
+    [
+     852.6,
+     909.4
+    ],
+    [
+     852.6,
+     694.84
+    ],
+    [
+     567,
+     694.84
+    ],
+    [
+     567,
+     778
+    ],
+    [
+     499.68,
+     778
+    ],
+    [
+     499.68,
+     694.84
+    ],
+    [
+     385.2,
+     694.84
+    ],
+    [
+     385.2,
+     637
+    ],
+    [
+     863.28,
+     637
+    ],
+    [
+     863.28,
+     611.44
+    ],
+    [
+     930.96,
+     611.44
+    ],
+    [
+     930.96,
+     705.04
+    ],
+    [
+     897.12,
+     705.04
+    ],
+    [
+     897.12,
+     865.24
+    ],
+    [
+     930.96,
+     865.24
+    ],
+    [
+     930.96,
+     965.8
+    ],
+    [
+     1011.36,
+     965.8
+    ],
+    [
+     1011.36,
+     1041.4
+    ],
+    [
+     936.12,
+     1041.4
+    ],
+    [
+     936.12,
+     998.56
+    ],
+    [
+     926.16,
+     998.56
+    ],
+    [
+     926.16,
+     965.8
+    ],
+    [
+     763.32,
+     965.8
+    ],
+    [
+     763.32,
+     1137.04
+    ],
+    [
+     558.24,
+     1127.8
+    ],
+    [
+     496.2,
+     1127.8
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 3,
+   "name": "WC",
+   "type": "BATHROOM",
+   "area_m2": 3.44,
+   "bb": [
+    524.52,
+    1508.92,
+    577.4399999999999,
+    1561.12
+   ],
+   "pts": [
+    [
+     577.44,
+     1508.92
+    ],
+    [
+     524.52,
+     1508.92
+    ],
+    [
+     524.52,
+     1561.12
+    ],
+    [
+     577.44,
+     1561.12
+    ],
+    [
+     577.44,
+     1508.92
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 4,
+   "name": "KITCHEN",
+   "type": "KITCHEN",
+   "area_m2": 26.59,
+   "bb": [
+    1118.04,
+    343.3600000000001,
+    1303.68,
+    530.0800000000002
+   ],
+   "pts": [
+    [
+     1118.04,
+     343.36
+    ],
+    [
+     1303.68,
+     343.36
+    ],
+    [
+     1303.68,
+     436.96
+    ],
+    [
+     1275.36,
+     436.96
+    ],
+    [
+     1275.36,
+     530.08
+    ],
+    [
+     1221.48,
+     530.08
+    ],
+    [
+     1221.48,
+     427
+    ],
+    [
+     1118.04,
+     427
+    ],
+    [
+     1118.04,
+     343.36
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 6,
+   "name": "KITCHEN",
+   "type": "KITCHEN",
+   "area_m2": 26.59,
+   "bb": [
+    1118.04,
+    343.3600000000001,
+    1303.68,
+    530.0800000000002
+   ],
+   "pts": [
+    [
+     1118.04,
+     343.36
+    ],
+    [
+     1303.68,
+     343.36
+    ],
+    [
+     1303.68,
+     436.96
+    ],
+    [
+     1275.36,
+     436.96
+    ],
+    [
+     1275.36,
+     530.08
+    ],
+    [
+     1221.48,
+     530.08
+    ],
+    [
+     1221.48,
+     427
+    ],
+    [
+     1118.04,
+     427
+    ],
+    [
+     1118.04,
+     343.36
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 8,
+   "name": "KITCHEN",
+   "type": "KITCHEN",
+   "area_m2": 26.59,
+   "bb": [
+    891.24,
+    343.3600000000001,
+    1076.8799999999999,
+    530.0800000000002
+   ],
+   "pts": [
+    [
+     891.24,
+     343.36
+    ],
+    [
+     1076.88,
+     343.36
+    ],
+    [
+     1076.88,
+     436.96
+    ],
+    [
+     1048.56,
+     436.96
+    ],
+    [
+     1048.56,
+     530.08
+    ],
+    [
+     994.68,
+     530.08
+    ],
+    [
+     994.68,
+     427
+    ],
+    [
+     891.24,
+     427
+    ],
+    [
+     891.24,
+     343.36
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 8,
+   "name": "FIRE STAIR",
+   "type": "STAIR",
+   "area_m2": 19.98,
+   "bb": [
+    1052.1599999999999,
+    1041.76,
+    1235.76,
+    1132.6
+   ],
+   "pts": [
+    [
+     1235.52,
+     1041.76
+    ],
+    [
+     1052.16,
+     1044.64
+    ],
+    [
+     1052.16,
+     1132.6
+    ],
+    [
+     1235.76,
+     1128.76
+    ],
+    [
+     1235.52,
+     1041.76
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 8,
+   "name": "'GAMI' ''RESTAURANT' TENANCY",
+   "type": "RETAIL",
+   "area_m2": 112.46,
+   "bb": [
+    379.44,
+    986.44,
+    839.64,
+    1207.8400000000001
+   ],
+   "pts": [
+    [
+     387.84,
+     1207.84
+    ],
+    [
+     567.36,
+     1207.6
+    ],
+    [
+     567.24,
+     1186
+    ],
+    [
+     839.4,
+     1185.4
+    ],
+    [
+     839.64,
+     1036.72
+    ],
+    [
+     757.44,
+     1036.6
+    ],
+    [
+     757.2,
+     987.4
+    ],
+    [
+     379.56,
+     986.44
+    ],
+    [
+     379.44,
+     1073.56
+    ],
+    [
+     387.96,
+     1073.56
+    ],
+    [
+     387.84,
+     1207.84
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 8,
+   "name": "TENANCY",
+   "type": "RETAIL",
+   "area_m2": 74.61,
+   "bb": [
+    701.52,
+    1240.72,
+    1021.56,
+    1524.16
+   ],
+   "pts": [
+    [
+     1021.32,
+     1241.92
+    ],
+    [
+     702.36,
+     1240.72
+    ],
+    [
+     701.52,
+     1467.16
+    ],
+    [
+     706.44,
+     1467.16
+    ],
+    [
+     706.2,
+     1524.16
+    ],
+    [
+     835.68,
+     1524.04
+    ],
+    [
+     835.8,
+     1361.8
+    ],
+    [
+     1021.56,
+     1361.68
+    ],
+    [
+     1021.32,
+     1241.92
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 9,
+   "name": "DDA WC",
+   "type": "BATHROOM",
+   "area_m2": 152.66,
+   "bb": [
+    385.2,
+    611.44,
+    1011.36,
+    1137.04
+   ],
+   "pts": [
+    [
+     496.2,
+     1127.8
+    ],
+    [
+     496.2,
+     963.88
+    ],
+    [
+     465.96,
+     963.88
+    ],
+    [
+     465.96,
+     925.84
+    ],
+    [
+     710.76,
+     925.84
+    ],
+    [
+     710.76,
+     909.4
+    ],
+    [
+     852.6,
+     909.4
+    ],
+    [
+     852.6,
+     694.84
+    ],
+    [
+     567,
+     694.84
+    ],
+    [
+     567,
+     778
+    ],
+    [
+     499.68,
+     778
+    ],
+    [
+     499.68,
+     694.84
+    ],
+    [
+     385.2,
+     694.84
+    ],
+    [
+     385.2,
+     637
+    ],
+    [
+     863.28,
+     637
+    ],
+    [
+     863.28,
+     611.44
+    ],
+    [
+     930.96,
+     611.44
+    ],
+    [
+     930.96,
+     705.04
+    ],
+    [
+     897.12,
+     705.04
+    ],
+    [
+     897.12,
+     865.24
+    ],
+    [
+     930.96,
+     865.24
+    ],
+    [
+     930.96,
+     965.8
+    ],
+    [
+     1011.36,
+     965.8
+    ],
+    [
+     1011.36,
+     1041.4
+    ],
+    [
+     936.12,
+     1041.4
+    ],
+    [
+     936.12,
+     998.56
+    ],
+    [
+     926.16,
+     998.56
+    ],
+    [
+     926.16,
+     965.8
+    ],
+    [
+     763.32,
+     965.8
+    ],
+    [
+     763.32,
+     1137.04
+    ],
+    [
+     558.24,
+     1127.8
+    ],
+    [
+     496.2,
+     1127.8
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 9,
+   "name": "STAIR",
+   "type": "STAIR",
+   "area_m2": 3.73,
+   "bb": [
+    1560.12,
+    1346.44,
+    1632.84,
+    1432.12
+   ],
+   "pts": [
+    [
+     1585.2,
+     1398.28
+    ],
+    [
+     1592.16,
+     1392.76
+    ],
+    [
+     1586.52,
+     1392.76
+    ],
+    [
+     1560.12,
+     1359.04
+    ],
+    [
+     1614,
+     1346.44
+    ],
+    [
+     1632.84,
+     1428.4
+    ],
+    [
+     1617.24,
+     1432.12
+    ],
+    [
+     1590.84,
+     1398.28
+    ],
+    [
+     1585.2,
+     1398.28
+    ]
+   ],
+   "devices": {}
+  },
+  {
+   "page": 9,
+   "name": "WC",
+   "type": "BATHROOM",
+   "area_m2": 3.44,
+   "bb": [
+    524.52,
+    1508.92,
+    577.4399999999999,
+    1561.12
+   ],
+   "pts": [
+    [
+     577.44,
+     1508.92
+    ],
+    [
+     524.52,
+     1508.92
+    ],
+    [
+     524.52,
+     1561.12
+    ],
+    [
+     577.44,
+     1561.12
+    ],
+    [
+     577.44,
+     1508.92
+    ]
+   ],
+   "devices": {}
+  }
+ ],
+ "networks": [],
+ "measurements": [],
+ "symbols": [
+  {
+   "fingerprint": "SMOKE_FP_7ETIB",
+   "geoHash": "GEO_MW3P7",
+   "deviceType": "smoke",
+   "n": 19,
+   "text": []
+  },
+  {
+   "fingerprint": "SMOKE_FP_3U1VZ",
+   "geoHash": "GEO_52KQO",
+   "deviceType": "smoke",
+   "n": 6,
+   "text": []
+  },
+  {
+   "fingerprint": "SMOKE_FP_PU8TP",
+   "geoHash": "GEO_3BQBX",
+   "deviceType": "smoke",
+   "n": 5,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKCON_FP_Q0OOZ",
+   "geoHash": "GEO_ULX16",
+   "deviceType": "spk_conc",
+   "n": 11,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKSPA_FP_EFEWT",
+   "geoHash": "GEO_X15LL",
+   "deviceType": "spk_space",
+   "n": 14,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKSPA_FP_PJ5TA",
+   "geoHash": "GEO_FMPHP",
+   "deviceType": "spk_space",
+   "n": 8,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKSPA_FP_NBP4H",
+   "geoHash": "GEO_E50CE",
+   "deviceType": "spk_space",
+   "n": 6,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKSEM_FP_Q0OOZ",
+   "geoHash": "GEO_ULX16",
+   "deviceType": "spk_semi",
+   "n": 2,
+   "text": []
+  },
+  {
+   "fingerprint": "SPRINK_FP_Q0OOZ",
+   "geoHash": "GEO_ULX16",
+   "deviceType": "sprinkler",
+   "n": 7,
+   "text": []
+  },
+  {
+   "fingerprint": "SPEAKE_FP_2SIQC",
+   "geoHash": "GEO_699OV",
+   "deviceType": "speaker",
+   "n": 3,
+   "text": []
+  },
+  {
+   "fingerprint": "SPEAKE_FP_UM561",
+   "geoHash": "GEO_D1OAI",
+   "deviceType": "speaker",
+   "n": 3,
+   "text": []
+  },
+  {
+   "fingerprint": "HEAT_FP_K2YO5",
+   "geoHash": "GEO_68OD3",
+   "deviceType": "heat",
+   "n": 2,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKUP_FP_5ICO1",
+   "geoHash": "GEO_5ZCBX",
+   "deviceType": "spk_up",
+   "n": 30,
+   "text": []
+  }
+ ],
+ "markupClasses": [
+  {
+   "key": "annotation:Polygon#ff0000",
+   "src": "annotation",
+   "kind": "Polygon",
+   "colour": "ff0000",
+   "type": "smoke",
+   "how": "markup-map",
+   "perPage": null,
+   "confidence": 1,
+   "n": 129,
+   "words": [
+    "6",
+    "8",
+    "9",
+    "15",
+    "20",
+    "42"
+   ]
+  },
+  {
+   "key": "annotation:Polygon#008040",
+   "src": "annotation",
+   "kind": "Polygon",
+   "colour": "008040",
+   "type": "speaker",
+   "how": "markup-map",
+   "perPage": null,
+   "confidence": 1,
+   "n": 22,
+   "words": [
+    "6",
+    "7",
+    "9"
+   ]
+  },
+  {
+   "key": "annotation:Polygon#80ff80",
+   "src": "annotation",
+   "kind": "Polygon",
+   "colour": "80ff80",
+   "type": "speaker",
+   "how": "markup-map",
+   "perPage": null,
+   "confidence": 1,
+   "n": 8,
+   "words": [
+    "1",
+    "7"
+   ]
+  },
+  {
+   "key": "annotation:Polygon#ffff00",
+   "src": "annotation",
+   "kind": "Polygon",
+   "colour": "ffff00",
+   "type": "heat",
+   "how": "markup-map",
+   "perPage": null,
+   "confidence": 1,
+   "n": 3,
+   "words": [
+    "3"
+   ]
+  },
+  {
+   "key": "annotation:Polygon#ffb680",
+   "src": "annotation",
+   "kind": "Polygon",
+   "colour": "ffb680",
+   "type": "sprinkler",
+   "how": "markup-map",
+   "perPage": null,
+   "confidence": 1,
+   "n": 32,
+   "words": [
+    "1",
+    "30"
+   ]
+  },
+  {
+   "key": "annotation:Polygon#000000",
+   "src": "annotation",
+   "kind": "Polygon",
+   "colour": "000000",
+   "type": "sprinkler",
+   "how": "markup-map",
+   "perPage": null,
+   "confidence": 1,
+   "n": 25,
+   "words": [
+    "10",
+    "15"
+   ]
+  }
+ ],
+ "labels": [],
+ "notes": [],
+ "pricing": {
+  "items": [],
+  "totals": [],
+  "boqCheck": []
+ },
+ "summary": {
+  "devices": 154,
+  "byType": {
+   "smoke": 43,
+   "spk_conc": 11,
+   "spk_space": 33,
+   "spk_semi": 2,
+   "sprinkler": 9,
+   "speaker": 14,
+   "spk_surf": 9,
+   "heat": 3,
+   "spk_up": 30
+  },
+  "symbols": 13,
+  "networks": 0,
+  "rooms": 16,
+  "pricingItems": 0,
+  "unknownMarkupClasses": 0
+ },
+ "provenance": {
+  "diff": {
+   "annotations": 3,
+   "vector": 0,
+   "text": 0,
+   "revisionSheets": [],
+   "pairs": 10,
+   "additions": 224,
+   "labels": 0
+  },
+  "legend": {
+   "symbols": 99,
+   "typed": 53,
+   "historical": 0,
+   "lineTypes": 17,
+   "detections": 172
+  },
+  "generatedBy": "src/learning-engine"
+ }
+}

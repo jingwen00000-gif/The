@@ -23,9 +23,10 @@ function scoreDevices(truth, dets, opts = {}) {
     ut.add(i); ud.add(j); tp++; if (t.typeLevel === 'family') continue; typed++; // family-level truth judges recognition, not sub-type
     if (norm(t.type) === norm(d.type)) typeOk++; else { const k = norm(t.type) + '→' + d.type; confusion[k] = (confusion[k] || 0) + 1; }
   }
-  // only detections of families the truth covers on pages the truth covers count as false positives
-  const fams = new Set(T.map(t => fam(t.type))), pages = new Set(T.map(t => t.page));
-  const fpList = D.filter((d, j) => !ud.has(j) && pages.has(d.page) && fams.has(fam(d.type)));
+  // only detections of a family the truth counts ON THAT SHEET are false positives (smoke detectors drawn on a wet sheet are not, when
+  // the estimator counts them on the dry sheet)
+  const famPage = new Set(T.map(t => t.page + '|' + fam(t.type)));
+  const fpList = D.filter((d, j) => !ud.has(j) && famPage.has(d.page + '|' + fam(d.type)));
   const fnList = T.filter((t, i) => !ut.has(i));
   const fp = fpList.length, fn = fnList.length;
   const precision = tp + fp ? 100 * tp / (tp + fp) : 100, recall = tp + fn ? 100 * tp / (tp + fn) : 100;

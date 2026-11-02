@@ -200,11 +200,18 @@ FVE.titleBlock=function(m){const W=m.page.w, H=m.page.h; let tbx=W, tby=H;
   const z=[]; if(tbx<W*.995) z.push([tbx,0,W,H]); if(tby<H*.995) z.push([0,tby,W,H]); return z};
 FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, out={sections:[],symbols:[],lineTypes:[],abbrev:{},zones:[]};
   const heads=L.filter(l=>HEAD_RE.test(l.s.toUpperCase())&&l.s.length<70&&!/^\d/.test(l.s)&&!ABBR_RE.test(l.s));
+  // legend sheets with category boxes (FIRE SPRINKLERS & HYDRANTS, FIRE DETECTION, PIPING SYSTEM …): a short all-caps line clearly taller
+  // than the body text (1.25–2.5×) with rows beneath it in its column is a section heading too
+  if(m.sheet&&m.sheet.kind==='legend') for(const l of L){if(heads.includes(l)||l.s.length>45||/[a-z]/.test(l.s)||!/[A-Z]{3}/.test(l.s)||/^\d/.test(l.s)||ABBR_RE.test(l.s)) continue;
+    if(l.h<bodyH*1.25||l.h>bodyH*2.5) continue;
+    const lw=l.x1-l.x, below=L.filter(o=>o!==l&&o.cy>l.cy&&o.cy-l.cy<bodyH*8&&Math.abs(o.h-bodyH)<bodyH*.2&&o.x>=l.x-Math.max(bodyH*6,lw)&&o.x<=l.x+bodyH*30).length; if(below>=2){l.boxed=true; heads.push(l)}}
   const tb=FVE.titleBlock(m), inTB=b=>tb.some(z=>b[0]>=z[0]&&b[1]>=z[1]);
   const usedLine=new Set();
   for(const h of heads){if(inTB(h.bb)) continue; const hw=h.x1-h.x;
+    // a heading centred in its box: its rows (and their symbols) start left of it, by up to the heading's width
+    const left=h.boxed?h.x-Math.max(bodyH*3,hw*.9):h.x-bodyH*3, symLeft=h.boxed?h.x-Math.max(bodyH*6,hw*1.3):h.x-bodyH*3;
     // entries: lines below the heading, in its column, before the next heading of that column
-    const cand=L.filter(l=>l!==h&&!heads.includes(l)&&l.cy>h.cy&&l.x>=h.x-bodyH*3&&l.x<=h.x+Math.max(hw*1.3,bodyH*25)&&!inTB(l.bb));
+    const cand=L.filter(l=>l!==h&&!heads.includes(l)&&l.cy>h.cy&&l.x>=left&&l.x<=h.x+Math.max(hw*1.3,bodyH*25)&&!inTB(l.bb));
     const below=heads.filter(o=>o!==h&&o.cy>h.cy&&Math.abs(o.x-h.x)<Math.max(hw,bodyH*20)); const stopY=below.length?Math.min(...below.map(o=>o.cy)):Infinity;
     let rows=cand.filter(l=>l.cy<stopY).sort((a,b)=>a.cy-b.cy); const keep=[]; let lastY=h.cy;
     for(const r of rows){if(r.cy-lastY>bodyH*9) break; keep.push(r); lastY=r.cy} rows=keep; if(!rows.length) continue;
@@ -217,12 +224,18 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
       if(/^[-–]\s*[A-Z]/.test(r.s)){const t=L.find(o=>o!==r&&Math.abs(o.cy-r.cy)<r.h*.5&&o.x1<=r.x+r.h&&r.x-o.x1<r.h*12&&/^[A-Z][A-Z0-9\/&.]{0,7}$/.test(o.s)); if(t){out.abbrev[t.s.toUpperCase()]=r.s.replace(/^[-–]\s*/,'').trim(); usedLine.add(t); sec.kind='abbrev'; return}}
       if(r.x<mode-bodyH*3) return; // a tag or label sitting in the symbol column, handled with its row
       const prev=rows[i-1], next=rows[i+1]; const half=Math.min(Math.max(((next?next.cy:r.cy+r.h*3)-(prev?prev.cy:r.cy-r.h*3))/4,r.h*.8),r.h*3);
-      const zone=[Math.max(h.x-bodyH*3,r.x-bodyH*40),r.cy-half,r.x-bodyH*.3,r.cy+half];
+      const zone=[Math.max(symLeft,r.x-bodyH*40),r.cy-half,r.x-bodyH*.3,r.cy+half];
       // white fills are masks laid under a symbol (they hide the background), not part of it
       // a symbol nearly as tall as the row spacing pokes a little past the row: centre inside the row, box within half a row more
       const tol=half*.5, objs=m.index.search(...zone).filter(o=>{const cx=(o.bb[0]+o.bb[2])/2, cy=(o.bb[1]+o.bb[3])/2; return cx>=zone[0]&&cx<=zone[2]&&cy>=zone[1]&&cy<=zone[3]&&o.bb[0]>=zone[0]-1&&o.bb[2]<=zone[2]+1&&o.bb[1]>=zone[1]-tol&&o.bb[3]<=zone[3]+tol&&!(!o.stroke&&o.fill==='ffffff')&&o.stroke!=='ffffff'});
       const tags=m.texts.filter(t=>t.cx>zone[0]&&t.cx<zone[2]&&t.cy>zone[1]&&t.cy<zone[3]&&!r.items.includes(t)&&t.s.length<=12).map(t=>t.s);
       sec.rows.push(r); sec.bb=bbUnion(sec.bb,zone);
+      // a boxed section's wide zone can reach the neighbouring column: keep the cluster of pieces next to the row's text (gaps under
+      // 2.5 text heights), not a glyph or tick from the column beside it
+      if(h.boxed&&objs.length>1){const g=bodyH*2.5, gap=(a,b)=>Math.max(a.bb[0]-b.bb[2],b.bb[0]-a.bb[2],a.bb[1]-b.bb[3],b.bb[1]-a.bb[3],0);
+        const seed=objs.reduce((m,o)=>o.bb[2]>m.bb[2]?o:m,objs[0]), keep=new Set([seed]); let grew=true;
+        while(grew){grew=false; for(const o of objs) if(!keep.has(o)&&[...keep].some(k=>gap(o,k)<=g)){keep.add(o); grew=true}}
+        for(let i=objs.length-1;i>=0;i--) if(!keep.has(objs[i])) objs.splice(i,1)}
       const desc=r.s.trim(); if(!objs.length&&!tags.length) return;
       const ob=objs.length?objs.reduce((u,o)=>bbUnion(u,o.bb),objs[0].bb.slice()):null;
       // a line type: a long, low sample (pipework / cabling legend)
@@ -230,7 +243,9 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
       const pieces=objs.filter(o=>o.k==='line'&&(o.bb[3]-o.bb[1])<bodyH*.6), longest=pieces.reduce((m2,o)=>Math.max(m2,o.len),0);
       const span=ob?ob[2]-ob[0]:0, dashed=objs.some(o=>o.dash)||(pieces.length>=3&&longest<span*.45);
       const cls=FVE.lineClass(desc), ct=FVE.classifyDesc(desc);
-      if((lineObj||(dashed&&span>bodyH*4))&&!(ct.type&&!cls)){const ref=lineObj||pieces[0]; const ink=pieces.reduce((a,o)=>a+o.len,0)+(lineObj?lineObj.len:0);
+      // a row naming a device with no run word ('CONCEALED SPACE SPRINKLER - PENDENT') is a symbol, however its sample is drawn
+      const runWord=/PIPE|PIPEWORK|\bMAIN|\bRANGE|RING|CABLE|CABLING|WIRING|\bLOOP|CONDUIT|\bLINE\b|DUCT\s*WORK/.test(desc.toUpperCase());
+      if((lineObj||(dashed&&span>bodyH*4))&&!(ct.type&&!cls)&&!(ct.type&&!runWord)){const ref=lineObj||pieces[0]; const ink=pieces.reduce((a,o)=>a+o.len,0)+(lineObj?lineObj.len:0);
         out.lineTypes.push({id:'lt'+out.lineTypes.length,page:m.page.id,desc,cls,status:ct.status,stroke:ref.stroke||ref.fill,w:ref.w,dashed,duty:dashed&&span?Math.min(1,ink/span):1,bb:ob,tags});
         return}
       if(!objs.length) return; const c=[(ob[0]+ob[2])/2,(ob[1]+ob[3])/2];
@@ -415,8 +430,17 @@ FVE.pageRatios=function(D,m){const byCol={}; for(const o of m.objects) if(o.k===
   const top=Object.entries(votes).sort((a,b)=>b[1]-a[1]); const out=[]; for(const [k,n] of top){const q=+k; if(out.length<2&&!out.some(o=>Math.abs(o.q-q)<.08)&&n>=6) out.push({q,n})}
   if(!out.some(o=>Math.abs(o.q-1)<.08)) out.push({q:1,n:0}); return out};
 // the same, per legend symbol, from its largest closed shape (a circle's radius, a square's side) against same-kind same-colour shapes
-FVE.templateRatios=function(e,m){if(!e.key) return []; if(!m.shapeHist){const H={}; for(const o of m.objects) if(o.closed&&o.stroke&&(o.k==='circle'||o.k==='rect'||o.k==='polygon')){const k=o.k+'|'+o.stroke, z=Math.round(shapeSize(o)*20)/20; (H[k]=H[k]||{})[z]=(H[k][z]||0)+1} m.shapeHist=H}
-  const H=m.shapeHist[e.key.k+'|'+e.key.col]; if(!H) return []; const c=Object.entries(H).map(([z,n])=>({q:+z/e.key.size,n})).filter(x=>x.n>=2&&x.q>=.25&&x.q<=4).sort((a,b)=>b.n-a.n);
+FVE.templateRatios=function(e,m){if(!e.key) return [];
+  // the key must be the symbol's outline: a dash or an inner dot (a dashed square with a dot) cannot say what scale the plan uses
+  if(e.bb){const S=Math.max(e.bb[2]-e.bb[0],e.bb[3]-e.bb[1]), ks=e.key.k==='circle'?2*e.key.size:e.key.size; if(S>0&&ks<S*.5) return []} if(!m.shapeHist){const H={}, inner={};
+    // a shape centred inside a larger same-kind, same-colour shape is an inner detail (the dot in a sprinkler), not a symbol of its own
+    const cl=m.objects.filter(o=>o.closed&&o.stroke&&(o.k==='circle'||o.k==='rect'||o.k==='polygon'));
+    for(const o of cl){const k=o.k+'|'+o.stroke, z=Math.round(shapeSize(o)*20)/20, c=[(o.bb[0]+o.bb[2])/2,(o.bb[1]+o.bb[3])/2], S=shapeSize(o);
+      (H[k]=H[k]||{})[z]=(H[k][z]||0)+1;
+      const host=m.index.search(c[0]-.5,c[1]-.5,c[0]+.5,c[1]+.5).some(x=>x!==o&&x.k===o.k&&x.stroke===o.stroke&&x.closed&&shapeSize(x)>S*1.5&&hyp((x.bb[0]+x.bb[2])/2-c[0],(x.bb[1]+x.bb[3])/2-c[1])<Math.max(.5,S*.2));
+      if(host){(inner[k]=inner[k]||{})[z]=(inner[k][z]||0)+1}}
+    m.shapeHist=H; m.shapeInner=inner}
+  const kk=e.key.k+'|'+e.key.col, H=m.shapeHist[kk]; if(!H) return []; const I=(m.shapeInner&&m.shapeInner[kk])||{}; const c=Object.entries(H).map(([z,n])=>({q:+z/e.key.size,n:n-(I[z]||0)})).filter(x=>x.n>=2&&x.q>=.25&&x.q<=4).sort((a,b)=>b.n-a.n);
   const out=[]; for(const x of c){if(out.length<2&&!out.some(o=>Math.abs(o.q-x.q)<.08*o.q)&&(!out.length||x.n>=out[0].n*.25)) out.push(x)} return out};
 // hooks.match(entry, model, ratio) → [{x,y,w,h,score}] for a legend symbol on a sheet (the app's vector matcher)
 FVE.detect=async function(models,D,hooks){hooks=hooks||{};

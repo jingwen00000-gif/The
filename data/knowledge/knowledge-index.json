@@ -10,7 +10,17 @@
    "networks": 0,
    "rooms": 0,
    "pricingItems": 0
+  },
+  {
+   "projectId": "44-market",
+   "at": "2026-11-02T05:10:19.760Z",
+   "consultant": "Nutbrook Engineering Group Pty Ltd.",
+   "devices": 154,
+   "symbols": 13,
+   "networks": 0,
+   "rooms": 16,
+   "pricingItems": 0
   }
  ],
- "updated": "2026-11-02T03:17:27.451Z"
+ "updated": "2026-11-02T05:10:19.770Z"
 }

@@ -1,6 +1,6 @@
 {
  "schema": "firetake.knowledge/1",
- "updated": "2026-11-02T03:17:27.451Z",
+ "updated": "2026-11-02T05:10:19.770Z",
  "entries": [
   {
    "consultant": "Millimetre Consulting Engineers",
@@ -196,6 +196,209 @@
    },
    "projects": [
     "44-mandarin"
+   ]
+  },
+  {
+   "consultant": "Nutbrook Engineering Group Pty Ltd.",
+   "key": "nutbrookengineeringgroup",
+   "aliases": {
+    "Az": 1,
+    "Copyright. This Document And Design": 1,
+    "Nutbrook Engineering": 1,
+    "In Any Form Without The Consent Of Nutbrook Engineering": 1,
+    "Diagrammatic Design": 1,
+    "Concept Design": 1,
+    "Consulting Engineers": 1,
+    "Millimetre Consulting Engineers": 1,
+    "Nutbrook Group": 1,
+    "Safety In Design": 1,
+    "N": 1,
+    "Section 3.5.1 Of Fire Engineering": 1
+   },
+   "emailDomains": {
+    "nutbrookgroup": 1
+   },
+   "logoHashes": {},
+   "symbols": [
+    {
+     "geoHash": "GEO_MW3P7",
+     "deviceType": "smoke",
+     "n": 19,
+     "sources": {
+      "44-market": 19
+     }
+    },
+    {
+     "geoHash": "GEO_52KQO",
+     "deviceType": "smoke",
+     "n": 6,
+     "sources": {
+      "44-market": 6
+     }
+    },
+    {
+     "geoHash": "GEO_3BQBX",
+     "deviceType": "smoke",
+     "n": 5,
+     "sources": {
+      "44-market": 5
+     }
+    },
+    {
+     "geoHash": "GEO_ULX16",
+     "deviceType": "spk_conc",
+     "n": 11,
+     "sources": {
+      "44-market": 11
+     }
+    },
+    {
+     "geoHash": "GEO_X15LL",
+     "deviceType": "spk_space",
+     "n": 14,
+     "sources": {
+      "44-market": 14
+     }
+    },
+    {
+     "geoHash": "GEO_FMPHP",
+     "deviceType": "spk_space",
+     "n": 8,
+     "sources": {
+      "44-market": 8
+     }
+    },
+    {
+     "geoHash": "GEO_E50CE",
+     "deviceType": "spk_space",
+     "n": 6,
+     "sources": {
+      "44-market": 6
+     }
+    },
+    {
+     "geoHash": "GEO_ULX16",
+     "deviceType": "spk_semi",
+     "n": 2,
+     "sources": {
+      "44-market": 2
+     }
+    },
+    {
+     "geoHash": "GEO_ULX16",
+     "deviceType": "sprinkler",
+     "n": 7,
+     "sources": {
+      "44-market": 7
+     }
+    },
+    {
+     "geoHash": "GEO_699OV",
+     "deviceType": "speaker",
+     "n": 3,
+     "sources": {
+      "44-market": 3
+     }
+    },
+    {
+     "geoHash": "GEO_D1OAI",
+     "deviceType": "speaker",
+     "n": 3,
+     "sources": {
+      "44-market": 3
+     }
+    },
+    {
+     "geoHash": "GEO_68OD3",
+     "deviceType": "heat",
+     "n": 2,
+     "sources": {
+      "44-market": 2
+     }
+    },
+    {
+     "geoHash": "GEO_5ZCBX",
+     "deviceType": "spk_up",
+     "n": 30,
+     "sources": {
+      "44-market": 30
+     }
+    }
+   ],
+   "abbreviations": {
+    "STORE": {
+     "sprinkler": 1
+    }
+   },
+   "conventions": {
+    "statusColours": {},
+    "legendStyle": {
+     "text": 1
+    },
+    "scales": {
+     "100": 1
+    },
+    "lineTypes": {
+     "pipe|ff3f00|0": {
+      "cls": "pipe",
+      "desc": "FIRE SPRINKLER PIPE",
+      "stroke": "ff3f00",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|bf00ff|0": {
+      "cls": "pipe",
+      "desc": "PRE-ACTION DRY PIPE",
+      "stroke": "bf00ff",
+      "dashed": false,
+      "n": 1
+     },
+     "pipe|dcdc00|0": {
+      "cls": "pipe",
+      "desc": "GAS SUPPRESSION PIPE",
+      "stroke": "dcdc00",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|00ff00|0": {
+      "cls": "pipe",
+      "desc": "COMBINED FIRE SPRINKLER/HYDRANT RING",
+      "stroke": "00ff00",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|003fff|0": {
+      "cls": "pipe",
+      "desc": "FIRE HYDRANT PIPE",
+      "stroke": "003fff",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|a0a0a0|0": {
+      "cls": "pipe",
+      "desc": "FIRE HYDRANT PIPE (IN GROUND)",
+      "stroke": "a0a0a0",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|00dcdc|0": {
+      "cls": "pipe",
+      "desc": "MASD SAMPLING PIPE",
+      "stroke": "00dcdc",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|8a00b8|0": {
+      "cls": "pipe",
+      "desc": "EXISTING PRE-ACTION DRY PIPE",
+      "stroke": "8a00b8",
+      "dashed": false,
+      "n": 1
+     }
+    }
+   },
+   "projects": [
+    "44-market"
    ]
   }
  ]

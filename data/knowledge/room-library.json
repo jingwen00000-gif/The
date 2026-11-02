@@ -1,5 +1,81 @@
 {
  "schema": "firetake.knowledge/1",
- "updated": "2026-11-02T03:17:27.451Z",
- "entries": []
+ "updated": "2026-11-02T05:10:19.770Z",
+ "entries": [
+  {
+   "room": "RETAIL",
+   "n": 4,
+   "area_m2": {
+    "n": 4,
+    "avg": 93.54,
+    "min": 74.61,
+    "max": 112.46,
+    "median": 112.46
+   },
+   "expectedDevices": [],
+   "sources": {
+    "44-market": 4
+   }
+  },
+  {
+   "room": "STAIR",
+   "n": 4,
+   "area_m2": {
+    "n": 4,
+    "avg": 13.65,
+    "min": 3.73,
+    "max": 19.98,
+    "median": 19.98
+   },
+   "expectedDevices": [],
+   "sources": {
+    "44-market": 4
+   }
+  },
+  {
+   "room": "BATHROOM",
+   "n": 4,
+   "area_m2": {
+    "n": 4,
+    "avg": 78.05,
+    "min": 3.44,
+    "max": 152.66,
+    "median": 152.66
+   },
+   "expectedDevices": [],
+   "sources": {
+    "44-market": 4
+   }
+  },
+  {
+   "room": "KITCHEN",
+   "n": 3,
+   "area_m2": {
+    "n": 3,
+    "avg": 26.59,
+    "min": 26.59,
+    "max": 26.59,
+    "median": 26.59
+   },
+   "expectedDevices": [],
+   "sources": {
+    "44-market": 3
+   }
+  },
+  {
+   "room": "PLANT ROOM",
+   "n": 1,
+   "area_m2": {
+    "n": 1,
+    "avg": 408.46,
+    "min": 408.46,
+    "max": 408.46,
+    "median": 408.46
+   },
+   "expectedDevices": [],
+   "sources": {
+    "44-market": 1
+   }
+  }
+ ]
 }
