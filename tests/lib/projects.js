@@ -8,7 +8,9 @@ function all() {
     for (const name of fs.readdirSync(dir).sort()) {
       const gtf = path.join(dir, name, 'ground-truth.json'); if (!fs.existsSync(gtf)) continue;
       const gt = JSON.parse(fs.readFileSync(gtf, 'utf8')); const files = (gt.files || ['project.pdf']).map(f => path.join(dir, name, f));
-      out.push({ name, dir: path.join(dir, name), gt, files, present: files.every(f => fs.existsSync(f)) });
+      // a consultant library the estimator built (library.json: geoHash → device) is what the app would have stored from an earlier job
+      const lf = path.join(dir, name, 'library.json'); const library = fs.existsSync(lf) ? JSON.parse(fs.readFileSync(lf, 'utf8')).entries : null;
+      out.push({ name, dir: path.join(dir, name), gt, files, library, present: files.every(f => fs.existsSync(f)) });
     }
   }
   return out;

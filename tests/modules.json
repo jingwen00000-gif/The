@@ -69,8 +69,10 @@
     {
      "id": "legend-geometric",
      "name": "Legend analysis — CAD-lettered legends (no text layer)",
-     "implemented": false,
-     "note": "exists in the app UI flow (lgRows), not yet inside FVE"
+     "implemented": true,
+     "file": "app/fve.js (findLegendColumn, legendColumn, strokeLetter, geoLegendSymbols, reclassify)",
+     "accept": "unit",
+     "note": "383-kent: 52 rows found without a box, status from stroke letter + colour vote; rows typed from validation-projects/383-kent/library.json"
     },
     {
      "id": "rule-engine",

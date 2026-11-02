@@ -3893,6 +3893,18 @@ function vsmBuild(sg,bw,bh){if(sg.length<3) return null; const ps=sg.flatMap(s=>
 // the same stroke plotted two or three times over (heavy pens) counts once, or the copies would read as extra line work
 function vsmIndex(V){if(V._vsm) return V._vsm; const seen=new Set(), all=[]; for(const s of [...V,...(V.fills||[])]){const k=s.col+'|'+[s.a,s.b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(k)) continue; seen.add(k); all.push(s)}
   const byL=all.slice().sort((a,b)=>a.L-b.L); return V._vsm={all,byL}}
+// the vector template of an FVE legend entry. A geometric (CAD-lettered) legend row is cut from the legend page's own segments: the same
+// curve flattening as the plans it is searched on, each stroke once however often the pen went over it. Text-legend entries keep their FVE
+// segments (measured: on 44-mandarin the page cut lost 2 points of recall).
+async function fveTemplate(e){if(e._T!==undefined) return e._T; const bw=e.bb[2]-e.bb[0], bh=e.bb[3]-e.bb[1]; let sg=null; const p=S.pages.find(x=>x.id===e.page);
+  if(p&&e.geo){const V=await pdfVectors(p), b=e.bb, t=.3, cols=new Set(e.cols||[]), inB=q=>q[0]>=b[0]-t&&q[0]<=b[2]+t&&q[1]>=b[1]-t&&q[1]<=b[3]+t;
+    // only strokes lying on the entry's own objects (its box can also hold pieces of the row frame or a neighbouring sample)
+    const own=e.segs.map(q=>({a:[q.a[0]+e.c[0],q.a[1]+e.c[1]],b:[q.b[0]+e.c[0],q.b[1]+e.c[1]]})), dS=(q,A,B)=>{const dx=B[0]-A[0],dy=B[1]-A[1],L2=dx*dx+dy*dy||1; const k=Math.max(0,Math.min(1,((q[0]-A[0])*dx+(q[1]-A[1])*dy)/L2)); return Math.hypot(q[0]-A[0]-k*dx,q[1]-A[1]-k*dy)};
+    const onSym=s=>{const M=[(s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2]; return own.some(o=>dS(M,o.a,o.b)<.25)};
+    const seen=new Set(); // a stroke plotted two or three times over (heavy pens) counts once, or it crowds the anchors out
+    sg=V.concat(V.fills||[]).filter(s=>{if(cols.size&&!cols.has(s.col)||!inB(s.a)||!inB(s.b)||!onSym(s)) return false; const k=s.col+'|'+(s.f?1:0)+'|'+[s.a,s.b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(k)) return false; seen.add(k); return true}).map(s=>({a:[s.a[0]-e.c[0],s.a[1]-e.c[1]],b:[s.b[0]-e.c[0],s.b[1]-e.c[1]],L:s.L,c:s.col,col:s.col,f:s.f?1:0}))}
+  if(!sg||sg.length<3) sg=e.segs.map(s=>({...s}));
+  return e._T=vsmBuild(sg,bw*1.6,bh*1.6)}
 async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) return []; const {all,byL}=vsmIndex(V);
   const lo=.85*rs, hi=1.18*rs, lb=v=>{let a=0,b=byL.length; while(a<b){const m=(a+b)>>1; if(byL[m].L<v) a=m+1; else b=m} return a};
   const range=(a,b)=>{const out=[]; for(let i=lb(a);i<byL.length&&byL[i].L<=b;i++) out.push(byL[i]); return out};

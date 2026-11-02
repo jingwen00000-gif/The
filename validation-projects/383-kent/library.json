@@ -1,0 +1,151 @@
+{
+ "consultant": "Evolved Engineering",
+ "source": "Named once by an estimator reading the F-000-001 legend (52 rows cut by FVE.legendColumn); geoHash → device. Same consultant, next project: rows are typed without asking.",
+ "entries": [
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_4F3YV",
+   "device": "spk_semi"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_Z8SRU",
+   "device": "spk_semi"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_NHTSY",
+   "device": "spk_semi"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_Y90UN",
+   "device": "spk_pend"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_QEQEJ",
+   "device": "spk_pend"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_2SLDB",
+   "device": "spk_conc"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_GK553",
+   "device": "spk_conc"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_8EXYI",
+   "device": "spk_conc"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_6M4G7",
+   "device": "spk_space"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_W458Z",
+   "device": "spk_space"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_DDDSD",
+   "device": "spk_side"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_G0NGG",
+   "device": "spk_side"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_W0TDT",
+   "device": "spk_side"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_YOU10",
+   "device": "speaker"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_3SJD2",
+   "device": "speaker"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_IQ6MM",
+   "device": "horn"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_VGY43",
+   "device": "horn"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_8HFPU",
+   "device": "horn"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_99VJV",
+   "device": "smoke"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_ZA9UW",
+   "device": "smoke"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_VFJJ3",
+   "device": "duct_probe"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_CWI08",
+   "device": "cs_smoke"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_54B19",
+   "device": "heat"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_A09SO",
+   "device": "heat"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_EIU54",
+   "device": "heat"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_0UCLF",
+   "device": "ext_abe"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_QUQWG",
+   "device": "ext_co2"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_D4APD",
+   "device": "blanket"
+  },
+  {
+   "consultant": "Evolved Engineering",
+   "geoHash": "GEO_ZU7MD",
+   "device": "relay"
+  }
+ ]
+}

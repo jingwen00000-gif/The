@@ -51,11 +51,17 @@ const mul=(A,B)=>[A[0]*B[0]+A[2]*B[1],A[1]*B[0]+A[3]*B[1],A[0]*B[2]+A[2]*B[3],A[
 // (needs ≥ 8 points: a rectangle's 4 corners are equidistant from its centre too)
 function fitCircle(pts){if(pts.length<8) return null; let cx=0,cy=0; const P=hyp(pts[0][0]-pts[pts.length-1][0],pts[0][1]-pts[pts.length-1][1])<1e-6?pts.slice(0,-1):pts;
   for(const p of P){cx+=p[0]; cy+=p[1]} cx/=P.length; cy/=P.length; let r=0; for(const p of P) r+=hyp(p[0]-cx,p[1]-cy); r/=P.length; if(r<.2) return null;
-  for(const p of P) if(Math.abs(hyp(p[0]-cx,p[1]-cy)-r)>Math.max(.06*r,.08)) return null; return {c:[cx,cy],r}}
+  for(const p of P) if(Math.abs(hyp(p[0]-cx,p[1]-cy)-r)>Math.max(.06*r,.08)) return null;
+  // the chords must hug the circle too: a square drawn corner to corner (twice over, so 8 points) has every corner on a circle, its sides do not
+  for(let i=0;i<P.length;i++){const a=P[i], b=P[(i+1)%P.length]; if(hyp(((a[0]+b[0])/2)-cx,((a[1]+b[1])/2)-cy)<r*.85) return null}
+  return {c:[cx,cy],r}}
 function classify(sp){const pts=sp.pts, n=pts.length; if(n<2) return null; const bb=bbOf(pts), len=plen(pts), first=pts[0], last=pts[n-1];
   const closed=sp.closed||(n>2&&hyp(first[0]-last[0],first[1]-last[1])<Math.max(.05,len*.002)); const o={pts,closed,bb,len};
   if(sp.rect){o.k='rect'; return o}
   if(n===2){o.k='line'; return o}
+  if(closed&&n>5){const U=[]; for(const p of pts) if(!U.some(q=>hyp(q[0]-p[0],q[1]-p[1])<.05)) U.push(p);
+    // the same outline traced twice or three times over (heavy CAD pens): one copy of it
+    if(U.length>=3&&U.length<n-1&&(n-1)%U.length===0&&pts.every((p,i)=>hyp(p[0]-pts[i%U.length][0],p[1]-pts[i%U.length][1])<.05)){const P=U.concat([U[0]]); return classify({...sp,pts:P,closed:true})}}
   if(closed){const c=fitCircle(pts); if(c){o.k='circle'; o.c=c.c; o.r=c.r; return o}
     if(n===5||n===4){const P=n===5?pts.slice(0,4):pts; const ax=P.every((p,i)=>{const q=P[(i+1)%4]; return Math.abs(p[0]-q[0])<.05||Math.abs(p[1]-q[1])<.05}); if(ax){o.k='rect'; return o}}
     o.k='polygon'; return o}
@@ -131,7 +137,8 @@ const SHEET_KW=[['cover',/\bCOVER\b|DRAWING\s+(LIST|SCHEDULE|REGISTER)|SHEET\s+L
   ['notes',/SPECIFICATION|GENERAL\s+NOTES|\bNOTES\b/],['schematic',/SCHEMATIC|RISER\s+DIAGRAM|BLOCK\s+DIAGRAM/],['detail',/\bDETAILS?\b|DETAIL\s+SHEET|TYPICAL\s+INSTALL/],
   ['site',/SITE\s+PLAN|LOCALITY|LOCATION\s+PLAN/],['plan',/LAYOUT|FLOOR\s+PLAN|\bLEVEL\s*\d|\bL\d{1,2}\b|BASEMENT|GROUND|FIRST\s+FLOOR|SECOND\s+FLOOR|ROOF|MEZZANINE|COVERAGE/]];
 // what a sheet is: from its title block wording (bottom-right) and how much drawing is on it
-FVE.classifySheet=function(m){const tb=m.texts.filter(t=>t.cx>m.page.w*.55&&t.cy>m.page.h*.55), all=m.texts; const score={};
+const normT=s=>String(s).toUpperCase().replace(/\s+/g,' ').trim();
+FVE.classifySheet=function(m,ignore){const keep=t=>!ignore||!ignore.has(normT(t.s)); const tb=m.texts.filter(t=>t.cx>m.page.w*.55&&t.cy>m.page.h*.55&&keep(t)), all=m.texts.filter(keep); const score={};
   const add=(arr,w)=>{for(const t of arr){const u=t.s.toUpperCase(); for(const [k,re] of SHEET_KW) if(re.test(u)) score[k]=(score[k]||0)+w}};
   add(tb,3); add(all.filter(t=>t.h>=Math.max(...all.map(x=>x.h))*.6),1);
   const draw=m.objects.length; let kind=Object.keys(score).sort((a,b)=>score[b]-score[a])[0]||(draw>3000?'plan':'notes');
@@ -237,16 +244,128 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
     else if(/^[-–]\s*[A-Z]/.test(r.s)){const t=L.find(o=>o!==r&&Math.abs(o.cy-r.cy)<r.h*.5&&o.x1<=r.x+r.h&&r.x-o.x1<r.h*12&&/^[A-Z][A-Z0-9\/&.]{0,7}$/.test(o.s)); if(t&&!out.abbrev[t.s.toUpperCase()]) out.abbrev[t.s.toUpperCase()]=r.s.replace(/^[-–]\s*/,'').trim()}}
   out.zones=out.sections.filter(s=>s.rows.length||s.kind==='abbrev').map(s=>s.bb);
   return out};
+/* ------------------------------------------------------------------ layer 3b: geometric legend (CAD line lettering)
+   Some consultants plot the legend as strokes, not text: there is nothing to read, so the legend is cut by geometry instead —
+   the column of symbols, one row each, the status letter beside it (N / E / R / D in stroke lettering) and the symbol's colour.
+   Rows come back untyped unless a consultant library knows the symbol (geoHash) or the estimator names it once. */
+// phasing colour class of a CAD colour: saturated → its hue, otherwise black / grey by lightness (a 575757 'existing' grey is grey, not black)
+FVE.colClass=function(h){if(!h||h.length<6) return 'black'; const r=parseInt(h.slice(0,2),16), g=parseInt(h.slice(2,4),16), b=parseInt(h.slice(4,6),16), mx=Math.max(r,g,b), mn=Math.min(r,g,b);
+  if(mx-mn>70){const R=r/255,G=g/255,B=b/255, M=mx/255, m=mn/255; let H=M===m?0:M===R?60*(((G-B)/(M-m))%6):M===G?60*((B-R)/(M-m)+2):60*((R-G)/(M-m)+4); if(H<0) H+=360;
+    return H<18||H>=330?'red':H<45?'orange':H<70?'yellow':H<165?'green':H<200?'cyan':H<260?'blue':'magenta'}
+  return (r+g+b)/3<45?'black':(r+g+b)/3>235?'white':'grey'};
+// N / E / R / D from CAD stroke lettering: E = three bars and an upright, N = two uprights and a diagonal,
+// R = a bowl (many short strokes) with a long diagonal leg, D = a bowl and an upright, no leg
+FVE.strokeLetter=function(sg){if(!sg.length) return null; const ys=sg.flatMap(s=>[s.a[1],s.b[1]]), h=Math.max(...ys)-Math.min(...ys)||1; let hz=0,vt=0,dg=0,longDg=0,sh=0;
+  for(const s of sg){const a=Math.abs(Math.atan2(s.b[1]-s.a[1],s.b[0]-s.a[0])*180/Math.PI)%180; if(s.L<h*.2){sh++; continue} if(a<15||a>165) hz++; else if(a>75&&a<105) vt++; else {dg++; if(s.L>h*.35) longDg++}}
+  if(sh<=1&&hz>=3&&vt>=1&&dg===0) return 'E'; if(sh<=1&&vt>=2&&longDg>=1&&hz===0) return 'N'; if(sh>=3&&longDg>=1) return 'R'; if(sh>=3&&vt>=1&&longDg===0) return 'D'; return null};
+FVE.LETTER_STATUS={N:'new',E:'retain',R:'relocate',D:'remove'};
+// where the symbol column is when nobody drew a box: a narrow vertical band of small coloured pieces, stacked on many rows, in at least two
+// colours (new / existing / remove …), outside the title block; returns [x0,y0,x1,y1] or null
+FVE.findLegendColumn=function(m){const tb=FVE.titleBlock(m), inTB=b=>tb.some(z=>b[0]>=z[0]&&b[1]>=z[1]); const lim=Math.min(m.page.w,m.page.h)*.03;
+  const P=m.objects.filter(o=>{if(o.synthetic) return false; const c=FVE.colClass(o.stroke||o.fill); if(c==='black'||c==='white') return false; const s=Math.max(o.bb[2]-o.bb[0],o.bb[3]-o.bb[1]); return s<lim&&s>.5&&!inTB(o.bb)});
+  if(P.length<6) return null; const ms=median(P.map(o=>Math.max(o.bb[2]-o.bb[0],o.bb[3]-o.bb[1])))||4, bw=Math.max(ms*4,30);
+  const bins={}; P.forEach(o=>{const k=Math.floor((o.bb[0]+o.bb[2])/2/bw); (bins[k]=bins[k]||[]).push(o)}); let best=null;
+  for(const k of Object.keys(bins).map(Number)){const g=[].concat(bins[k-1]||[],bins[k]||[],bins[k+1]||[]); const rows=new Set(g.map(o=>Math.round((o.bb[1]+o.bb[3])/2/(ms*1.5))));
+    const cls=new Set(g.map(o=>FVE.colClass(o.stroke||o.fill))); if(rows.size<5||cls.size<2) continue; const sc=rows.size*Math.min(cls.size,3);
+    if(!best||sc>best.sc) best={sc,g}}
+  if(!best) return null; const g=best.g;
+  // the densest vertical run of rows (a coloured note elsewhere in the band is not part of the legend)
+  const ys=g.map(o=>(o.bb[1]+o.bb[3])/2).sort((a,b)=>a-b); const gaps=ys.slice(1).map((y,i)=>y-ys[i]).filter(d=>d>ms), gapMax=Math.max(ms*8,(median(gaps)||ms)*5);
+  let runs=[[ys[0]]]; for(let i=1;i<ys.length;i++){if(ys[i]-ys[i-1]>gapMax) runs.push([]); runs[runs.length-1].push(ys[i])}
+  const run=runs.sort((a,b)=>b.length-a.length)[0], y0=run[0], y1=run[run.length-1]; const G=g.filter(o=>{const cy=(o.bb[1]+o.bb[3])/2; return cy>=y0&&cy<=y1});
+  const x0=Math.min(...G.map(o=>o.bb[0])), x1=Math.max(...G.map(o=>o.bb[2])); const sz=median(G.map(o=>Math.max(o.bb[2]-o.bb[0],o.bb[3]-o.bb[1])));
+  return [x0-sz*2.5,y0-sz*3,x1+sz*1.2,y1+sz*3]};
+// rows of a geometric legend inside box (or the column found above): [{b, cx, cy, col, cls, letter, status, objs, segs, ms}]
+FVE.legendColumn=function(m,box){box=box||FVE.findLegendColumn(m); if(!box) return [];
+  const inR=q=>q[0]>=box[0]&&q[0]<=box[2]&&q[1]>=box[1]&&q[1]<=box[3];
+  const objs=m.index.search(...box).filter(o=>!o.synthetic&&o.stroke!=='ffffff'&&!(!o.stroke&&o.fill==='ffffff'));
+  const sg=FVE.segments(objs).filter(s=>inR(s.a)&&inR(s.b)&&s.L<(box[3]-box[1])*.5); if(sg.length<3) return [];
+  const seen=new Set(), sgu=[]; for(const s of sg){const k=s.col+'|'+[s.a,s.b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(!seen.has(k)){seen.add(k); sgu.push(s)}}
+  if(sgu.length>40000) return [];
+  // joined line work (pieces touching within 0.3 pt), found through a grid so a whole legend sheet stays quick
+  const tol=.3, cell=4, Gd=new Map();
+  sgu.forEach((s,i)=>{for(let gx=Math.floor((Math.min(s.a[0],s.b[0])-tol)/cell);gx<=Math.floor((Math.max(s.a[0],s.b[0])+tol)/cell);gx++) for(let gy=Math.floor((Math.min(s.a[1],s.b[1])-tol)/cell);gy<=Math.floor((Math.max(s.a[1],s.b[1])+tol)/cell);gy++){const k=gx+','+gy; let a=Gd.get(k); if(!a) Gd.set(k,a=[]); a.push(i)}});
+  const near=(q,s)=>segDist(q,s.a,s.b);
+  const gid=new Int32Array(sgu.length).fill(-1), comps=[];
+  for(let i=0;i<sgu.length;i++){if(gid[i]>=0) continue; const q=[i], mm=[]; gid[i]=comps.length;
+    while(q.length){const k=q.pop(), s=sgu[k]; mm.push(k); const cand=new Set(); for(const p2 of [s.a,s.b,[(s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2]]) for(let dx=-1;dx<=1;dx++) for(let dy=-1;dy<=1;dy++){const a=Gd.get((Math.floor(p2[0]/cell)+dx)+','+(Math.floor(p2[1]/cell)+dy)); if(a) a.forEach(j=>cand.add(j))}
+      for(const j of cand){if(gid[j]>=0) continue; const u=sgu[j]; if(near(u.a,s)<tol||near(u.b,s)<tol||near(s.a,u)<tol||near(s.b,u)<tol){gid[j]=comps.length; q.push(j)}}}
+    const b=bbOf(mm.flatMap(k=>[sgu[k].a,sgu[k].b])); comps.push({m:mm,b,sz:Math.max(b[2]-b[0],b[3]-b[1])})}
+  // symbols are the bigger pieces, roughly as wide as tall (status letters and lettering are narrow), in the left-most column;
+  // a dashed symbol arrives in pieces: same-colour (not black) pieces close together are joined first
+  const szs=comps.map(c=>c.sz).sort((a,b)=>a-b), upper=szs.slice(szs.length>>1), ms=upper[upper.length>>1]||1, mn=c=>Math.min(c.b[2]-c.b[0],c.b[3]-c.b[1]);
+  const colOf=c=>{if(c.col) return c.col; const n={}; c.m.forEach(k=>n[sgu[k].col]=(n[sgu[k].col]||0)+sgu[k].L); return c.col=Object.keys(n).sort((a,b)=>n[b]-n[a])[0]};
+  const ub=g=>g.reduce((u,x)=>bbUnion(u,x.b),g[0].b.slice());
+  const small=comps.filter(c=>mn(c)<ms*.4&&c.sz<ms*1.2&&FVE.colClass(colOf(c))!=='black'), used=new Set();
+  for(const c of small){if(used.has(c)) continue; const g=[c]; used.add(c); const col=colOf(c); let grew=true;
+    while(grew){grew=false; const b=ub(g);
+      for(const o of small){if(used.has(o)||colOf(o)!==col) continue; const gap=Math.max(o.b[0]-b[2],b[0]-o.b[2],o.b[1]-b[3],b[1]-o.b[3]); if(gap<ms*.3&&Math.max(b[2],o.b[2])-Math.min(b[0],o.b[0])<ms*1.6&&Math.max(b[3],o.b[3])-Math.min(b[1],o.b[1])<ms*1.6){g.push(o); used.add(o); grew=true}}}
+    if(g.length>1){const b=ub(g); comps.push({m:g.flatMap(x=>x.m),b,sz:Math.max(b[2]-b[0],b[3]-b[1])})}}
+  let big=comps.filter(c=>c.sz>=ms*.5&&mn(c)>=ms*.4&&c.m.length>=3);
+  if(!big.length) return []; const x0=Math.min(...big.map(c=>c.b[0])); big=big.filter(c=>c.b[0]<x0+ms*2.2);
+  big.sort((a,b)=>(a.b[1]+a.b[3])-(b.b[1]+b.b[3])); const rows=[];
+  for(const c of big){const r=rows.find(r=>c.b[1]<r.b[3]-ms*.15&&c.b[3]>r.b[1]+ms*.15); if(r){r.c.push(c); r.b=bbUnion(r.b,c.b)} else rows.push({c:[c],b:c.b.slice()})}
+  // pieces level with a row and touching its right side belong to it (a 're-set' arrow drawn as two open strokes)
+  for(const r of rows){let grew=true; while(grew){grew=false; for(const c of comps){if(r.c.includes(c)||c.sz>ms*1.5) continue; const ov=Math.min(c.b[3],r.b[3])-Math.max(c.b[1],r.b[1]);
+      if(ov<(c.b[3]-c.b[1])*.5||c.b[0]<r.b[0]+ms*.2||c.b[0]-r.b[2]>ms*.3||c.b[2]>r.b[0]+ms*2.5) continue; r.c.push(c); r.b=bbUnion(r.b,c.b); grew=true}}}
+  const byId=new Map(m.objects.map(o=>[o.id,o]));
+  const out=rows.map(r=>{const b=r.b, cx=(b[0]+b[2])/2, cy=(b[1]+b[3])/2, e=ms*.04; const ids=new Set(r.c.flatMap(c=>c.m));
+    sgu.forEach((s,i)=>{if(!ids.has(i)&&[s.a,s.b].every(q=>q[0]>=b[0]-e&&q[0]<=b[2]+e&&q[1]>=b[1]-e&&q[1]<=b[3]+e)) ids.add(i)});
+    const segs=[...ids].map(i=>sgu[i]);
+    // status colour = the outline's: the strokes that reach the symbol's outer edges, not its fill or inner dot
+    const ps=segs.flatMap(s=>[[s.a,s],[s.b,s]]), ex=[q=>q[0],q=>-q[0],q=>q[1],q=>-q[1]].map(f=>ps.reduce((mm,x)=>f(x[0])<f(mm[0])?x:mm)[1].col);
+    const sat=ex.filter(c=>{const k=FVE.colClass(c); return k!=='black'&&k!=='grey'}), cnt=c=>sat.filter(x=>x===c).length;
+    const lum=c=>parseInt(c.slice(0,2),16)+parseInt(c.slice(2,4),16)+parseInt(c.slice(4,6),16);
+    const col=sat.length?sat.slice().sort((a,b)=>cnt(b)-cnt(a))[0]:ex.slice().sort((a,b)=>lum(a)-lum(b))[0];
+    // the status letter drawn just above-left of the symbol
+    const lc=comps.filter(c=>!r.c.includes(c)&&c.sz<ms*1.1&&c.sz>ms*.25&&(c.b[0]+c.b[2])/2<b[0]+ms*.3&&(c.b[0]+c.b[2])/2>b[0]-ms*1.6&&(c.b[1]+c.b[3])/2<cy&&(c.b[1]+c.b[3])/2>b[1]-ms*1.2)
+      .sort((p,q)=>hyp(p.b[2]-b[0],p.b[3]-b[1])-hyp(q.b[2]-b[0],q.b[3]-b[1]))[0];
+    const letter=lc?FVE.strokeLetter(lc.m.map(k=>sgu[k])):null;
+    const ro=[...new Set(segs.map(s=>s.o))].map(id=>byId.get(id)).filter(Boolean);
+    return {b,cx,cy,col,cls:FVE.colClass(col),letter,status:FVE.LETTER_STATUS[letter]||null,objs:ro,segs,ms}});
+  // status by colour from the legend's own letters: each colour takes its rows' majority letter (an odd one is a model tag such as 'D(E)')
+  const vote={}; out.forEach(r=>{if(r.letter) (vote[r.cls]=vote[r.cls]||{})[r.letter]=(vote[r.cls][r.letter]||0)+1});
+  for(const c in vote){const [L,n]=Object.entries(vote[c]).sort((a,b)=>b[1]-a[1])[0], tot=Object.values(vote[c]).reduce((a,b)=>a+b,0); if(n/tot<.6) continue;
+    out.forEach(r=>{if(r.cls===c){r.status=FVE.LETTER_STATUS[L]; r.colourVote=L}})}
+  out.box=box; return out};
+// geometric legend rows as dictionary symbols (the same shape analyzeLegend gives), typed from a consultant library by geoHash when it knows them
+FVE.geoLegendSymbols=function(m,rows,library){const FP=root.FVE_MSME&&root.FVE_MSME.fingerprint; return rows.filter(r=>r.objs.length).map((r,i)=>{
+    const ob=r.objs.reduce((u,o)=>bbUnion(u,o.bb),r.objs[0].bb.slice()), c=[(ob[0]+ob[2])/2,(ob[1]+ob[3])/2];
+    const segs=FVE.segments(r.objs).map(s=>({a:[s.a[0]-c[0],s.a[1]-c[1]],b:[s.b[0]-c[0],s.b[1]-c[1]],L:s.L,c:s.col,col:s.col,f:s.f}));
+    const cols={}; r.objs.forEach(o=>{const k=o.stroke||o.fill; if(k) cols[k]=(cols[k]||0)+o.len}); const color=r.col||Object.keys(cols).sort((a,b)=>cols[b]-cols[a])[0]||null;
+    const lite=r.objs.map(o=>({k:o.k,bb:o.bb,c:o.c,r:o.r,pts:o.pts,stroke:o.stroke,fill:o.fill,closed:o.closed,synthetic:o.synthetic,len:o.len,w:o.w}));
+    const key=r.objs.filter(o=>o.closed&&o.stroke&&(o.k==='circle'||o.k==='rect'||o.k==='polygon')).map(o=>({k:o.k,col:o.stroke,size:shapeSize(o)})).sort((a,b)=>b.size-a.size)[0]||null;
+    let geoHash=null, desc2=null; if(FP){desc2=FP.describe(lite); geoHash=FP.geoHash(desc2)}
+    const hit=library&&geoHash?library.find(x=>x.geoHash===geoHash):null;
+    return {id:'geo'+i,page:m.page.id,desc:`legend row ${i+1}`,geo:true,row:i+1,type:hit?hit.device:null,typeSrc:hit?'library':null,status:r.status,letter:r.letter,tags:[],bb:ob,c,segs,objs:lite,color,key,
+      cols:[...new Set(r.objs.map(o=>o.stroke||o.fill).filter(Boolean))],circles:r.objs.filter(o=>o.k==='circle'&&o.stroke).map(o=>({col:o.stroke,r:o.r})),shapes:[...new Set(r.objs.map(o=>o.k))],geoHash,desc2,rowBox:r.b}})};
+// title-block wording every sheet shares (the project name 'Level 9 - 10 Fitouts', the client, the address) says nothing about what one sheet
+// is: with the whole set in hand, wording on ≥ 60 % of the sheets is ignored and each sheet is classified again
+FVE.reclassify=function(models){if(models.length<2) return models; const n={};
+  for(const m of models){const seen=new Set(m.texts.filter(t=>t.cx>m.page.w*.55&&t.cy>m.page.h*.55).map(t=>normT(t.s)).filter(s=>s.length>3)); seen.forEach(s=>n[s]=(n[s]||0)+1)}
+  const lim=Math.max(2,Math.ceil(models.length*.6)), ignore=new Set(Object.keys(n).filter(s=>n[s]>=lim));
+  for(const m of models){if(m.sheet&&m.sheet.manual) continue; const k=FVE.classifySheet(m,ignore); if(m.sheet&&k.kind!==m.sheet.kind) k.was=m.sheet.kind; m.sheet=k} return models};
 // one dictionary for the project: every legend page merged; the same description on two sheets is one entry
-FVE.projectDictionary=function(models){const D={symbols:[],lineTypes:[],abbrev:{},zones:{},sources:[]};
-  for(const m of models){const lg=FVE.analyzeLegend(m); if(!lg.symbols.length&&!lg.lineTypes.length&&!Object.keys(lg.abbrev).length) continue;
+// opts.library [{consultant, geoHash, device}] types geometric legend rows; opts.legendBoxes {pageId: box} where the estimator boxed a legend
+FVE.projectDictionary=function(models,opts){opts=opts||{}; const D={symbols:[],lineTypes:[],abbrev:{},zones:{},sources:[],geo:[]}; FVE.reclassify(models);
+  for(const m of models){const lg=FVE.analyzeLegend(m);
+    // no text legend: a legend sheet (or a boxed area) is cut by geometry
+    const ubox=opts.legendBoxes&&opts.legendBoxes[m.page.id];
+    if(ubox||(!lg.symbols.length&&/legend|notes|cover/.test(m.sheet.kind))){const rows=FVE.legendColumn(m,ubox||null);
+      if(rows.length>=3){const sy=FVE.geoLegendSymbols(m,rows,opts.library); lg.symbols.push(...sy); D.geo.push({page:m.page.id,box:rows.box,rows:sy.length,typed:sy.filter(e=>e.type).length});
+        lg.zones.push(rows.box); lg.sections.push({title:'(geometric legend)',rows:[],bb:rows.box})}}
+    if(!lg.symbols.length&&!lg.lineTypes.length&&!Object.keys(lg.abbrev).length) continue;
     D.zones[m.page.id]=lg.zones; D.sources.push({page:m.page.id,sections:lg.sections.map(s=>s.title)});
-    for(const s of lg.symbols) if(!D.symbols.some(o=>o.desc===s.desc&&o.color===s.color)) D.symbols.push(s);
+    for(const s of lg.symbols) if(s.geo||!D.symbols.some(o=>o.desc===s.desc&&o.color===s.color)) D.symbols.push(s);
     for(const l of lg.lineTypes) if(!D.lineTypes.some(o=>o.desc===l.desc)) D.lineTypes.push(l);
     Object.assign(D.abbrev,lg.abbrev)}
   // two line types drawn the same way (colour, dash) cannot be told apart on a plan: the first keeps the strokes
   const seenLT=new Set(); D.lineTypes.forEach(l=>{if(!l.cls) return; const k=l.stroke+'|'+l.dashed; if(seenLT.has(k)) l.dupOf=true; else seenLT.add(k)});
   D.symbols.forEach((s,i)=>s.id='sy'+i); D.lineTypes.forEach((l,i)=>l.id='lt'+i);
+  // colour → status where the legend is colour-coded (refurbishment sets: blue new, grey existing, red remove …): ≥ 2 rows, ≥ 80 % agreeing
+  const cv={}; D.symbols.forEach(e=>{if(e.color&&e.status) (cv[e.color]=cv[e.color]||{})[e.status]=(cv[e.color][e.status]||0)+1}); D.colStatus={};
+  for(const c in cv){const [st,n]=Object.entries(cv[c]).sort((a,b)=>b[1]-a[1])[0], tot=Object.values(cv[c]).reduce((a,b)=>a+b,0); if(tot>=2&&n/tot>=.8) D.colStatus[c]=st}
+  if(new Set(Object.values(D.colStatus)).size<2) D.colStatus={};
   // tags: an abbreviation the project defines → the device it names
   D.tagType={}; for(const [k,v] of Object.entries(D.abbrev)){const t=FVE.classifyDesc(v).type; if(t) D.tagType[k]=t}
   return D};
@@ -297,7 +416,7 @@ FVE.detect=async function(models,D,hooks){hooks=hooks||{};
   for(const m of models){const ctx={sheet:m.sheet,zones:D.zones[m.page.id]||[],tb:FVE.titleBlock(m)}; if(m.sheet.kind!=='plan') continue; let C=[];
     // 1) the project's own legend symbols
     const ratios=FVE.pageRatios(D,m); m.ratios=ratios; const pcols=new Set(m.objects.map(o=>o.stroke||o.fill));
-    if(hooks.match) for(const e of D.symbols){if(!e.type||!e.segs||e.segs.length<3) continue; // notation / valve symbols with no device type are not searched if(e.cols&&e.cols.length&&!e.cols.some(c=>pcols.has(c))) continue; // its colours are not on this sheet
+    if(hooks.match) for(const e of D.symbols){if(!e.type||!e.segs||e.segs.length<3) continue; /* notation / valve symbols with no device type are not searched */ if(e.cols&&e.cols.length&&!e.cols.some(c=>pcols.has(c))) continue; // its colours are not on this sheet
       const tr=FVE.templateRatios(e,m), qs=(tr.length?tr:ratios.slice(0,1)).map(x=>x.q); if(!qs.some(q=>Math.abs(q-1)<.08)&&!tr.length) qs.push(1);
       const best=[]; for(const q of qs){const hits=await hooks.match(e,m,q)||[]; for(const h of hits){const o=best.find(b=>hyp(b.x-h.x,b.y-h.y)<Math.min(b.w,b.h)*.5); if(!o) best.push({...h,q}); else if(h.score>o.score) Object.assign(o,h,{q})}}
       for(const h of best) C.push({x:h.x,y:h.y,w:h.w,h:h.h,ev:[{src:'legend',entry:e.id,type:e.type,status:e.status,conf:Math.min(.98,h.score),score:h.score,ratio:h.q}]})}

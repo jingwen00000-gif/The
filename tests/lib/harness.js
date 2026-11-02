@@ -9,6 +9,8 @@ async function openApp() {
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
+  // FT_FLAGS=A,B sets window.A = window.B = true before the app loads (A/B switches while bisecting a change)
+  if (process.env.FT_FLAGS) await page.addInitScript(f => f.split(',').forEach(k => globalThis[k] = true), process.env.FT_FLAGS);
   await page.goto('file://' + ensureBuild());
   await page.waitForFunction(() => typeof FVE === 'object' && typeof openFiles === 'function', null, { timeout: 30000 });
   return { browser, page, errors };
@@ -27,11 +29,10 @@ async function analyse(page, pdfs, opts = {}) {
     const pages = S.pages.filter(p => p.kind === 'pdf' && pdfPageRef.get(p.id));
     const t1 = performance.now(); const models = [];
     for (const p of pages) models.push(await FVE.buildModel(await pdfPageObj(p), pdfjsLib.OPS, { id: p.id, name: p.name, index: models.length }));
-    const t2 = performance.now(); const D = FVE.projectDictionary(models);
+    const t2 = performance.now(); const D = FVE.projectDictionary(models, { library: opts.library || null });
     const t3 = performance.now();
-    const dets = await FVE.detect(models, D, { match: async (e, m, q) => {
-      const p = S.pages.find(x => x.id === m.page.id); const bw = e.bb[2] - e.bb[0], bh = e.bb[3] - e.bb[1];
-      const T = vsmBuild(e.segs.map(s => ({ ...s })), bw * 1.6, bh * 1.6); if (!T) return [];
+    const dets = await FVE.detect(models, D, { library: opts.library || null, match: async (e, m, q) => {
+      const p = S.pages.find(x => x.id === m.page.id); const T = await fveTemplate(e); if (!T) return [];
       return (await vsmSearch(p, T, q || 1)).filter(h => h.score >= (opts.minScore || .85));
     } });
     const t4 = performance.now(); const warn = FVE.verify(models, D, dets); const lines = FVE.measureLines(models, D); const t5 = performance.now();
@@ -41,7 +42,7 @@ async function analyse(page, pdfs, opts = {}) {
       pages: models.map((m, i) => ({ i, name: m.page.name, w: m.page.w, h: m.page.h, sheet: m.sheet.kind, title: m.sheet.title, scale: m.scale, objects: m.objects.length, texts: m.texts.length,
         kinds: m.objects.reduce((o, x) => (o[x.k] = (o[x.k] || 0) + 1, o), {}), markups: Object.fromEntries(Object.entries(m.markups || {}).map(([k, g]) => [k, { n: g.n, at: g.at }])) })),
       dict: { sources: D.sources, abbrev: D.abbrev, tagType: D.tagType,
-        symbols: D.symbols.map(s => ({ id: s.id, desc: s.desc, type: s.type, status: s.status, tags: s.tags, shapes: s.shapes, color: s.color, key: s.key, bb: s.bb })),
+        geo: D.geo, symbols: D.symbols.map(s => ({ id: s.id, desc: s.desc, type: s.type, typeSrc: s.typeSrc, geoHash: s.geoHash, status: s.status, tags: s.tags, shapes: s.shapes, color: s.color, key: s.key, bb: s.bb })),
         lineTypes: D.lineTypes.map(l => ({ id: l.id, desc: l.desc, cls: l.cls, stroke: l.stroke, w: l.w, dashed: l.dashed, dupOf: !!l.dupOf })), zones: D.zones },
       detections: dets.map(d => ({ page: idx(d.page), x: d.x, y: d.y, w: d.w, h: d.h, type: d.type, status: d.status, conf: d.conf, entry: d.entry, src: [...new Set(d.ev.map(e => e.src))].sort().join('+'), rules: d.rules })),
       warnings: warn.map(w => ({ ...w, page: w.page ? idx(w.page) : undefined })),

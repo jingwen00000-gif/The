@@ -34,6 +34,13 @@ FVE_MSME.matchSymbol(candidate, graph)
 await FVE_MSME.run(models, dictionary, { match, library, consultant })   // all plan sheets; dets.learn = library entries (≥ 90 %)
 ```
 
+**CAD-lettered legends (no text layer):** `FVE.findLegendColumn` finds the symbol column (a narrow band of small coloured pieces on many
+rows in ≥ 2 colours), `FVE.legendColumn` cuts it into rows and reads the stroke-lettered status letter beside each symbol (N / E / R / D);
+each colour then takes its rows' majority letter (`AB(E)` model tags don't flip a row). `FVE.geoLegendSymbols` turns the rows into
+dictionary entries; their geoHash ignores colour, so one library entry types the new / existing / relocated / removed rows of a device.
+Sheets: title-block wording on ≥ 60 % of the set (the project name) is ignored by `FVE.reclassify`, so 383-kent's legend sheet is a legend.
+Rows with no library match stay untyped: the app asks the estimator once.
+
 **Consultant learning:** `library` entries `{consultant, geoHash, device}` add legend-layer evidence for that consultant's symbols.
 Not yet: proposing candidates from the library alone (projects without a legend), and storing the library per consultant in the app.
 

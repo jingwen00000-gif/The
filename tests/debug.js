@@ -15,7 +15,7 @@ const COL = { smoke: '#d32f2f', heat: '#ef6c00', speaker: '#1565c0', spk_surf: '
 const esc = s => String(s).replace(/[<&>"]/g, c => ({ '<': '&lt;', '&': '&amp;', '>': '&gt;', '"': '&quot;' })[c]);
 
 (async () => {
-  const app = await openApp(); const R = await analyse(app.page, p.files); await app.browser.close();
+  const app = await openApp(); const R = await analyse(app.page, p.files, { library: p.library }); await app.browser.close();
   const dir = path.join(ROOT, 'debug', p.name); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'dictionary.json'), JSON.stringify(R.dict, null, 1));
   fs.writeFileSync(path.join(dir, 'detections.json'), JSON.stringify(R.detections, null, 1));
