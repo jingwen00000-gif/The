@@ -1,6 +1,6 @@
 {
  "schema": "firetake.knowledge/1",
- "updated": "2026-11-02T06:55:34.014Z",
+ "updated": "2026-11-02T08:24:01.749Z",
  "entries": [
   {
    "consultant": "Millimetre Consulting Engineers",
@@ -203,7 +203,7 @@
    "key": "nutbrookengineeringgroup",
    "aliases": {
     "Az": 1,
-    "Copyright. This Document And Design": 1,
+    "This Document And Design": 1,
     "Nutbrook Engineering": 1,
     "In Any Form Without The Consent Of Nutbrook Engineering": 1,
     "Diagrammatic Design": 1,
@@ -223,25 +223,41 @@
     {
      "geoHash": "GEO_MW3P7",
      "deviceType": "smoke",
-     "n": 19,
+     "n": 23,
      "sources": {
-      "44-market": 19
+      "44-market": 23
      }
     },
     {
      "geoHash": "GEO_52KQO",
      "deviceType": "smoke",
-     "n": 6,
+     "n": 15,
      "sources": {
-      "44-market": 6
+      "44-market": 15
      }
     },
     {
-     "geoHash": "GEO_3BQBX",
+     "geoHash": "GEO_Z3ZD5",
      "deviceType": "smoke",
      "n": 5,
      "sources": {
       "44-market": 5
+     }
+    },
+    {
+     "geoHash": "GEO_MDBHW",
+     "deviceType": "spk_semi",
+     "n": 22,
+     "sources": {
+      "44-market": 22
+     }
+    },
+    {
+     "geoHash": "GEO_ISI01",
+     "deviceType": "spk_semi",
+     "n": 13,
+     "sources": {
+      "44-market": 13
      }
     },
     {
@@ -278,30 +294,22 @@
     },
     {
      "geoHash": "GEO_ULX16",
-     "deviceType": "spk_semi",
-     "n": 2,
+     "deviceType": "sprinkler",
+     "n": 4,
      "sources": {
-      "44-market": 2
+      "44-market": 4
      }
     },
     {
-     "geoHash": "GEO_ULX16",
-     "deviceType": "sprinkler",
-     "n": 7,
+     "geoHash": "GEO_RLW22",
+     "deviceType": "speaker",
+     "n": 6,
      "sources": {
-      "44-market": 7
+      "44-market": 6
      }
     },
     {
      "geoHash": "GEO_699OV",
-     "deviceType": "speaker",
-     "n": 3,
-     "sources": {
-      "44-market": 3
-     }
-    },
-    {
-     "geoHash": "GEO_D1OAI",
      "deviceType": "speaker",
      "n": 3,
      "sources": {
@@ -399,6 +407,133 @@
    },
    "projects": [
     "44-market"
+   ]
+  },
+  {
+   "consultant": "Lucid Consulting",
+   "key": "lucidconsulting",
+   "aliases": {},
+   "emailDomains": {
+    "lucidconsulting": 1
+   },
+   "logoHashes": {},
+   "symbols": [
+    {
+     "geoHash": "GEO_JI3SD",
+     "deviceType": "smoke",
+     "n": 125,
+     "sources": {
+      "lucid-lce103150": 125
+     }
+    },
+    {
+     "geoHash": "GEO_GW6MO",
+     "deviceType": "spk_semi",
+     "n": 7,
+     "sources": {
+      "lucid-lce103150": 7
+     }
+    },
+    {
+     "geoHash": "GEO_7XFAR",
+     "deviceType": "ext_co2",
+     "n": 2,
+     "sources": {
+      "lucid-lce103150": 2
+     }
+    },
+    {
+     "geoHash": "GEO_259U8",
+     "deviceType": "speaker",
+     "n": 112,
+     "sources": {
+      "lucid-lce103150": 112
+     }
+    },
+    {
+     "geoHash": "GEO_17YS2",
+     "deviceType": "spk_surf",
+     "n": 1,
+     "sources": {
+      "lucid-lce103150": 1
+     }
+    },
+    {
+     "geoHash": "GEO_7SVY9",
+     "deviceType": "spk_pend",
+     "n": 152,
+     "sources": {
+      "lucid-lce103150": 152
+     }
+    },
+    {
+     "geoHash": "GEO_655I4",
+     "deviceType": "spk_pend",
+     "n": 43,
+     "sources": {
+      "lucid-lce103150": 43
+     }
+    },
+    {
+     "geoHash": "GEO_CKNSP",
+     "deviceType": "spk_pend",
+     "n": 26,
+     "sources": {
+      "lucid-lce103150": 26
+     }
+    },
+    {
+     "geoHash": "GEO_7SVY9",
+     "deviceType": "spk_up",
+     "n": 2,
+     "sources": {
+      "lucid-lce103150": 2
+     }
+    }
+   ],
+   "abbreviations": {},
+   "conventions": {
+    "statusColours": {},
+    "legendStyle": {
+     "text": 1
+    },
+    "scales": {
+     "100": 1,
+     "200": 1
+    },
+    "lineTypes": {
+     "pipe|0000ff|0": {
+      "cls": "pipe",
+      "desc": "TOWN MAIN INLET PIPEWORK. (TYPE & SIZE AS NOTED).",
+      "stroke": "0000ff",
+      "dashed": false,
+      "n": 2
+     },
+     "pipe|ff00ff|0": {
+      "cls": "pipe",
+      "desc": "HYDRANT MAINS PIPEWORK (TYPE & SIZE AS NOTED).",
+      "stroke": "ff00ff",
+      "dashed": false,
+      "n": 1
+     },
+     "pipe|ff0000|0": {
+      "cls": "pipe",
+      "desc": "SPRINKLER PIPEWORK (TYPE & SIZE AS NOTED).",
+      "stroke": "ff0000",
+      "dashed": false,
+      "n": 1
+     },
+     "pipe|ff8000|0": {
+      "cls": "pipe",
+      "desc": "HYDRANT TEST DRAIN PIPEWORK. (TYPE & SIZE AS NOTED).",
+      "stroke": "ff8000",
+      "dashed": false,
+      "n": 1
+     }
+    }
+   },
+   "projects": [
+    "lucid-lce103150"
    ]
   }
  ]

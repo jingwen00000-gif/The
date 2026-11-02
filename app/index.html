@@ -455,7 +455,7 @@ kbd{font-family:var(--f-mono)}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.0</small></div>
+  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.1</small></div>
   <select id="projSel" class="projsel" aria-label="切换项目"></select>
   <span class="ptlbl">类型</span><div class="seg ptseg" id="ptypeSeg" role="group" aria-label="项目类型"><button data-pt="NEW" title="新建 / 在建工程">新建工程</button><button data-pt="REFURB" title="既有建筑改造">翻新装修</button></div>
   <nav class="tabs" role="tablist">
@@ -3326,7 +3326,7 @@ async function buildBackup(){
   const fl=[]; for(const f of files){fl.push({...f,blob:undefined,b64:await blobToB64(f.blob)})}
   return JSON.stringify({app:'FireTake',type:'backup',version:APPVER,created:new Date().toISOString(),projects,meta,files:fl});
 }
-let APPVER='2.13.0';
+let APPVER='2.13.1';
 async function runBackup(force){
   if(!DB.ok) return; const today=todayISO(); let last=''; try{last=localStorage.getItem('firetake.lastBackup')||''}catch(e){}
   if(!force&&last===today) return;
@@ -3542,6 +3542,14 @@ async function pdfTextItems(p){
   const out=tc.items.filter(i=>(i.str||'').trim()).map(i=>{const [x,y]=vp.convertToViewportPoint(i.transform[4],i.transform[5]); const h=Math.hypot(i.transform[2],i.transform[3])||8; return {s:i.str.trim(),x,y:y-h*.35,w:i.width||0,h}});
   txtCache.set(p.id,out); return out;
 }
+// a path's pieces as segments: pieces under 0.2 pt are noise on their own, but a curve plotted as a run of them (an arc of 121 points 0.1 pt
+// apart) is the symbol's outline — consecutive tiny pieces are joined into chords of about 0.8 pt instead of dropped
+function joinTiny(path,emit){let A=null, B=null; const out=(a,b)=>{const L=Math.hypot(b[0]-a[0],b[1]-a[1]); if(L>.2) emit(a,b,L)};
+  for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]);
+    if(L>.2){if(A){out(A,B); A=null} emit(s[0],s[1],L); continue}
+    if(A&&Math.abs(B[0]-s[0][0])<1e-6&&Math.abs(B[1]-s[0][1])<1e-6){B=s[1]; if(Math.hypot(B[0]-A[0],B[1]-A[1])>=.8){out(A,B); A=null}}
+    else {if(A) out(A,B); A=s[0]; B=s[1]}}
+  if(A) out(A,B)}
 async function pdfVectors(p){
   if(vecCache.has(p.id)) return vecCache.get(p.id); if(p.kind!=='pdf') return [];
   const pg=await pdfPageObj(p); if(!pg) return []; const vp=pg.getViewport({scale:1}); const ol=await pg.getOperatorList({annotationMode:pdfjsLib.AnnotationMode.DISABLE}); const O=pdfjsLib.OPS; // markups (review ticks, highlight boxes) are not drawing
@@ -3571,9 +3579,9 @@ async function pdfVectors(p){
       }}
     else if(fn===O.stroke||fn===O.closeStroke||fn===O.fillStroke||fn===O.closeFillStroke||fn===O.eoFillStroke||fn===O.closeEOFillStroke){
       const sc=Math.sqrt(Math.abs(st.m[0]*st.m[3]-st.m[1]*st.m[2]))||1; const w=Math.max(.1,(st.lw||0)*sc);
-      for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) segs.push({a:s[0],b:s[1],col:st.col,w,L})} path=[]; start=curP=null}
+      joinTiny(path,(a,b,L)=>segs.push({a,b,col:st.col,w,L})); path=[]; start=curP=null}
     // outlines of filled shapes (solid triangles / dots inside symbols) are kept apart in segs.fills, for symbol matching only
-    else if(fn===O.fill||fn===O.eoFill){for(const s of path){const L=Math.hypot(s[1][0]-s[0][0],s[1][1]-s[0][1]); if(L>.2) fills.push({a:s[0],b:s[1],col:st.fcol,w:0,L,f:1})} path=[]; start=curP=null}
+    else if(fn===O.fill||fn===O.eoFill){joinTiny(path,(a,b,L)=>fills.push({a,b,col:st.fcol,w:0,L,f:1})); path=[]; start=curP=null}
     else if(fn===O.endPath){path=[]; start=curP=null}
   }
   segs.fills=fills; vecCache.set(p.id,segs); return segs;
@@ -3936,7 +3944,16 @@ async function fveTemplate(e){if(e._T!==undefined) return e._T; const bw=e.bb[2]
   // a historical symbol (Learning Engine) carries the app's own segments from the job it was learnt on
   if((!sg||sg.length<3)&&e.vsegs&&e.vsegs.length>=3) sg=e.vsegs.map(s=>({...s,a:s.a.slice(),b:s.b.slice()}));
   if(!sg||sg.length<3) sg=e.segs.map(s=>({...s}));
-  return e._T=vsmBuild(sg,bw*1.6,bh*1.6)}
+  // a stroke plotted twice over (heavy pens, a symbol block inserted twice) counts once, whatever the template's source
+  // (strokes plotted twice over are kept: a heavy pen draws the plan's copies twice too; they count once where presence is checked, below)
+  const T=vsmBuild(sg,bw*1.6,bh*1.6);
+  // hatching / solid dots are checked for presence against their count: a legend that draws its inner circle twice must not ask the plan
+  // for twice the pieces
+  if(T) for(const k in T.hatch){const F=k.startsWith('F'), c=F?k.slice(1):k, ids=new Set();
+    for(const q of sg) if(q.h&&q.c===c&&(!F||q.f)) ids.add([q.a,q.b].map(p=>Math.round(p[0]*20)+','+Math.round(p[1]*20)).sort().join('|'));
+    if(ids.size&&ids.size<T.hatch[k]) T.hatch[k]=ids.size}
+  if(T&&e.anyColour&&new Set(sg.filter(s=>s.col!=='ffffff').map(s=>s.col)).size===1) T.anyCol=sg.find(s=>s.col!=='ffffff').col; /* monochrome legend: any one colour */
+  return e._T=T}
 // one legend entry on one sheet: the app's vector matcher with the entry's template, hits at or above minScore
 async function fveMatch(e,p,q,minScore){const min=minScore||.85; const T=await fveTemplate(e); if(!T) return [];
   // (a second template cut from the legend sheet's own vectors, for rows whose curves are flattened differently, was measured: +0.4 F1
@@ -3946,9 +3963,12 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
   const lo=.85*rs, hi=1.18*rs, lb=v=>{let a=0,b=byL.length; while(a<b){const m=(a+b)>>1; if(byL[m].L<v) a=m+1; else b=m} return a};
   const range=(a,b)=>{const out=[]; for(let i=lb(a);i<byL.length&&byL[i].L<=b;i++) out.push(byL[i]); return out};
   const colOk=(t,s)=>!t.col||s.col===t.col;
+  // a monochrome legend's symbol in another colour: a system colour (saturated: red sprinklers, blue hydrants), never the greys of the
+  // architectural background (grass hatch, ceiling grid) — those look like symbols too
+  const anyOk=c=>{if(c===T.anyCol) return true; if(!c||c==='ffffff') return false; const v=[0,2,4].map(i=>parseInt(c.slice(i,i+2),16)); return Math.max(...v)-Math.min(...v)>=80};
   // anchors: of the 6 longest template segments, the two (of different lengths) with the fewest look-alike page segments. Two, because a copy
   // drawn in a dashed linetype (demolished items) has no full-length side to anchor on, while its short inner strokes are still whole
-  const AC=T.segs.slice().sort((a,b)=>b.L-a.L).slice(0,6).map(t=>({t,list:range(t.L*lo,t.L*hi).filter(s=>colOk(t,s))})).filter(a=>a.list.length&&a.list.length<=60000).sort((a,b)=>a.list.length-b.list.length);
+  const AC=T.segs.slice().sort((a,b)=>b.L-a.L).slice(0,6).map(t=>({t,list:range(t.L*(t.L<2?.7*rs:lo),t.L*(t.L<2?1.4*rs:hi)).filter(s=>T.anyCol?anyOk(s.col):colOk(t,s))})).filter(a=>a.list.length&&a.list.length<=60000).sort((a,b)=>a.list.length-b.list.length);
   const ancs=[]; for(const a of AC){if(ancs.length<2&&!ancs.some(b=>Math.abs(b.t.L-a.t.L)<a.t.L*.2)) ancs.push(a)} if(!ancs.length) return [];
   // spatial grid of the page's short segments, kept per cell size (several symbols of one size share it)
   const cell=Math.max(1,Math.round(T.R*rs)/2), GC=V._vsm.grids||(V._vsm.grids=new Map()); let G=GC.get(cell);
@@ -3956,31 +3976,35 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
   const around=(x,y,r)=>{const out=[]; for(let gx=Math.floor((x-r)/cell);gx<=Math.floor((x+r)/cell);gx++) for(let gy=Math.floor((y-r)/cell);gy<=Math.floor((y+r)/cell);gy++){const a=G.get(gx+','+gy); if(a) out.push(...a)} return out};
   const tol=Math.max(.25,T.R*rs*.07), hits=[], ib=T.ib, iw=ib[2]-ib[0], ih=ib[3]-ib[1];
   // how much of the stroke A→B is covered by collinear page strokes (a dashed copy covers ~70–80 %); a longer line running past it does not count
-  const cover=(A,B,u,near)=>{const dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L, iv=[], ws=[];
-    for(const w of near){if(!colOk(u,w)) continue; const pa=[(w.a[0]-A[0])*ux+(w.a[1]-A[1])*uy, Math.abs((w.a[1]-A[1])*ux-(w.a[0]-A[0])*uy)], pb=[(w.b[0]-A[0])*ux+(w.b[1]-A[1])*uy, Math.abs((w.b[1]-A[1])*ux-(w.b[0]-A[0])*uy)];
+  const cover=(A,B,u,near,ok)=>{const dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L, iv=[], ws=[];
+    for(const w of near){if(!ok(u,w)) continue; const pa=[(w.a[0]-A[0])*ux+(w.a[1]-A[1])*uy, Math.abs((w.a[1]-A[1])*ux-(w.a[0]-A[0])*uy)], pb=[(w.b[0]-A[0])*ux+(w.b[1]-A[1])*uy, Math.abs((w.b[1]-A[1])*ux-(w.b[0]-A[0])*uy)];
       if(pa[1]>tol||pb[1]>tol) continue; const s0=Math.min(pa[0],pb[0]), e0=Math.max(pa[0],pb[0]); if(s0<-tol*2||e0>L+tol*2||e0<0||s0>L) continue; iv.push([Math.max(0,s0),Math.min(L,e0)]); ws.push(w)}
     iv.sort((x,y)=>x[0]-y[0]); let cov=0, st=0, cur=-1; for(const [a,b] of iv){if(a>cur){if(cur>st) cov+=cur-st; st=a; cur=b} else cur=Math.max(cur,b)} if(cur>st) cov+=cur-st; return {f:cov/L,ws}};
   for(const {t,list} of ancs) for(const s of list) for(const dir of [0,1]) for(const mi of [1,-1]){
     const ps=dir?s.b:s.a, pe=dir?s.a:s.b, va=[(t.b[0]-t.a[0])*mi,t.b[1]-t.a[1]], vs=[pe[0]-ps[0],pe[1]-ps[1]];
-    const sg=Math.hypot(...vs)/(Math.hypot(...va)||1), th=Math.atan2(vs[1],vs[0])-Math.atan2(va[1],va[0]), c=Math.cos(th)*sg, n=Math.sin(th)*sg;
+    // a chord of a curve under 2 pt says little about scale (curves are flattened into 13 or 121 points by different plotters): its
+    // direction only, at the expected scale
+    const sg=t.L<2?rs:Math.hypot(...vs)/(Math.hypot(...va)||1), th=Math.atan2(vs[1],vs[0])-Math.atan2(va[1],va[0]), c=Math.cos(th)*sg, n=Math.sin(th)*sg;
     const map=q=>{const x=(q[0]-t.a[0])*mi, y=q[1]-t.a[1]; return [ps[0]+c*x-n*y, ps[1]+n*x+c*y]};
     const ctr=map([0,0]); if(hits.some(h=>h.score>=.999&&Math.hypot(h.x-ctr[0],h.y-ctr[1])<T.R*sg*.3)) continue;
+    // a monochrome legend's symbol is matched in the colour of the stroke it is anchored on (the template's colour stands for that one)
+    const ac=T.anyCol?s.col:null, ok=ac?(u,w)=>w.col===(u.col===T.anyCol?ac:u.col):colOk, tcol=c=>ac&&c===ac?T.anyCol:c;
     const near=around(ctr[0],ctr[1],T.R*sg*2+tol), used=new Set(); let got=0, left=T.tot, viaDash=0;
-    for(const u of T.segs){const A=map(u.a), B=map(u.b); left-=u.L; let cv=cover(A,B,u,near);
+    for(const u of T.segs){const A=map(u.a), B=map(u.b); left-=u.L; let cv=cover(A,B,u,near,ok);
       // a dash of a dashed outline: copies start their dash pattern at different points, so any same-colour stroke right beside it will do
-      if(cv.f<.45&&u.L<T.D*.15){const M=[(A[0]+B[0])/2,(A[1]+B[1])/2], r=Math.max(tol,u.L*sg*1.6); const ws=near.filter(w=>colOk(u,w)&&w.L<T.D*sg*.3&&Math.hypot((w.a[0]+w.b[0])/2-M[0],(w.a[1]+w.b[1])/2-M[1])<r); if(ws.length){cv={f:1,ws}; viaDash+=u.L}}
+      if(cv.f<.45&&u.L<T.D*.15){const M=[(A[0]+B[0])/2,(A[1]+B[1])/2], r=Math.max(tol,u.L*sg*1.6); const ws=near.filter(w=>ok(u,w)&&w.L<T.D*sg*.3&&Math.hypot((w.a[0]+w.b[0])/2-M[0],(w.a[1]+w.b[1])/2-M[1])<r); if(ws.length){cv={f:1,ws}; viaDash+=u.L}}
       if(cv.f>=.45){got+=u.L*Math.min(1,cv.f/.75); cv.ws.forEach(w=>used.add(w))} if((got+left)/T.tot<.6) break}
     let fr=got/T.tot; if(fr<.6) continue;
     const inv=q=>{const dx=q[0]-ps[0], dy=q[1]-ps[1], d=sg*sg; const x=(c*dx+n*dy)/d, y=(-n*dx+c*dy)/d; return [x*mi+t.a[0], y+t.a[1]]}, e=tol/sg;
     const inside=w=>[inv(w.a),inv(w.b)].every(q=>q[0]>=ib[0]-e&&q[0]<=ib[2]+e&&q[1]>=ib[1]-e&&q[1]<=ib[3]+e);
     const outside=w=>{const q=inv([(w.a[0]+w.b[0])/2,(w.a[1]+w.b[1])/2]); return q[0]<ib[0]-iw*.3||q[0]>ib[2]+iw*.3||q[1]<ib[1]-ih*.3||q[1]>ib[3]+ih*.3};
     // a colour that is all around the spot too (ceiling pattern, background hatch) is background, not part of this copy
-    const bg=new Set(); for(const w of near) if(!T.cols.has(w.col)&&!used.has(w)&&outside(w)) bg.add(w.col);
+    const bg=new Set(); for(const w of near) if(!T.cols.has(tcol(w.col))&&!used.has(w)&&outside(w)) bg.add(w.col);
     // the template's hatching (a solid dot / triangle) must be there; anything else inside the outline is extra line work
     // strokes lying on the symbol's own outline (more or fewer dashes than the sample) are not extra either
     const segD=(q,A,B)=>{const dx=B[0]-A[0],dy=B[1]-A[1],L2=dx*dx+dy*dy||1; const k=Math.max(0,Math.min(1,((q[0]-A[0])*dx+(q[1]-A[1])*dy)/L2)); return Math.hypot(q[0]-A[0]-k*dx,q[1]-A[1]-k*dy)};
-    const MS=T.segs.map(u=>[map(u.a),map(u.b),u]), onLine=w=>{const M=[(w.a[0]+w.b[0])/2,(w.a[1]+w.b[1])/2], r=Math.max(tol,T.D*sg*.06); return MS.some(([A,B,u])=>colOk(u,w)&&segD(M,A,B)<r)};
-    const hc={}; let extra=0; for(const w of near){if(used.has(w)||!inside(w)) continue; const wk=w.f?'F'+w.col:w.col; if(T.hatch[wk]!=null){hc[wk]=(hc[wk]||0)+1; continue} if(bg.has(w.col)||onLine(w)||w.col==='ffffff') continue; /* white masks are not ink */ extra+=w.L/sg}
+    const MS=T.segs.map(u=>[map(u.a),map(u.b),u]), onLine=w=>{const M=[(w.a[0]+w.b[0])/2,(w.a[1]+w.b[1])/2], r=Math.max(tol,T.D*sg*.06); return MS.some(([A,B,u])=>ok(u,w)&&segD(M,A,B)<r)};
+    const hc={}; let extra=0; for(const w of near){if(used.has(w)||!inside(w)) continue; const wk=w.f?'F'+tcol(w.col):tcol(w.col); if(T.hatch[wk]!=null){hc[wk]=(hc[wk]||0)+1; continue} if(bg.has(w.col)||onLine(w)||w.col==='ffffff') continue; /* white masks are not ink */ extra+=w.L/sg}
     let fillOk=true; for(const k in T.hatch) if((hc[k]||0)<Math.max(2,T.hatch[k]*.3)){fr*=.6; fillOk=false}
     fr*=1-.5*Math.min(1,extra/T.tot);
     const cs=Math.abs(Math.cos(th)), sn=Math.abs(Math.sin(th)), w=(T.bw*cs+T.bh*sn)*sg, h=(T.bw*sn+T.bh*cs)*sg;

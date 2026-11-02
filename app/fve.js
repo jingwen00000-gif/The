@@ -233,7 +233,7 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
   const usedLine=new Set();
   for(const h of heads){if(inTB(h.bb)) continue; const hw=h.x1-h.x;
     // a heading centred in its box: its rows (and their symbols) start left of it, by up to the heading's width
-    const left=h.boxed?h.x-Math.max(bodyH*3,hw*.9):h.x-bodyH*3, symLeft=h.boxed?h.x-Math.max(bodyH*6,hw*1.3):h.x-bodyH*3;
+    const left=h.boxed?h.x-Math.max(bodyH*3,hw*.9):h.x-bodyH*3; let symLeft=h.boxed?h.x-Math.max(bodyH*6,hw*1.3):h.x-bodyH*3;
     // entries: lines below the heading, in its column, before the next heading of that column
     const cand=L.filter(l=>l!==h&&!heads.includes(l)&&l.cy>h.cy&&l.x>=left&&l.x<=h.x+Math.max(hw*1.3,bodyH*25)&&!inTB(l.bb));
     const below=heads.filter(o=>o!==h&&o.cy>h.cy&&Math.abs(o.x-h.x)<Math.max(hw,bodyH*20)); const stopY=below.length?Math.min(...below.map(o=>o.cy)):Infinity;
@@ -242,6 +242,9 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
     const sec={title:h.s,head:h,rows:[],bb:h.bb.slice()}; out.sections.push(sec);
     // the description column: where most rows start (rows further left are symbol tags / abbreviations)
     const xs=rows.map(r=>Math.round(r.x/(bodyH*2))); const mode=+Object.entries(xs.reduce((o,v)=>(o[v]=(o[v]||0)+1,o),{})).sort((a,b)=>b[1]-a[1])[0][0]*bodyH*2;
+    // a heading written above the descriptions (LEGEND OF SYMBOLS aligned with the text, symbols in a column to its left): the symbol
+    // column lies left of the heading, so look as far as ten text heights (the pieces nearest the text are kept, as for boxed headings)
+    const overText=!h.boxed&&Math.abs(mode-h.x)<bodyH*2; if(overText) symLeft=Math.min(symLeft,h.x-bodyH*10);
     rows.forEach((r,i)=>{if(usedLine.has(r)) return; usedLine.add(r); sec.bb=bbUnion(sec.bb,r.bb);
       // abbreviations: 'SD - SMOKE DETECTOR' (one line) or 'SD' … '- SMOKE DETECTOR' (two pieces on a baseline)
       const am=r.s.match(ABBR_RE); if(am){out.abbrev[am[1].toUpperCase()]=am[2].trim(); sec.kind='abbrev'; return}
@@ -259,7 +262,7 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
       sec.rows.push(r); sec.bb=bbUnion(sec.bb,zone);
       // a boxed section's wide zone can reach the neighbouring column: keep the cluster of pieces next to the row's text (gaps under
       // 2.5 text heights), not a glyph or tick from the column beside it
-      if(h.boxed&&objs.length>1){const g=bodyH*2.5, gap=(a,b)=>Math.max(a.bb[0]-b.bb[2],b.bb[0]-a.bb[2],a.bb[1]-b.bb[3],b.bb[1]-a.bb[3],0);
+      if((h.boxed||overText)&&objs.length>1){const g=bodyH*2.5, gap=(a,b)=>Math.max(a.bb[0]-b.bb[2],b.bb[0]-a.bb[2],a.bb[1]-b.bb[3],b.bb[1]-a.bb[3],0);
         const seed=objs.reduce((m,o)=>o.bb[2]>m.bb[2]?o:m,objs[0]), keep=new Set([seed]); let grew=true;
         while(grew){grew=false; for(const o of objs) if(!keep.has(o)&&[...keep].some(k=>gap(o,k)<=g)){keep.add(o); grew=true}}
         for(let i=objs.length-1;i>=0;i--) if(!keep.has(objs[i])) objs.splice(i,1)}
@@ -418,6 +421,10 @@ FVE.projectDictionary=function(models,opts){opts=opts||{}; const D={symbols:[],l
   if(new Set(Object.values(D.colStatus)).size<2) D.colStatus={};
   // no colour code of its own: the consultant's usual one (learnt from their earlier jobs)
   if(!Object.keys(D.colStatus).length&&K&&K.statusColours&&new Set(Object.values(K.statusColours)).size>=2) D.colStatus={...K.statusColours};
+  // a legend drawn all in black (no colour code, no status rows): colour on the plans is the system's (red sprinklers, blue hydrants), not
+  // part of the symbol — its copies are matched in any one colour
+  {const own=D.symbols.filter(e=>e.type&&!e.hist&&e.color), grey=c=>{const v=[0,2,4].map(i=>parseInt(c.slice(i,i+2),16)); return Math.max(...v)-Math.min(...v)<30&&Math.max(...v)<170};
+   if(own.length>=3&&!Object.keys(D.colStatus).length&&own.filter(e=>grey(e.color)).length>=own.length*.9&&own.every(e=>!e.status||e.status==='new')) own.forEach(e=>{if(grey(e.color)) e.anyColour=true})}
   // tags: an abbreviation the project defines → the device it names
   D.tagType={}; for(const [k,v] of Object.entries(D.abbrev)){const t=FVE.classifyDesc(v).type; if(t) D.tagType[k]=t}
   return D};

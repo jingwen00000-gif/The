@@ -2,12 +2,14 @@
 // Ground truth from a takeoff whose estimator left Bluebeam count tables (Description / Quantity / Unit per section on each sheet):
 // the Learning Engine reads the tables, ties each row to its markup group by total, and every markup of a tied group is a device of the
 // row's type and status, at the markup's own position. Rows the tables leave ambiguous are not used.
-//   node tests/validation/truth-from-count-tables.js <training folder> <validation folder>
+//   node tests/validation/truth-from-count-tables.js <training folder> <validation folder> [--snapped] [--all-named]
+//   --snapped     positions snapped to the symbol under each markup (ticks drawn 20-30 pt beside their symbol), not the markup centre
+//   --all-named   also groups the tables leave out, when named from the symbols under the estimator's own markups (>= 60 % agree)
 const fs = require('fs'), path = require('path'), cp = require('child_process');
 const { openApp } = require('../lib/harness');
 const I = require('../../src/learning-engine/project-ingestion');
 (async () => {
-  const src = path.resolve(process.argv[2]), out = path.resolve(process.argv[3]); const P = I.loadFolder(src);
+  const src = path.resolve(process.argv[2]), out = path.resolve(process.argv[3]); const snapped = process.argv.includes('--snapped'), allNamed = process.argv.includes('--all-named'); const P = I.loadFolder(src);
   const words = P.takeoffDrawing.flatMap(f => I.bboxWords(cp.execFileSync('pdftotext', ['-bbox', f, '-'], { encoding: 'utf8', maxBuffer: 1 << 28 })));
   const b64 = f => [path.basename(f), fs.readFileSync(f).toString('base64')];
   const app = await openApp();
@@ -16,7 +18,9 @@ const I = require('../../src/learning-engine/project-ingestion');
   const tied = new Set(ex.countTables.flatMap(t => t.rows.filter(r => r.groups.length && !r.ambiguous && r.type).map(r => t.page + '|' + r.groups.join('|'))));
   const rowOf = d => ex.countTables.find(t => t.page === d.page)?.rows.find(r => !r.ambiguous && r.groups.includes(d.grp));
   const fam = t => /^spk_/.test(t) ? 'sprinkler' : /^(speaker|spk_surf|horn)$/.test(t) ? 'speaker' : t;
-  const devices = ex.devices.filter(d => rowOf(d)).map((d, i) => { const r = rowOf(d); return { id: `${r.type}-${d.page}-${String(i + 1).padStart(3, '0')}`, type: r.type, status: r.status, page: d.page, x: d.mx, y: d.my, source: d.grp, row: r.description }; });
+  const named = new Set(allNamed ? ex.classes.filter(c => c.type && /legend under markups/.test(c.how)).map(c => c.key) : []);
+  const rowOr = d => rowOf(d) || (named.has(d.cls) ? { type: d.type, status: d.status || 'new', description: '(not in the count table: ' + d.type + ', from the symbols under the markups)' } : null);
+  const devices = ex.devices.filter(d => rowOr(d)).map((d, i) => { const r = rowOr(d); return { id: `${r.type}-${d.page}-${String(i + 1).padStart(3, '0')}`, type: r.type, status: r.status, page: d.page, x: snapped ? d.x : d.mx, y: snapped ? d.y : d.my, source: d.grp, row: r.description }; });
   const summary = {}; devices.forEach(d => { const k = `${d.page}:${d.type}@${d.status}`; summary[k] = (summary[k] || 0) + 1; });
   const tables = ex.countTables.map(t => ({ page: t.page, rows: t.rows.map(r => ({ description: r.description, status: r.status, qty: r.qty, unit: r.unit, type: r.type, groups: r.groups, ambiguous: r.ambiguous })) }));
   fs.mkdirSync(out, { recursive: true });

@@ -37,7 +37,8 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
   for(const c of classes.values()){
     // the estimator's key decides markup by markup (one colour can mean smoke on the dry sheet and sprinkler on the wet one);
     // markups the key does not cover are not counts
-    if(ctx.markupMap){c.items.forEach(a=>{a.mtype=mapType(ctx.markupMap,a); a.mstatus=mapStatus(ctx.markupMap,a)}); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length){c.type=mode(mt); c.how='markup-map'; c.confidence=1; c.perItem=true} else {c.type=null; c.how='not in markup-map'} continue}
+    if(ctx.markupMap){c.items.forEach(a=>{a.mtype=mapType(ctx.markupMap,a); a.mstatus=mapStatus(ctx.markupMap,a)}); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length){c.type=mode(mt); c.how='markup-map'; c.confidence=1; c.perItem=true; continue} if(!ctx.markupMap.fromCountTables){c.type=null; c.how='not in markup-map'; continue}
+      /* a group the count tables do not list (the estimator left it out of the summary): named like a job without a key, from its words or the symbols under it */}
     const ws=Object.entries(c.words).sort((a,b)=>b[1]-a[1]); const wt=ws.map(([w])=>wordType(w,FVE,D)).find(Boolean); if(wt){c.type=wt; c.how='markup text'; c.confidence=.95; continue}
     const under=c.items.map(detAt).filter(Boolean).map(d=>d.type); if(under.length){const t=mode(under), share=under.filter(x=>x===t).length/c.items.length; if(share>=.6){c.type=t; c.how='legend under markups'; c.confidence=Math.round(share*100)/100; continue}}
     // one colour can count different devices on different sheets (red: smoke detectors on the dry sheet, sprinklers on the wet one):
@@ -49,7 +50,11 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
     c.type=null; c.how='unknown'}
   // devices: the answer, snapped to the symbol the original drawing has there
   const devices=[];
-  for(const c of classes.values()) if(c.type) for(const a of c.items){let t=c.perItem?a.mtype:c.type; if(!t) continue; const d=detAt(a);
+  // a tick sits beside its symbol (often 20–30 pt off for a 27 pt tick): the nearest symbol of the markup's own family within 1.3 tick
+  // sizes that no other tick has taken
+  const taken=new Set(), snapAt=(a,t)=>{const pid=pageOf(a.page), r=Math.max(12,a.size*1.3); let best=null, bd=Infinity;
+    for(const d of dets){if(d.page!==pid||taken.has(d)||!(d.type===t||family(d.type)===family(t))) continue; const dd=hyp(d.x-a.c[0],d.y-a.c[1]); if(dd<r&&dd<bd){bd=dd; best=d}} return best};
+  for(const c of classes.values()) if(c.type) for(const a of c.items){let t=c.perItem?a.mtype:c.type; if(!t) continue; const d=snapAt(a,t)||detAt(a); if(d) taken.add(d);
     // a family in the key ('sprinkler') takes the exact type the drawing's legend shows under the markup (pendent, sidewall …)
     const ok=d&&(d.type===t||family(d.type)===t); if(ok) t=d.type;
     const x=ok?d.x:a.c[0], y=ok?d.y:a.c[1];

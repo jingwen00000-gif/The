@@ -1,7 +1,7 @@
 {
   "name": "firetake",
   "productName": "FireTake",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "description": "FireTake \u6d88\u9632\u7b97\u91cf\u62a5\u4ef7 - Fire services takeoff and quoting",
   "main": "main.js",
   "author": "FireTake",

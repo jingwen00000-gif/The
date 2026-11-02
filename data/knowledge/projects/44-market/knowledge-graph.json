@@ -1,7 +1,7 @@
 {
  "schema": "firetake.project-graph/1",
  "projectId": "44-market",
- "at": "2026-11-02T05:10:19.760Z",
+ "at": "2026-11-02T08:21:32.997Z",
  "metadata": {},
  "files": {
   "original": [
@@ -1171,7 +1171,7 @@
   "logoHash": null,
   "aliases": [
    "Az",
-   "Copyright. This Document And Design",
+   "This Document And Design",
    "Nutbrook Engineering",
    "In Any Form Without The Consent Of Nutbrook Engineering",
    "Diagrammatic Design",
@@ -1258,12 +1258,576 @@
  ],
  "devices": [
   {
+   "page": 2,
+   "type": "smoke",
+   "x": 1316.28,
+   "y": 1161.2,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1316.28,
+   "my": 1161.2
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1529.1,
+   "y": 1161.33,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1529.1,
+   "my": 1161.33
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1528.21,
+   "y": 915.82,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1528.21,
+   "my": 915.82
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1315.44,
+   "y": 915.52,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1315.44,
+   "my": 915.52
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1053.53,
+   "y": 916.2,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1053.53,
+   "my": 916.2
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1053.62,
+   "y": 660.26,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1053.62,
+   "my": 660.26
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1316.34,
+   "y": 636.81,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1316.34,
+   "my": 636.81
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1528.38,
+   "y": 636.46,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1528.38,
+   "my": 636.46
+  },
+  {
+   "page": 2,
+   "type": "smoke",
+   "x": 1257.82,
+   "y": 218.24,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 1257.82,
+   "my": 218.24
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1196.18,
+   "y": 227.35,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1196.18,
+   "my": 227.35
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1280.92,
+   "y": 226.52,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1280.92,
+   "my": 226.52
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1375.63,
+   "y": 219.87,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1375.63,
+   "my": 219.87
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1412.19,
+   "y": 342.83,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1412.19,
+   "my": 342.83
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1302.52,
+   "y": 341.17,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1302.52,
+   "my": 341.17
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1197.01,
+   "y": 344.5,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1197.01,
+   "my": 344.5
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1107.69,
+   "y": 386.38,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1107.69,
+   "my": 386.38
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1110.96,
+   "y": 496.23,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1110.96,
+   "my": 496.23
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1188.07,
+   "y": 466.99,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1188.07,
+   "my": 466.99
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 952.75,
+   "y": 665.19,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 952.75,
+   "my": 665.19
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1037.49,
+   "y": 666.85,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1037.49,
+   "my": 666.85
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1152.77,
+   "y": 662.8,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1152.77,
+   "my": 662.8
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1260.54,
+   "y": 662.17,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1260.54,
+   "my": 662.17
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1287.65,
+   "y": 583.17,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1287.65,
+   "my": 583.17
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1368.51,
+   "y": 582.71,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1368.51,
+   "my": 582.71
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1485.3,
+   "y": 579.98,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1485.3,
+   "my": 579.98
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1490.28,
+   "y": 656.88,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1490.28,
+   "my": 656.88
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1369.92,
+   "y": 664.97,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1369.92,
+   "my": 664.97
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1372.31,
+   "y": 743.28,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1372.31,
+   "my": 743.28
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1491.11,
+   "y": 756.58,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1491.11,
+   "my": 756.58
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1481.14,
+   "y": 820.55,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1481.14,
+   "my": 820.55
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1370.02,
+   "y": 824.23,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1370.02,
+   "my": 824.23
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1260.34,
+   "y": 752.99,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1260.34,
+   "my": 752.99
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1259.77,
+   "y": 827.15,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1259.77,
+   "my": 827.15
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1266.8,
+   "y": 902.8,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1266.8,
+   "my": 902.8
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1378.96,
+   "y": 906.95,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1378.96,
+   "my": 906.95
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1479.48,
+   "y": 909.44,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1479.48,
+   "my": 909.44
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1485.35,
+   "y": 1001.39,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1485.35,
+   "my": 1001.39
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1358.19,
+   "y": 996.68,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1358.19,
+   "my": 996.68
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1267.63,
+   "y": 1004.16,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1267.63,
+   "my": 1004.16
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1153.81,
+   "y": 919.41,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1153.81,
+   "my": 919.41
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 951.09,
+   "y": 921.91,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 951.09,
+   "my": 921.91
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1040.82,
+   "y": 924.4,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1040.82,
+   "my": 924.4
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1257.46,
+   "y": 1077.55,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1257.46,
+   "my": 1077.55
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1269.58,
+   "y": 1156.59,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1269.58,
+   "my": 1156.59
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1264.96,
+   "y": 1219.48,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1264.96,
+   "my": 1219.48
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1367.08,
+   "y": 1156.59,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1367.08,
+   "my": 1156.59
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1368.81,
+   "y": 1075.81,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1368.81,
+   "my": 1075.81
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1490.55,
+   "y": 1078.7,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1490.55,
+   "my": 1078.7
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1488.24,
+   "y": 1155.43,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1488.24,
+   "my": 1155.43
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1299.79,
+   "y": 467.46,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1299.79,
+   "my": 467.46
+  },
+  {
+   "page": 2,
+   "type": "spk_semi",
+   "x": 1407.37,
+   "y": 467.46,
+   "status": "remove",
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|42",
+   "mx": 1407.37,
+   "my": 467.46
+  },
+  {
    "page": 4,
    "type": "smoke",
    "x": 1492.98,
    "y": 1213.3,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|6",
+   "mx": 1492.32,
+   "my": 1212.43
   },
   {
    "page": 4,
@@ -1271,7 +1835,10 @@
    "x": 1554.06,
    "y": 1174.3,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|6",
+   "mx": 1554.92,
+   "my": 1175.41
   },
   {
    "page": 4,
@@ -1279,7 +1846,10 @@
    "x": 1726.02,
    "y": 1174.3,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|6",
+   "mx": 1727.23,
+   "my": 1172.72
   },
   {
    "page": 4,
@@ -1287,7 +1857,10 @@
    "x": 1335.06,
    "y": 408.58,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|6",
+   "mx": 1336.47,
+   "my": 404.01
   },
   {
    "page": 4,
@@ -1295,7 +1868,10 @@
    "x": 1418.1,
    "y": 340.18,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|6",
+   "mx": 1415.22,
+   "my": 338.04
   },
   {
    "page": 4,
@@ -1303,7 +1879,10 @@
    "x": 1545.3,
    "y": 213.1,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|6",
+   "mx": 1548.22,
+   "my": 213.04
   },
   {
    "page": 4,
@@ -1311,7 +1890,10 @@
    "x": 1490.28,
    "y": 391.24,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1488.03,
+   "my": 392.24
   },
   {
    "page": 4,
@@ -1319,7 +1901,10 @@
    "x": 1538.94,
    "y": 391.18,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1538.51,
+   "my": 392.24
   },
   {
    "page": 4,
@@ -1327,7 +1912,10 @@
    "x": 1598.76,
    "y": 391.24,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1598.42,
+   "my": 391.56
   },
   {
    "page": 4,
@@ -1335,7 +1923,10 @@
    "x": 1418.04,
    "y": 357.16,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1420.72,
+   "my": 357.24
   },
   {
    "page": 4,
@@ -1343,7 +1934,10 @@
    "x": 1335,
    "y": 445.48,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1334.56,
+   "my": 446.09
   },
   {
    "page": 4,
@@ -1351,7 +1945,10 @@
    "x": 1321.08,
    "y": 510.28,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1322.44,
+   "my": 508.68
   },
   {
    "page": 4,
@@ -1359,7 +1956,10 @@
    "x": 1386.78,
    "y": 510.22,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1387.06,
+   "my": 510.03
   },
   {
    "page": 4,
@@ -1367,7 +1967,10 @@
    "x": 1565.22,
    "y": 503.62,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1564.76,
+   "my": 502.63
   },
   {
    "page": 4,
@@ -1375,7 +1978,10 @@
    "x": 1565.22,
    "y": 538.78,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1564.76,
+   "my": 538.97
   },
   {
    "page": 4,
@@ -1383,7 +1989,10 @@
    "x": 1214.64,
    "y": 660.4,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1214.63,
+   "my": 660.57
   },
   {
    "page": 4,
@@ -1391,7 +2000,10 @@
    "x": 1431.24,
    "y": 660.4,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1430.7,
+   "my": 660.57
   },
   {
    "page": 4,
@@ -1399,7 +2011,10 @@
    "x": 1637.4,
    "y": 661.36,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1638.01,
+   "my": 660.57
   },
   {
    "page": 4,
@@ -1407,7 +2022,10 @@
    "x": 1214.64,
    "y": 915.52,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1214.37,
+   "my": 914.6
   },
   {
    "page": 4,
@@ -1415,7 +2033,10 @@
    "x": 1431.24,
    "y": 915.52,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1430.32,
+   "my": 915.16
   },
   {
    "page": 4,
@@ -1423,7 +2044,10 @@
    "x": 1637.46,
    "y": 909.34,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1636.12,
+   "my": 909.24
   },
   {
    "page": 4,
@@ -1431,7 +2055,10 @@
    "x": 1536.96,
    "y": 1174.36,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1536.75,
+   "my": 1175.41
   },
   {
    "page": 4,
@@ -1439,7 +2066,10 @@
    "x": 1708.92,
    "y": 1174.36,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1707.71,
+   "my": 1174.74
   },
   {
    "page": 4,
@@ -1447,7 +2077,10 @@
    "x": 1509.84,
    "y": 1213.24,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1510.49,
+   "my": 1211.09
   },
   {
    "page": 4,
@@ -1455,7 +2088,10 @@
    "x": 1406.88,
    "y": 213.04,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1407.06,
+   "my": 212.57
   },
   {
    "page": 4,
@@ -1463,7 +2099,10 @@
    "x": 1528.32,
    "y": 213.16,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1529.06,
+   "my": 213.04
   },
   {
    "page": 5,
@@ -1471,7 +2110,10 @@
    "x": 483.48,
    "y": 666.04,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 484.48,
+   "my": 665.84
   },
   {
    "page": 5,
@@ -1479,7 +2121,10 @@
    "x": 533.1,
    "y": 733.06,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 532.13,
+   "my": 732.88
   },
   {
    "page": 5,
@@ -1487,7 +2132,10 @@
    "x": 722.04,
    "y": 666.04,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 721.14,
+   "my": 665.03
   },
   {
    "page": 5,
@@ -1495,7 +2143,10 @@
    "x": 564.78,
    "y": 946.3,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 567.67,
+   "my": 945.31
   },
   {
    "page": 5,
@@ -1503,7 +2154,10 @@
    "x": 767.22,
    "y": 946.3,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 765.57,
+   "my": 946.12
   },
   {
    "page": 5,
@@ -1511,7 +2165,10 @@
    "x": 631.32,
    "y": 1026.28,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 633.91,
+   "my": 1025.28
   },
   {
    "page": 5,
@@ -1519,7 +2176,10 @@
    "x": 874.92,
    "y": 827.92,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 875.42,
+   "my": 828.19
   },
   {
    "page": 5,
@@ -1527,7 +2187,10 @@
    "x": 889.5,
    "y": 665.98,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|8",
+   "mx": 889.15,
+   "my": 665.03
   },
   {
    "page": 5,
@@ -1535,7 +2198,10 @@
    "x": 466.5,
    "y": 665.98,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 465.09,
+   "my": 665.84
   },
   {
    "page": 5,
@@ -1543,7 +2209,10 @@
    "x": 705.06,
    "y": 665.98,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 702.56,
+   "my": 665.84
   },
   {
    "page": 5,
@@ -1551,7 +2220,10 @@
    "x": 889.5,
    "y": 648.94,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 891.57,
+   "my": 649.68
   },
   {
    "page": 5,
@@ -1559,7 +2231,10 @@
    "x": 564.78,
    "y": 992.68,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 562.83,
+   "my": 992.97
   },
   {
    "page": 5,
@@ -1567,7 +2242,10 @@
    "x": 750.18,
    "y": 946.3,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 750.22,
+   "my": 945.31
   },
   {
    "page": 5,
@@ -1575,7 +2253,10 @@
    "x": 707.64,
    "y": 1089.58,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 705.79,
+   "my": 1086.66
   },
   {
    "page": 5,
@@ -1583,7 +2264,10 @@
    "x": 611.22,
    "y": 1089.58,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 611.29,
+   "my": 1092.32
   },
   {
    "page": 5,
@@ -1591,7 +2275,10 @@
    "x": 531.42,
    "y": 1073.26,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 532.94,
+   "my": 1071.32
   },
   {
    "page": 5,
@@ -1599,7 +2286,10 @@
    "x": 874.86,
    "y": 810.94,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|9",
+   "mx": 876.23,
+   "my": 808.8
   },
   {
    "page": 6,
@@ -1607,7 +2297,10 @@
    "x": 1525.5,
    "y": 1177.18,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1529.71,
+   "my": 1180.92
   },
   {
    "page": 6,
@@ -1615,7 +2308,10 @@
    "x": 1636.62,
    "y": 1177.18,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1639.62,
+   "my": 1179.56
   },
   {
    "page": 6,
@@ -1623,7 +2319,10 @@
    "x": 1749.9,
    "y": 1177.18,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1753.61,
+   "my": 1179.56
   },
   {
    "page": 6,
@@ -1631,7 +2330,10 @@
    "x": 1509.3,
    "y": 1212.58,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1517.49,
+   "my": 1216.2
   },
   {
    "page": 6,
@@ -1639,7 +2341,10 @@
    "x": 1553.94,
    "y": 213.82,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1556.37,
+   "my": 218.66
   },
   {
    "page": 6,
@@ -1647,7 +2352,10 @@
    "x": 1539.78,
    "y": 324.94,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1543.18,
+   "my": 327.03
   },
   {
    "page": 6,
@@ -1655,7 +2363,10 @@
    "x": 1490.1,
    "y": 324.94,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1493.23,
+   "my": 327.03
   },
   {
    "page": 6,
@@ -1663,7 +2374,10 @@
    "x": 1490.1,
    "y": 437.5,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1487.58,
+   "my": 441.99
   },
   {
    "page": 6,
@@ -1671,7 +2385,10 @@
    "x": 1537.52,
    "y": 503.25,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1537.52,
+   "my": 503.25
   },
   {
    "page": 6,
@@ -1679,7 +2396,10 @@
    "x": 1546.95,
    "y": 444.82,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1546.95,
+   "my": 444.82
   },
   {
    "page": 6,
@@ -1687,7 +2407,10 @@
    "x": 1595.01,
    "y": 443.88,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1595.01,
+   "my": 443.88
   },
   {
    "page": 6,
@@ -1695,7 +2418,10 @@
    "x": 1596.9,
    "y": 324.94,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1596.89,
+   "my": 326.09
   },
   {
    "page": 6,
@@ -1703,7 +2429,10 @@
    "x": 1630.82,
    "y": 507.02,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1630.82,
+   "my": 507.02
   },
   {
    "page": 6,
@@ -1711,7 +2440,10 @@
    "x": 1419.06,
    "y": 405.34,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1422.56,
+   "my": 408.07
   },
   {
    "page": 6,
@@ -1719,7 +2451,10 @@
    "x": 1418.94,
    "y": 303.94,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1418.79,
+   "my": 321.37
   },
   {
    "page": 6,
@@ -1727,7 +2462,10 @@
    "x": 1335.42,
    "y": 351.82,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1338.69,
+   "my": 359.07
   },
   {
    "page": 6,
@@ -1735,7 +2473,10 @@
    "x": 1335.42,
    "y": 475.06,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1335.86,
+   "my": 479.69
   },
   {
    "page": 6,
@@ -1743,7 +2484,10 @@
    "x": 1319.46,
    "y": 508.78,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1318.9,
+   "my": 516.44
   },
   {
    "page": 6,
@@ -1751,7 +2495,10 @@
    "x": 1385.58,
    "y": 508.78,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1387.69,
+   "my": 514.56
   },
   {
    "page": 6,
@@ -1759,727 +2506,10 @@
    "x": 1433.22,
    "y": 475.06,
    "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "sprinkler",
-   "x": 437.35,
-   "y": 673.33,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 573.78,
-   "y": 662.86,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 691.38,
-   "y": 662.86,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "sprinkler",
-   "x": 787.59,
-   "y": 670.98,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 899.46,
-   "y": 652.9,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 874.98,
-   "y": 762.1,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 874.98,
-   "y": 881.86,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 803.94,
-   "y": 947.74,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 679.74,
-   "y": 961.65,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 559.5,
-   "y": 950.02,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 559.5,
-   "y": 1014.82,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 679.74,
-   "y": 1014.82,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 517.02,
-   "y": 1092.34,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 598.74,
-   "y": 1092.34,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 7,
-   "type": "sprinkler",
-   "x": 716.12,
-   "y": 1096.61,
-   "status": null,
-   "cls": "annotation:Polygon#ff0000"
-  },
-  {
-   "page": 4,
-   "type": "speaker",
-   "x": 1565.11,
-   "y": 213.04,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 4,
-   "type": "speaker",
-   "x": 1518.96,
-   "y": 391.19,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 4,
-   "type": "speaker",
-   "x": 1417.91,
-   "y": 374.69,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 4,
-   "type": "speaker",
-   "x": 1335.06,
-   "y": 426.94,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1626.54,
-   "y": 1174.3,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 4,
-   "type": "speaker",
-   "x": 1529.82,
-   "y": 1213.18,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 503.23,
-   "y": 665.92,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 741.79,
-   "y": 665.92,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 889.5,
-   "y": 685.78,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 874.98,
-   "y": 847.66,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 731.64,
-   "y": 945.31,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 564.78,
-   "y": 963.37,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 531.31,
-   "y": 1110.04,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 631.03,
-   "y": 1089.52,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 5,
-   "type": "speaker",
-   "x": 725.17,
-   "y": 1089.39,
-   "status": null,
-   "cls": "annotation:Polygon#008040"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1611.6,
-   "y": 909.28,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1406.13,
-   "y": 915.46,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1237.65,
-   "y": 915.46,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1237.65,
-   "y": 660.34,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1406.13,
-   "y": 660.34,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1611.69,
-   "y": 661.3,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 4,
-   "type": "spk_surf",
-   "x": 1424.16,
-   "y": 212.92,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 5,
-   "type": "spk_surf",
-   "x": 532.05,
-   "y": 752.86,
-   "status": null,
-   "cls": "annotation:Polygon#80ff80"
-  },
-  {
-   "page": 5,
-   "type": "heat",
-   "x": 533.75,
-   "y": 1091.51,
-   "status": null,
-   "cls": "annotation:Polygon#ffff00"
-  },
-  {
-   "page": 5,
-   "type": "heat",
-   "x": 594.24,
-   "y": 1089.58,
-   "status": null,
-   "cls": "annotation:Polygon#ffff00"
-  },
-  {
-   "page": 5,
-   "type": "heat",
-   "x": 690.66,
-   "y": 1089.58,
-   "status": null,
-   "cls": "annotation:Polygon#ffff00"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1167.36,
-   "y": 660.34,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1274.76,
-   "y": 660.34,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1383.12,
-   "y": 660.34,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1492.02,
-   "y": 562.18,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1492.02,
-   "y": 661.3,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1588.32,
-   "y": 562.18,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1588.32,
-   "y": 661.3,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1686.48,
-   "y": 661.3,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1686.48,
-   "y": 562.18,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1766.76,
-   "y": 562.18,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1766.76,
-   "y": 661.3,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1766.76,
-   "y": 760.54,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1686.48,
-   "y": 760.54,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1588.32,
-   "y": 760.54,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1492.02,
-   "y": 760.54,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1492.02,
-   "y": 859.66,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1383.12,
-   "y": 915.46,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1274.76,
-   "y": 915.46,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1167.42,
-   "y": 915.46,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1588.32,
-   "y": 859.66,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1686.48,
-   "y": 859.66,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1766.76,
-   "y": 859.66,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1492.02,
-   "y": 1058.02,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1588.32,
-   "y": 1058.02,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1686.48,
-   "y": 1058.02,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1766.76,
-   "y": 1058.02,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1766.76,
-   "y": 958.9,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1686.48,
-   "y": 958.9,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1588.32,
-   "y": 958.9,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_up",
-   "x": 1492.02,
-   "y": 958.9,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "sprinkler",
-   "x": 1421.62,
-   "y": 214.89,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 7,
-   "type": "sprinkler",
-   "x": 534.2,
-   "y": 741.31,
-   "status": null,
-   "cls": "annotation:Polygon#ffb680"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1407.18,
-   "y": 473.14,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1335.42,
-   "y": 376.42,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1418.94,
-   "y": 422.5,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1537.02,
-   "y": 215.38,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1490.82,
-   "y": 1214.14,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1491.9,
-   "y": 1159.66,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1589.58,
-   "y": 1159.66,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1687.5,
-   "y": 1159.66,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 6,
-   "type": "spk_space",
-   "x": 1765.2,
-   "y": 1156.66,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 559.38,
-   "y": 1033.9,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 695.46,
-   "y": 1092.34,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 679.74,
-   "y": 1033.9,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 559.38,
-   "y": 965.74,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 874.86,
-   "y": 897.58,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 874.86,
-   "y": 777.82,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 899.34,
-   "y": 674.14,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
-  },
-  {
-   "page": 7,
-   "type": "spk_space",
-   "x": 809.7,
-   "y": 662.86,
-   "status": null,
-   "cls": "annotation:Polygon#000000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|20",
+   "mx": 1440.46,
+   "my": 479.69
   },
   {
    "page": 7,
@@ -2487,7 +2517,1044 @@
    "x": 458.46,
    "y": 662.86,
    "status": null,
-   "cls": "annotation:Polygon#000000"
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 437.35,
+   "my": 673.33
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 573.78,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 562.99,
+   "my": 673.33
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 691.38,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 675.29,
+   "my": 668.62
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 809.7,
+   "y": 662.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 787.59,
+   "my": 670.98
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 899.46,
+   "y": 652.9,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 898.31,
+   "my": 656.06
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.98,
+   "y": 762.1,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 873.97,
+   "my": 762.07
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.98,
+   "y": 881.86,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 880.25,
+   "my": 877.51
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 803.94,
+   "y": 947.74,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 823.71,
+   "my": 944.26
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 679.74,
+   "y": 961.65,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 680,
+   "my": 949.76
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.5,
+   "y": 950.02,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 558.28,
+   "my": 948.97
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.5,
+   "y": 1014.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 562.99,
+   "my": 1018.86
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 679.74,
+   "y": 1014.82,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 682.36,
+   "my": 1014.94
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 517.02,
+   "y": 1092.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 535.51,
+   "my": 1094.25
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 598.74,
+   "y": 1092.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 616.39,
+   "my": 1096.61
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 695.46,
+   "y": 1092.34,
+   "status": null,
+   "cls": "annotation:Polygon#ff0000",
+   "grp": "Polygon#ff0000|15",
+   "mx": 716.12,
+   "my": 1096.61
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1304.55,
+   "y": 216.58,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1304.55,
+   "my": 216.58
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1187.96,
+   "y": 404.83,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1187.96,
+   "my": 404.83
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1426.48,
+   "y": 635.06,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1426.48,
+   "my": 635.06
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1070.37,
+   "y": 659.66,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1070.37,
+   "my": 659.66
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1070.73,
+   "y": 916.01,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1070.73,
+   "my": 916.01
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1426.28,
+   "y": 915.34,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1426.28,
+   "my": 915.34
+  },
+  {
+   "page": 2,
+   "type": "speaker",
+   "x": 1427.06,
+   "y": 1161.19,
+   "status": "remove",
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|7",
+   "mx": 1427.06,
+   "my": 1161.19
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1565.11,
+   "y": 213.04,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|6",
+   "mx": 1564.52,
+   "my": 213.82
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1518.96,
+   "y": 391.19,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|6",
+   "mx": 1518.96,
+   "my": 391.19
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1417.91,
+   "y": 374.69,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|6",
+   "mx": 1420.1,
+   "my": 378.59
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1335.06,
+   "y": 426.94,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|6",
+   "mx": 1337.71,
+   "my": 428.99
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1626.54,
+   "y": 1174.3,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|6",
+   "mx": 1631.31,
+   "my": 1174.88
+  },
+  {
+   "page": 4,
+   "type": "speaker",
+   "x": 1529.82,
+   "y": 1213.18,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|6",
+   "mx": 1530.34,
+   "my": 1213.59
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 503.23,
+   "y": 665.92,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 505.48,
+   "my": 665.84
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 741.79,
+   "y": 665.92,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 741.33,
+   "my": 666.64
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 889.5,
+   "y": 685.78,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 888.34,
+   "my": 685.22
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 874.98,
+   "y": 847.66,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 875.42,
+   "my": 846.77
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 731.64,
+   "y": 945.31,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 731.64,
+   "my": 945.31
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 564.78,
+   "y": 963.37,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 566.06,
+   "my": 966.31
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 531.31,
+   "y": 1110.04,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 532.13,
+   "my": 1110.89
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 631.03,
+   "y": 1089.52,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 631.48,
+   "my": 1089.89
+  },
+  {
+   "page": 5,
+   "type": "speaker",
+   "x": 725.17,
+   "y": 1089.39,
+   "status": null,
+   "cls": "annotation:Polygon#008040",
+   "grp": "Polygon#008040|9",
+   "mx": 729.22,
+   "my": 1090.7
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1611.6,
+   "y": 909.28,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1612.63,
+   "my": 907.63
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1406.13,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1407.15,
+   "my": 916.36
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1237.65,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1239.46,
+   "my": 914.42
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1237.65,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1238.49,
+   "my": 659.5
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1406.13,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1407.15,
+   "my": 659.5
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1611.69,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1613.6,
+   "my": 659.5
+  },
+  {
+   "page": 4,
+   "type": "spk_surf",
+   "x": 1424.16,
+   "y": 212.92,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|7",
+   "mx": 1428.79,
+   "my": 212.52
+  },
+  {
+   "page": 5,
+   "type": "spk_surf",
+   "x": 532.05,
+   "y": 752.86,
+   "status": null,
+   "cls": "annotation:Polygon#80ff80",
+   "grp": "Polygon#80ff80|1",
+   "mx": 530.52,
+   "my": 754.69
+  },
+  {
+   "page": 5,
+   "type": "heat",
+   "x": 531.42,
+   "y": 1090.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffff00",
+   "grp": "Polygon#ffff00|3",
+   "mx": 533.75,
+   "my": 1091.51
+  },
+  {
+   "page": 5,
+   "type": "heat",
+   "x": 594.3,
+   "y": 1089.58,
+   "status": null,
+   "cls": "annotation:Polygon#ffff00",
+   "grp": "Polygon#ffff00|3",
+   "mx": 592.71,
+   "my": 1090.7
+  },
+  {
+   "page": 5,
+   "type": "heat",
+   "x": 690.66,
+   "y": 1089.58,
+   "status": null,
+   "cls": "annotation:Polygon#ffff00",
+   "grp": "Polygon#ffff00|3",
+   "mx": 692.06,
+   "my": 1087.47
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1167.36,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1171.39,
+   "my": 659.52
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1274.76,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1278.82,
+   "my": 662.34
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1383.12,
+   "y": 660.34,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1394.73,
+   "my": 665.17
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1494.62,
+   "my": 561.51
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1498.39,
+   "my": 667.05
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1588.86,
+   "my": 569.99
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1584.14,
+   "my": 664.23
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1682.15,
+   "my": 663.29
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1685.92,
+   "my": 573.76
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 562.18,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1767.9,
+   "my": 566.22
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 661.3,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1767.9,
+   "my": 659.52
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1778.27,
+   "my": 762.23
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1677.44,
+   "my": 766
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1595.45,
+   "my": 765.06
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 760.54,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1504.99,
+   "my": 761.29
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1492.74,
+   "my": 857.41
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1383.12,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1388.14,
+   "my": 915.83
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1274.76,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1270.34,
+   "my": 919.6
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1167.42,
+   "y": 915.46,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1166.68,
+   "my": 919.6
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1586.97,
+   "my": 857.41
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1686.86,
+   "my": 860.24
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 859.66,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1767.9,
+   "my": 859.29
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1489.37,
+   "my": 1059.81
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1591.15,
+   "my": 1062.64
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1687.27,
+   "my": 1064.52
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 1058.02,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1771.14,
+   "my": 1061.69
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1766.76,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1771.14,
+   "my": 970.29
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1686.48,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1686.33,
+   "my": 958.04
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1588.32,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1587.38,
+   "my": 958.98
+  },
+  {
+   "page": 6,
+   "type": "spk_up",
+   "x": 1492.02,
+   "y": 958.9,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|30",
+   "mx": 1485.6,
+   "my": 964.63
+  },
+  {
+   "page": 6,
+   "type": "sprinkler",
+   "x": 1421.62,
+   "y": 214.89,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|1",
+   "mx": 1421.62,
+   "my": 214.89
+  },
+  {
+   "page": 7,
+   "type": "sprinkler",
+   "x": 534.2,
+   "y": 741.31,
+   "status": null,
+   "cls": "annotation:Polygon#ffb680",
+   "grp": "Polygon#ffb680|1",
+   "mx": 534.2,
+   "my": 741.31
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1407.18,
+   "y": 473.14,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1408.42,
+   "my": 478.75
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1335.42,
+   "y": 376.42,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1333.47,
+   "my": 380.47
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1418.94,
+   "y": 422.5,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1425.38,
+   "my": 427.86
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1537.02,
+   "y": 215.38,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1531.87,
+   "my": 219.6
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1490.82,
+   "y": 1214.14,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1494,
+   "my": 1219.31
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1491.9,
+   "y": 1159.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1496.73,
+   "my": 1161.5
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1589.58,
+   "y": 1159.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1591.61,
+   "my": 1160.95
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1687.5,
+   "y": 1159.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1690.87,
+   "my": 1159.86
+  },
+  {
+   "page": 6,
+   "type": "spk_space",
+   "x": 1765.2,
+   "y": 1156.66,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|10",
+   "mx": 1767.21,
+   "my": 1160.41
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.38,
+   "y": 1033.9,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|15",
+   "mx": 564.56,
+   "my": 1036.92
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 679.74,
+   "y": 1033.9,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|15",
+   "mx": 676.07,
+   "my": 1038.49
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 559.38,
+   "y": 965.74,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|15",
+   "mx": 556.71,
+   "my": 963.89
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.86,
+   "y": 897.58,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|15",
+   "mx": 877.11,
+   "my": 899.5
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 874.86,
+   "y": 777.82,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|15",
+   "mx": 875.54,
+   "my": 777.78
+  },
+  {
+   "page": 7,
+   "type": "spk_space",
+   "x": 899.34,
+   "y": 674.14,
+   "status": null,
+   "cls": "annotation:Polygon#000000",
+   "grp": "Polygon#000000|15",
+   "mx": 905.38,
+   "my": 674.12
   }
  ],
  "rooms": [
@@ -3459,21 +4526,35 @@
    "fingerprint": "SMOKE_FP_7ETIB",
    "geoHash": "GEO_MW3P7",
    "deviceType": "smoke",
-   "n": 19,
+   "n": 23,
    "text": []
   },
   {
    "fingerprint": "SMOKE_FP_3U1VZ",
    "geoHash": "GEO_52KQO",
    "deviceType": "smoke",
-   "n": 6,
+   "n": 15,
    "text": []
   },
   {
-   "fingerprint": "SMOKE_FP_PU8TP",
-   "geoHash": "GEO_3BQBX",
+   "fingerprint": "SMOKE_FP_2WQGB",
+   "geoHash": "GEO_Z3ZD5",
    "deviceType": "smoke",
    "n": 5,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKSEM_FP_XIJQN",
+   "geoHash": "GEO_MDBHW",
+   "deviceType": "spk_semi",
+   "n": 22,
+   "text": []
+  },
+  {
+   "fingerprint": "SPKSEM_FP_GEJFJ",
+   "geoHash": "GEO_ISI01",
+   "deviceType": "spk_semi",
+   "n": 13,
    "text": []
   },
   {
@@ -3505,29 +4586,22 @@
    "text": []
   },
   {
-   "fingerprint": "SPKSEM_FP_Q0OOZ",
-   "geoHash": "GEO_ULX16",
-   "deviceType": "spk_semi",
-   "n": 2,
-   "text": []
-  },
-  {
    "fingerprint": "SPRINK_FP_Q0OOZ",
    "geoHash": "GEO_ULX16",
    "deviceType": "sprinkler",
-   "n": 7,
+   "n": 4,
+   "text": []
+  },
+  {
+   "fingerprint": "SPEAKE_FP_MVRJA",
+   "geoHash": "GEO_RLW22",
+   "deviceType": "speaker",
+   "n": 6,
    "text": []
   },
   {
    "fingerprint": "SPEAKE_FP_2SIQC",
    "geoHash": "GEO_699OV",
-   "deviceType": "speaker",
-   "n": 3,
-   "text": []
-  },
-  {
-   "fingerprint": "SPEAKE_FP_UM561",
-   "geoHash": "GEO_D1OAI",
    "deviceType": "speaker",
    "n": 3,
    "text": []
@@ -3650,20 +4724,227 @@
   "totals": [],
   "boqCheck": []
  },
+ "countTables": [
+  {
+   "page": 2,
+   "rows": [
+    {
+     "description": "X RECESSED CEILING SPEAKER",
+     "status": "remove",
+     "qty": 7,
+     "unit": "Count",
+     "type": "speaker",
+     "group": "Polygon#008040|7",
+     "ambiguous": false,
+     "found": 7
+    },
+    {
+     "description": "X SEMI-RECESSED CEILING PENDANT",
+     "status": "remove",
+     "qty": 42,
+     "unit": "Count",
+     "type": "spk_semi",
+     "group": "Polygon#ff0000|42",
+     "ambiguous": false,
+     "found": 42
+    },
+    {
+     "description": "X SMOKE DETECTOR",
+     "status": "remove",
+     "qty": 9,
+     "unit": "Count",
+     "type": "smoke",
+     "group": "Polygon#ff0000|9",
+     "ambiguous": false,
+     "found": 9
+    }
+   ]
+  },
+  {
+   "page": 4,
+   "rows": [
+    {
+     "description": "RECESSED CEILING SPEAKER",
+     "status": "new",
+     "qty": 6,
+     "unit": "Count",
+     "type": "speaker",
+     "group": "Polygon#008040|6",
+     "ambiguous": false,
+     "found": 6
+    },
+    {
+     "description": "SMOKE DETECTOR CONCEALED",
+     "status": "new",
+     "qty": 6,
+     "unit": "Count",
+     "type": "smoke",
+     "group": "Polygon#ff0000|6",
+     "ambiguous": false,
+     "found": 6
+    },
+    {
+     "description": "SMOKE DETECTOR",
+     "status": "new",
+     "qty": 20,
+     "unit": "Count",
+     "type": "smoke",
+     "group": "Polygon#ff0000|20",
+     "ambiguous": false,
+     "found": 20
+    },
+    {
+     "description": "SPEAKER SURFACE MOUNTED",
+     "status": "new",
+     "qty": 7,
+     "unit": "Count",
+     "type": "speaker",
+     "group": "Polygon#80ff80|7",
+     "ambiguous": false,
+     "found": 7
+    }
+   ]
+  },
+  {
+   "page": 5,
+   "rows": [
+    {
+     "description": "RECESSED CEILING SPEAKER",
+     "status": "new",
+     "qty": 9,
+     "unit": "Count",
+     "type": "speaker",
+     "group": "Polygon#008040|9",
+     "ambiguous": false,
+     "found": 9
+    },
+    {
+     "description": "SMOKE DETECTOR",
+     "status": "new",
+     "qty": 8,
+     "unit": "Count",
+     "type": "smoke",
+     "group": "Polygon#ff0000|8",
+     "ambiguous": false,
+     "found": 8
+    },
+    {
+     "description": "SMOKE DETECTOR CONCEALED",
+     "status": "new",
+     "qty": 9,
+     "unit": "Count",
+     "type": "smoke",
+     "group": "Polygon#ff0000|9",
+     "ambiguous": false,
+     "found": 9
+    },
+    {
+     "description": "SPEAKER SURFACE MOUNTED",
+     "status": "new",
+     "qty": 1,
+     "unit": "Count",
+     "type": "speaker",
+     "group": "Polygon#80ff80|1",
+     "ambiguous": false,
+     "found": 1
+    },
+    {
+     "description": "THERMAL DETECTOR",
+     "status": "new",
+     "qty": 3,
+     "unit": "Count",
+     "type": "heat",
+     "group": "Polygon#ffff00|3",
+     "ambiguous": false,
+     "found": 3
+    }
+   ]
+  },
+  {
+   "page": 6,
+   "rows": [
+    {
+     "description": "Concealed head",
+     "status": "new",
+     "qty": 10,
+     "unit": "Count",
+     "type": "spk_conc",
+     "group": "Polygon#000000|10",
+     "ambiguous": false,
+     "found": 9
+    },
+    {
+     "description": "Exposed head",
+     "status": "new",
+     "qty": 31,
+     "unit": "Count",
+     "type": "spk_pend",
+     "group": "Polygon#ffb680|30 + Polygon#ffb680|1",
+     "ambiguous": false,
+     "found": 31
+    },
+    {
+     "description": "SEMI-RECESSED CEILING PENDANT",
+     "status": "new",
+     "qty": 20,
+     "unit": "Count",
+     "type": "spk_semi",
+     "group": "Polygon#ff0000|20",
+     "ambiguous": false,
+     "found": 20
+    }
+   ]
+  },
+  {
+   "page": 7,
+   "rows": [
+    {
+     "description": "Concealed head",
+     "status": "new",
+     "qty": 15,
+     "unit": "Count",
+     "type": "spk_conc",
+     "group": "Polygon#000000|15",
+     "ambiguous": false,
+     "found": 6
+    },
+    {
+     "description": "Exposed head",
+     "status": "new",
+     "qty": 1,
+     "unit": "Count",
+     "type": "spk_pend",
+     "group": "Polygon#ffb680|1",
+     "ambiguous": false,
+     "found": 1
+    },
+    {
+     "description": "SEMI-RECESSED CEILING PENDANT",
+     "status": "new",
+     "qty": 15,
+     "unit": "Count",
+     "type": "spk_semi",
+     "group": "Polygon#ff0000|15",
+     "ambiguous": false,
+     "found": 15
+    }
+   ]
+  }
+ ],
  "summary": {
-  "devices": 154,
+  "devices": 209,
   "byType": {
-   "smoke": 43,
+   "smoke": 52,
+   "spk_semi": 44,
    "spk_conc": 11,
    "spk_space": 33,
-   "spk_semi": 2,
-   "sprinkler": 9,
-   "speaker": 14,
+   "sprinkler": 6,
+   "speaker": 21,
    "spk_surf": 9,
    "heat": 3,
    "spk_up": 30
   },
-  "symbols": 13,
+  "symbols": 14,
   "networks": 0,
   "rooms": 16,
   "pricingItems": 0,
@@ -3684,7 +4965,7 @@
    "typed": 53,
    "historical": 0,
    "lineTypes": 17,
-   "detections": 172
+   "detections": 173
   },
   "generatedBy": "src/learning-engine"
  }

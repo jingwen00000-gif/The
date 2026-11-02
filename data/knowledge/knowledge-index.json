@@ -13,24 +13,34 @@
   },
   {
    "projectId": "44-market",
-   "at": "2026-11-02T05:10:19.760Z",
+   "at": "2026-11-02T08:21:32.997Z",
    "consultant": "Nutbrook Engineering Group Pty Ltd.",
-   "devices": 154,
-   "symbols": 13,
+   "devices": 209,
+   "symbols": 14,
    "networks": 0,
    "rooms": 16,
    "pricingItems": 0
   },
   {
    "projectId": "khartoum",
-   "at": "2026-11-02T05:37:00.863Z",
+   "at": "2026-11-02T08:23:14.194Z",
    "consultant": null,
-   "devices": 363,
-   "symbols": 6,
+   "devices": 365,
+   "symbols": 7,
    "networks": 0,
    "rooms": 0,
    "pricingItems": 0
+  },
+  {
+   "projectId": "lucid-lce103150",
+   "at": "2026-11-02T08:24:01.732Z",
+   "consultant": "Lucid Consulting",
+   "devices": 1328,
+   "symbols": 9,
+   "networks": 0,
+   "rooms": 1,
+   "pricingItems": 0
   }
  ],
- "updated": "2026-11-02T06:55:34.014Z"
+ "updated": "2026-11-02T08:24:01.749Z"
 }

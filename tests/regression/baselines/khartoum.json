@@ -1,6 +1,6 @@
 {
  "project": "khartoum",
- "accepted": "2026-11-02T06:33:46.406Z",
+ "accepted": "2026-11-02T08:40:06.517Z",
  "sheets": [
   "cover",
   "notes",
@@ -39,19 +39,19 @@
   "5:hydrant@new": 1,
   "5:hydrant@retain": 3,
   "5:spk_pend@new": 58,
-  "5:spk_pend@relocate": 44,
-  "5:spk_pend@retain": 113,
+  "5:spk_pend@relocate": 43,
+  "5:spk_pend@retain": 114,
   "5:spk_space@new": 15,
   "5:spk_space@relocate": 13,
-  "5:spk_space@retain": 68,
-  "5:spk_up@retain": 6,
+  "5:spk_space@retain": 45,
+  "5:spk_up@retain": 9,
   "6:hydrant@new": 1,
   "6:hydrant@retain": 3,
   "6:spk_pend@new": 25,
   "6:spk_pend@relocate": 26,
   "6:spk_pend@retain": 120,
-  "6:spk_space@retain": 62,
-  "6:spk_up@retain": 6,
+  "6:spk_space@retain": 41,
+  "6:spk_up@retain": 15,
   "7:smoke@new": 44,
   "7:smoke@relocate": 14,
   "7:smoke@retain": 35,
@@ -70,7 +70,7 @@
   "8:spk_surf@retain": 2,
   "8:wip": 1
  },
- "total": 876,
+ "total": 844,
  "lines": {
   "PIPEWORK (EXISTING TO BE RETAINED)": 184.1,
   "PIPEWORK (NEW)": 407.5
