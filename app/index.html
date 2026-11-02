@@ -3909,6 +3909,9 @@ function vsmBuild(sg,bw,bh){if(sg.length<3) return null; const ps=sg.flatMap(s=>
   const pe=sg.flatMap(s=>[[s.a,s],[s.b,s]]), oc=new Set([q=>q[0],q=>-q[0],q=>q[1],q=>-q[1]].map(f=>pe.reduce((m,x)=>f(x[0])<f(m[0])?x:m)[1].c));
   const ix0=bx0+(bx1-bx0)*.1, ix1=bx1-(bx1-bx0)*.1, iy0=by0+(by1-by0)*.1, iy1=by1-(by1-by0)*.1; let fill=sg.filter(s=>!s.h&&!oc.has(s.c)&&s.L<D*.25&&[s.a,s.b].every(p=>p[0]>=ix0&&p[0]<=ix1&&p[1]>=iy0&&p[1]<=iy1));
   const fc={}; fill.forEach(s=>fc[s.c]=(fc[s.c]||0)+1); fill=fill.filter(s=>fc[s.c]>=4); fill.forEach(s=>{s.h=1; hatch[s.c]=(hatch[s.c]||0)+1});
+  // a solid dot in the outline's own colour drawn as a fan of tiny pieces (each copy cut differently): checked for presence, not stroke
+  // by stroke — khartoum's below-ceiling sprinklers scored 50 % until this
+  const tiny=sg.filter(s=>!s.h&&s.L<D*.15&&[s.a,s.b].every(p=>p[0]>=ix0&&p[0]<=ix1&&p[1]>=iy0&&p[1]<=iy1)); if(tiny.length>=8) tiny.forEach(s=>{s.h=1; hatch[s.c]=(hatch[s.c]||0)+1});
   let geo=sg.filter(s=>!s.h);
   // a symbol that is only a fill (a solid disc: concealed-space sprinkler): its filled outline is the geometry
   if(geo.length<3){const fl=sg.filter(s=>s.f); if(fl.length>=3&&fl.length===sg.length){fl.forEach(s=>{s.h=0}); for(const k of Object.keys(hatch)) if(k.startsWith('F')) delete hatch[k]; geo=fl}}
@@ -3959,10 +3962,10 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
     const sg=Math.hypot(...vs)/(Math.hypot(...va)||1), th=Math.atan2(vs[1],vs[0])-Math.atan2(va[1],va[0]), c=Math.cos(th)*sg, n=Math.sin(th)*sg;
     const map=q=>{const x=(q[0]-t.a[0])*mi, y=q[1]-t.a[1]; return [ps[0]+c*x-n*y, ps[1]+n*x+c*y]};
     const ctr=map([0,0]); if(hits.some(h=>h.score>=.999&&Math.hypot(h.x-ctr[0],h.y-ctr[1])<T.R*sg*.3)) continue;
-    const near=around(ctr[0],ctr[1],T.R*sg*2+tol), used=new Set(); let got=0, left=T.tot;
+    const near=around(ctr[0],ctr[1],T.R*sg*2+tol), used=new Set(); let got=0, left=T.tot, viaDash=0;
     for(const u of T.segs){const A=map(u.a), B=map(u.b); left-=u.L; let cv=cover(A,B,u,near);
       // a dash of a dashed outline: copies start their dash pattern at different points, so any same-colour stroke right beside it will do
-      if(cv.f<.45&&u.L<T.D*.15){const M=[(A[0]+B[0])/2,(A[1]+B[1])/2], r=Math.max(tol,u.L*sg*1.6); const ws=near.filter(w=>colOk(u,w)&&w.L<T.D*sg*.3&&Math.hypot((w.a[0]+w.b[0])/2-M[0],(w.a[1]+w.b[1])/2-M[1])<r); if(ws.length) cv={f:1,ws}}
+      if(cv.f<.45&&u.L<T.D*.15){const M=[(A[0]+B[0])/2,(A[1]+B[1])/2], r=Math.max(tol,u.L*sg*1.6); const ws=near.filter(w=>colOk(u,w)&&w.L<T.D*sg*.3&&Math.hypot((w.a[0]+w.b[0])/2-M[0],(w.a[1]+w.b[1])/2-M[1])<r); if(ws.length){cv={f:1,ws}; viaDash+=u.L}}
       if(cv.f>=.45){got+=u.L*Math.min(1,cv.f/.75); cv.ws.forEach(w=>used.add(w))} if((got+left)/T.tot<.6) break}
     let fr=got/T.tot; if(fr<.6) continue;
     const inv=q=>{const dx=q[0]-ps[0], dy=q[1]-ps[1], d=sg*sg; const x=(c*dx+n*dy)/d, y=(-n*dx+c*dy)/d; return [x*mi+t.a[0], y+t.a[1]]}, e=tol/sg;
@@ -3974,12 +3977,12 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
     // strokes lying on the symbol's own outline (more or fewer dashes than the sample) are not extra either
     const segD=(q,A,B)=>{const dx=B[0]-A[0],dy=B[1]-A[1],L2=dx*dx+dy*dy||1; const k=Math.max(0,Math.min(1,((q[0]-A[0])*dx+(q[1]-A[1])*dy)/L2)); return Math.hypot(q[0]-A[0]-k*dx,q[1]-A[1]-k*dy)};
     const MS=T.segs.map(u=>[map(u.a),map(u.b),u]), onLine=w=>{const M=[(w.a[0]+w.b[0])/2,(w.a[1]+w.b[1])/2], r=Math.max(tol,T.D*sg*.06); return MS.some(([A,B,u])=>colOk(u,w)&&segD(M,A,B)<r)};
-    const hc={}; let extra=0; for(const w of near){if(used.has(w)||!inside(w)) continue; const wk=w.f?'F'+w.col:w.col; if(T.hatch[wk]!=null){hc[wk]=(hc[wk]||0)+1; continue} if(bg.has(w.col)||onLine(w)) continue; extra+=w.L/sg}
+    const hc={}; let extra=0; for(const w of near){if(used.has(w)||!inside(w)) continue; const wk=w.f?'F'+w.col:w.col; if(T.hatch[wk]!=null){hc[wk]=(hc[wk]||0)+1; continue} if(bg.has(w.col)||onLine(w)||w.col==='ffffff') continue; /* white masks are not ink */ extra+=w.L/sg}
     let fillOk=true; for(const k in T.hatch) if((hc[k]||0)<Math.max(2,T.hatch[k]*.3)){fr*=.6; fillOk=false}
     fr*=1-.5*Math.min(1,extra/T.tot);
     const cs=Math.abs(Math.cos(th)), sn=Math.abs(Math.sin(th)), w=(T.bw*cs+T.bh*sn)*sg, h=(T.bw*sn+T.bh*cs)*sg;
     const o=hits.find(h0=>Math.hypot(h0.x-ctr[0],h0.y-ctr[1])<Math.min(h0.w,h0.h)*.5);
-    const hit={x:ctr[0],y:ctr[1],score:fr,got:fr*T.tot+(fillOk?T.fillLen||0:0),rot:Math.round(((th*180/Math.PI)%360+360)%360),mir:mi<0,w,h,on:null,vec:true};
+    const hit={x:ctr[0],y:ctr[1],score:fr,dashed:Math.round(100*viaDash/T.tot)/100,got:fr*T.tot+(fillOk?T.fillLen||0:0),rot:Math.round(((th*180/Math.PI)%360+360)%360),mir:mi<0,w,h,on:null,vec:true};
     if(!o) hits.push(hit); else if(fr>o.score) Object.assign(o,hit)}
   return hits}
 // text lines: pieces of text on one baseline joined left to right

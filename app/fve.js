@@ -221,6 +221,9 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
     rows.forEach((r,i)=>{if(usedLine.has(r)) return; usedLine.add(r); sec.bb=bbUnion(sec.bb,r.bb);
       // abbreviations: 'SD - SMOKE DETECTOR' (one line) or 'SD' … '- SMOKE DETECTOR' (two pieces on a baseline)
       const am=r.s.match(ABBR_RE); if(am){out.abbrev[am[1].toUpperCase()]=am[2].trim(); sec.kind='abbrev'; return}
+      // an ABBREVIATIONS section laid out as two columns with no dash ('R      RELOCATED'): a short key on the row's left, its meaning after it
+      if(/ABBREV/i.test(h.s)){const it=(r.items||[]).slice().sort((a,b)=>a.x-b.x); if(it.length>=2&&/^[A-Za-z][A-Za-z0-9\/&.]{0,5}$/.test(String(it[0].s).trim())&&it[1].x-it[0].x1>r.h*2){const val=it.slice(1).map(t=>t.s).join(' ').trim(); if(/^[A-Z][A-Z0-9 ,&\/()'.-]{2,}$/.test(val)){out.abbrev[String(it[0].s).trim().toUpperCase()]=val; sec.kind='abbrev'; return}}
+        if(/^[A-Z][A-Z0-9 ,&\/()'.-]{2,}$/.test(r.s)){const t=L.find(o=>o!==r&&Math.abs(o.cy-r.cy)<r.h*.5&&o.x1<=r.x&&r.x-o.x1<r.h*20&&/^[A-Za-z][A-Za-z0-9\/&.]{0,5}$/.test(o.s)); if(t){out.abbrev[t.s.toUpperCase()]=r.s.trim(); usedLine.add(t); sec.kind='abbrev'; return}}}
       if(/^[-–]\s*[A-Z]/.test(r.s)){const t=L.find(o=>o!==r&&Math.abs(o.cy-r.cy)<r.h*.5&&o.x1<=r.x+r.h&&r.x-o.x1<r.h*12&&/^[A-Z][A-Z0-9\/&.]{0,7}$/.test(o.s)); if(t){out.abbrev[t.s.toUpperCase()]=r.s.replace(/^[-–]\s*/,'').trim(); usedLine.add(t); sec.kind='abbrev'; return}}
       if(r.x<mode-bodyH*3) return; // a tag or label sitting in the symbol column, handled with its row
       const prev=rows[i-1], next=rows[i+1]; const half=Math.min(Math.max(((next?next.cy:r.cy+r.h*3)-(prev?prev.cy:r.cy-r.h*3))/4,r.h*.8),r.h*3);

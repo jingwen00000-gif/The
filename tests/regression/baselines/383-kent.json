@@ -1,6 +1,6 @@
 {
  "project": "383-kent",
- "accepted": "2026-11-02T05:37:50.003Z",
+ "accepted": "2026-11-02T06:31:36.789Z",
  "sheets": [
   "legend",
   "plan",
@@ -29,7 +29,7 @@
   "1:smoke@retain": 10,
   "1:speaker@new": 29,
   "1:speaker@relocate": 12,
-  "1:speaker@remove": 12,
+  "1:speaker@remove": 11,
   "1:speaker@retain": 5,
   "1:spk_conc@relocate": 1,
   "1:spk_pend@remove": 16,
@@ -63,6 +63,6 @@
   "2:spk_semi@retain": 96,
   "2:spk_space@new": 22
  },
- "total": 784,
+ "total": 783,
  "lines": {}
 }

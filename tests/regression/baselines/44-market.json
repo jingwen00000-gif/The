@@ -1,6 +1,6 @@
 {
  "project": "44-market",
- "accepted": "2026-11-02T05:39:01.821Z",
+ "accepted": "2026-11-02T06:32:23.923Z",
  "sheets": [
   "legend",
   "notes",
@@ -36,11 +36,14 @@
   "3:spk_side": 1,
   "4:smoke": 26,
   "4:speaker": 4,
+  "4:spk_semi": 1,
   "4:spk_surf": 8,
-  "5:ext_afff": 3,
+  "5:ext_afff": 2,
   "5:heat": 3,
   "5:smoke": 17,
   "5:speaker": 8,
+  "5:spk_conc": 1,
+  "5:spk_space": 1,
   "5:spk_surf": 1,
   "6:ext_co2": 7,
   "6:smoke": 1,
@@ -58,7 +61,7 @@
   "9:smoke": 3,
   "9:spk_up": 2
  },
- "total": 172,
+ "total": 174,
  "lines": {
   "FIRE HYDRANT PIPE (IN GROUND)": 37971.4
  }

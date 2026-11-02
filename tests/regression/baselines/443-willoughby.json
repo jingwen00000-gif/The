@@ -1,6 +1,6 @@
 {
  "project": "443-willoughby",
- "accepted": "2026-11-02T05:39:16.584Z",
+ "accepted": "2026-11-02T06:32:37.252Z",
  "sheets": [
   "cover",
   "legend",
@@ -22,24 +22,21 @@
   null
  ],
  "dictionary": {
-  "symbols": 63,
-  "typed": 30,
+  "symbols": 58,
+  "typed": 27,
   "lineTypes": 6,
-  "abbrev": 1
+  "abbrev": 49
  },
  "detections": {
-  "3:isov": 2,
   "3:spk_duct": 101,
   "4:hydrant": 1,
-  "4:isov": 1,
   "4:spk_duct": 19,
   "4:spk_pend": 5,
-  "5:isov": 1,
   "5:spk_duct": 10,
   "5:spk_pend": 1,
   "6:spk_duct": 2
  },
- "total": 143,
+ "total": 139,
  "lines": {
   "FIRE SPRINKLER PIPE": 1709.4
  }

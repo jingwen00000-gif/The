@@ -46,7 +46,7 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
       for(const e of typed){if(!e.segs||e.segs.length<3) continue; if(e.cols&&e.cols.length&&!e.cols.some(c=>pcols.has(c))) continue;
         const tr=trs.get(e), qs=(tr.length?tr:pr.slice(0,1)).map(x=>x.q); if(!qs.some(q=>Math.abs(q-1)<.08)&&!tr.length) qs.push(1);
         if(qStar&&(e.geo||e.hist)&&!qs.some(q=>Math.abs(q-qStar)<.06*qStar)) qs.push(qStar); // geometric rows only: on text legends it cost 12 s on 44-mandarin for no gain
-        for(const q of qs) for(const h of (await hooks.match(e,m,q))||[]){const s=Math.max(h.w,h.h)/1.6; list.push({page:m.page.id,bb:[h.x-s/2,h.y-s/2,h.x+s/2,h.y+s/2],c:[h.x,h.y],size:s,hits:[{type:e.type,status:e.status,entry:e.id,score:h.score}],src:{exact:e.id}})}}}
+        for(const q of qs) for(const h of (await hooks.match(e,m,q))||[]){const s=Math.max(h.w,h.h)/1.6; list.push({page:m.page.id,bb:[h.x-s/2,h.y-s/2,h.x+s/2,h.y+s/2],c:[h.x,h.y],size:s,hits:[{type:e.type,status:e.status,entry:e.id,score:h.score,dashed:h.dashed||0}],src:{exact:e.id}})}}}
     list.push(...NS.geometry.candidates(m,D,FVE), ...NS.text.candidates(m,D,FVE));
     // one place, one candidate: merge what lands on the same spot (keeping every hit and source)
     const M=[]; for(const c of list){const o=M.find(q=>hyp(q.c[0]-c.c[0],q.c[1]-c.c[1])<Math.max(Math.min(q.size,c.size),2)*.5);
@@ -62,8 +62,8 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
   const dets=[], learn=new Map(); let rejected=0;
   for(const c of all){const r=matchSymbol(c,ctxOf(c)); if(!r){rejected++; continue} if(r.confidence/100<minConf){rejected++; continue}
     const o=dets.find(d=>d.page===c.page&&d.type===r.device&&hyp(d.x-c.c[0],d.y-c.c[1])<Math.max(c.size,2)*.6); if(o){if(r.confidence/100>o.conf) Object.assign(o,{x:c.c[0],y:c.c[1],conf:r.confidence/100}); continue}
-    dets.push({page:c.page,x:c.c[0],y:c.c[1],w:c.bb[2]-c.bb[0],h:c.bb[3]-c.bb[1],type:r.device,status:r.status,entry:r.entry,score:(c.hits||[]).reduce((a,h)=>Math.max(a,h.score),0)||null,conf:r.confidence/100,
-      alt:r.alternatives.map(a=>({type:a.device,conf:a.score/100})),sources:r.sources,fingerprint:r.fingerprint,geoHash:r.geoHash,network:r.network,ev:r.sources.map(s=>({src:s.toLowerCase(),type:r.device})),rules:[],layers:r.layers});
+    const dd={page:c.page,x:c.c[0],y:c.c[1],w:c.bb[2]-c.bb[0],h:c.bb[3]-c.bb[1],type:r.device,status:r.status,entry:r.entry,score:(c.hits||[]).reduce((a,h)=>Math.max(a,h.score),0)||null,conf:r.confidence/100,
+      alt:r.alternatives.map(a=>({type:a.device,conf:a.score/100})),sources:r.sources,fingerprint:r.fingerprint,geoHash:r.geoHash,network:r.network,ev:r.sources.map(s=>({src:s.toLowerCase(),type:r.device})),rules:[],layers:r.layers}; Object.defineProperty(dd,'_hits',{value:c.hits||[],enumerable:false}); dets.push(dd);
     if(r.confidence>=90&&c.geoHash&&!learn.has(c.geoHash)) learn.set(c.geoHash,{geoHash:c.geoHash,device:r.device,fingerprint:r.fingerprint,consultant:graph.consultant||null})}
   // one device per spot: within 1.2 symbol sizes, only the most confident detection of a device family stays
   // (a head with a dropper note beside it proposes two candidates a few points apart)
@@ -88,12 +88,22 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
   const onSheet=d=>{const pg=dims.get(d.page); return !pg||(d.x>=0&&d.y>=0&&d.x<=pg.w&&d.y<=pg.h)};
   dets.length=0; dets.push(...keep.filter(d=>!gone.has(d)&&onSheet(d)));
   // status written beside the symbol: legends that tell new / existing / relocated apart by a letter next to the same symbol (N, R …)
-  // give each such row its letter; a detection with exactly that letter beside it takes the row's status
-  const fam2=family; const tagRows={}; for(const e of D.symbols||[]) if(e.type&&e.status&&!e.hist) for(const t of e.tags||[]){const k=String(t).trim().toUpperCase(); if(/^[A-Z]{1,2}$/.test(k)){(tagRows[fam2(e.type)]=tagRows[fam2(e.type)]||{})[k]=e.status}}
-  if(Object.keys(tagRows).length) for(const m of models){const T=m.texts.filter(t=>/^[A-Z]{1,2}$/.test(String(t.s).trim().toUpperCase())); if(!T.length) continue;
-    for(const d of dets){if(d.page!==m.page.id) continue; const rows=tagRows[fam2(d.type)]; if(!rows) continue; const r=Math.max(d.w,d.h)*1.1;
-      const t=T.filter(t=>hyp(t.cx-d.x,t.cy-d.y)<r).sort((a,b)=>hyp(a.cx-d.x,a.cy-d.y)-hyp(b.cx-d.x,b.cy-d.y))[0]; const st=t&&rows[String(t.s).trim().toUpperCase()];
-      if(st&&st!==d.status){d.statusFrom='tag '+String(t.s).trim(); d.status=st}}}
+  // give each such row its letter; letters the drawing's abbreviations define as a status ('R – RELOCATED') count for any device
+  const fam2=family, byId=new Map((D.symbols||[]).map(e=>[e.id,e])); const tagRows={}, rowTags=new Map();
+  for(const e of D.symbols||[]) if(e.type&&e.status&&!e.hist) for(const t of e.tags||[]){const k=String(t).trim().toUpperCase(); if(/^[A-Z]{1,2}$/.test(k)){(tagRows[fam2(e.type)]=tagRows[fam2(e.type)]||{})[k]=e.status; rowTags.set(e.id,(rowTags.get(e.id)||[]).concat(k))}}
+  const absTag={}; for(const [k,v] of Object.entries(D.abbrev||{})){if(!/^[A-Z]{1,2}$/.test(k)) continue; const st=FVE&&FVE.classifyDesc?FVE.classifyDesc(v).status:null; if(st) absTag[k]=st}
+  if(Object.keys(tagRows).length||Object.keys(absTag).length) for(const m of models){const T=m.texts.filter(t=>/^[A-Z]{1,2}$/.test(String(t.s).trim().toUpperCase())); const pd=dets.filter(d=>d.page===m.page.id);
+    // one letter, one device: each letter goes to the nearest detection within reach
+    const got=new Map(); for(const t of T){const k=String(t.s).trim().toUpperCase(); let best=null, bd=Infinity;
+      for(const d of pd){const rows={...absTag,...(tagRows[fam2(d.type)]||{})}; if(!rows[k]) continue; const dd=hyp(t.cx-d.x,t.cy-d.y); if(dd<Math.max(d.w,d.h)*1.1&&dd<bd){bd=dd; best=d}}
+      if(best&&(!got.has(best)||got.get(best).d>bd)) got.set(best,{k,d:bd})}
+    for(const d of pd){const g=got.get(d), rows={...absTag,...(tagRows[fam2(d.type)]||{})};
+      if(g){const st=rows[g.k]; if(st&&st!==d.status){d.statusFrom='tag '+g.k; d.status=st}; continue}
+      // no letter beside it: a row that needs one (its legend sample carries N) cannot be this copy — an untagged row of the device that
+      // matched here as well takes it (the dashed 'existing' ring, not the 'new' one)
+      const need=rowTags.get(d.entry); if(!need||!need.length) continue;
+      const alt=(d._hits||[]).filter(h=>h.score>=.85&&fam2(h.type)===fam2(d.type)&&!rowTags.get(h.entry)).sort((a,b)=>b.score-a.score)[0];
+      if(alt){const e=byId.get(alt.entry); d.entry=alt.entry; d.status=e&&e.status||alt.status||null; d.statusFrom='untagged row'}}}
   for(const c of all){delete c.m; delete c._l}
   dets.learn=[...learn.values()]; dets.rejected=rejected; dets.candidates=all.length; Object.defineProperty(dets,"pool",{value:all,enumerable:false}); return dets}
 

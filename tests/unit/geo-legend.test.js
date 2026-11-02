@@ -93,3 +93,10 @@ test('MSME: status of a detection comes from its own device\'s legend hit, else 
   assert.equal(M.statusFor('heat', { desc: { col: '0000ff' } }, L, graph), 'new');
   assert.equal(M.statusFor('heat', {}, L, graph), 'remove');
 });
+
+test('legend: an ABBREVIATIONS section in two columns with no dash ("R    RELOCATED") is read', async () => {
+  const p = frame(new FakePage(), 'LEGEND');
+  p.text(60, 60, 'ABBREVIATIONS', 9); p.text(60, 80, 'E', 6); p.text(120, 80, 'EXISTING', 6); p.text(60, 94, 'R', 6); p.text(120, 94, 'RELOCATED', 6); p.text(60, 108, 'FH', 6); p.text(120, 108, 'FIRE HYDRANT', 6);
+  const m = await model(p, 'ab'); const lg = FVE.analyzeLegend(m);
+  assert.deepEqual(lg.abbrev, { E: 'EXISTING', R: 'RELOCATED', FH: 'FIRE HYDRANT' });
+});
