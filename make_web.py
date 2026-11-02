@@ -16,7 +16,8 @@ args = [a for a in args if a != '--fragment']
 s = (root / 'app/index.html').read_text(encoding='utf-8')
 # every local script (app/*.js and ../src/**) is inlined; the pdf.js worker goes where <!--PDFWORKER--> marks it
 def inline(m):
-    js = (root / 'app' / m.group(1)).resolve().read_text(encoding='utf-8').replace('</script', '<\\/script')
+    f = (root / 'app' / m.group(1)).resolve()
+    js = (f.read_text(encoding='utf-8') if f.exists() else '/* %s not built yet */' % m.group(1)).replace('</script', '<\\/script')
     return '<script>' + js + '</script>'
 s = re.sub(r'<script src="((?!https?:)[^"]+)"></script>', inline, s)
 assert s.count('<!--PDFWORKER-->') == 1

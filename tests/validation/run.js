@@ -8,6 +8,8 @@ const { openApp, analyse } = require('../lib/harness');
 const { scoreDevices, scoreLength } = require('../lib/metrics');
 const ROOT = path.resolve(__dirname, '../..'), OUT = path.join(ROOT, 'tests/results/validation');
 const GATES = require('../modules.json').gates, strict = process.argv.includes('--strict');
+// the Learning Engine's knowledge base (data/knowledge); each project is analysed without its own contributions
+const KB = require('../lib/knowledge').load();
 const only = process.argv.slice(2).filter(a => !a.startsWith('--'));
 
 function projects() {
@@ -32,7 +34,7 @@ const scored = gt => (gt.generated || /^verified/.test(gt.status || '')) && (gt.
     if (!p.present) { row.result = 'AWAITING DATA'; rows.push(row); continue; }
     if (!scored(p.gt)) { row.result = 'NOT SCORED (no verified ground truth — runs in regression)'; rows.push(row); continue; }
     app = app || await openApp();
-    const R = await analyse(app.page, p.files, { library: p.library });
+    const R = await analyse(app.page, p.files, { library: p.library, knowledgeBase: KB, projectId: p.name });
     const s = scoreDevices(p.gt.devices, R.detections);
     const detection = { project: p.name, precision: s.precision, recall: s.recall, f1: s.f1, falsePositive: s.falsePositive, falseNegative: s.falseNegative, typeAccuracy: s.typeAccuracy, byType: s.byType, confusion: s.confusion };
     const cables = Object.entries(p.gt.lines || {}).map(([k, exp]) => { const got = R.lines.find(l => l.desc === k); return { loop: k, ...scoreLength(exp, got ? got.total_m : 0) }; });

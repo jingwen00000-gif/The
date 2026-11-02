@@ -6,6 +6,7 @@
 const fs = require('fs'), path = require('path');
 const { openApp, analyse } = require('./lib/harness');
 const { find, ROOT } = require('./lib/projects');
+const KB = require('./lib/knowledge').load();
 const [kind, target] = process.argv.slice(2);
 const TODO = { network: 'Stage 4 network-graph / loop-detection', rooms: 'Stage 3 room-detection', compliance: 'Stage 3 AS 1670 checks' };
 if (TODO[kind]) { console.error(`debug:${kind}: the ${TODO[kind]} module is not implemented yet — nothing to debug. See npm run status.`); process.exit(2); }
@@ -15,7 +16,7 @@ const COL = { smoke: '#d32f2f', heat: '#ef6c00', speaker: '#1565c0', spk_surf: '
 const esc = s => String(s).replace(/[<&>"]/g, c => ({ '<': '&lt;', '&': '&amp;', '>': '&gt;', '"': '&quot;' })[c]);
 
 (async () => {
-  const app = await openApp(); const R = await analyse(app.page, p.files, { library: p.library }); await app.browser.close();
+  const app = await openApp(); const R = await analyse(app.page, p.files, { library: p.library, knowledgeBase: KB, projectId: p.name }); await app.browser.close();
   const dir = path.join(ROOT, 'debug', p.name); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'dictionary.json'), JSON.stringify(R.dict, null, 1));
   fs.writeFileSync(path.join(dir, 'detections.json'), JSON.stringify(R.detections, null, 1));

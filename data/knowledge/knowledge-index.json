@@ -1,0 +1,16 @@
+{
+ "schema": "firetake.knowledge/1",
+ "projects": [
+  {
+   "projectId": "44-mandarin",
+   "at": "2026-11-02T03:17:27.446Z",
+   "consultant": "Millimetre Consulting Engineers",
+   "devices": 404,
+   "symbols": 14,
+   "networks": 0,
+   "rooms": 0,
+   "pricingItems": 0
+  }
+ ],
+ "updated": "2026-11-02T03:17:27.451Z"
+}

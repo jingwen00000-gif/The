@@ -1,0 +1,14 @@
+{
+ "schema": "firetake.knowledge/1",
+ "updated": "2026-11-02T03:17:27.451Z",
+ "entries": {
+  "patterns": [],
+  "circuits": [],
+  "transitions": {},
+  "loops": {
+   "devices": null,
+   "length_m": null,
+   "metresPerDevice": null
+  }
+ }
+}

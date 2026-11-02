@@ -28,6 +28,12 @@ function consultantOf(models){const votes={};
       const c=String(t.s).match(/^([A-Z][A-Za-z&.' ]{2,40}\b(ENGINEERING|ENGINEERS|CONSULTING|CONSULTANTS|PTY\.? ?LTD|GROUP|ASSOCIATES))/i); if(c&&!/FIRE SERVICES/i.test(c[1])) votes[c[1].trim()]=(votes[c[1].trim()]||0)+1}}
   return Object.entries(votes).sort((a,b)=>b[1]-a[1]).map(x=>x[0])[0]||''}
 
+/* ---------------------------------------------------------------- knowledge base */
+const KBKEY='ft_knowledge';
+// the bundled base (window.FT_KNOWLEDGE, written by npm run learn) or one the estimator imported (localStorage), the imported one first
+function knowledgeBase(){try{const s=localStorage.getItem(KBKEY); if(s) return JSON.parse(s)}catch(e){} return root.FT_KNOWLEDGE&&root.FT_KNOWLEDGE.index&&root.FT_KNOWLEDGE.index.projects&&root.FT_KNOWLEDGE.index.projects.length?root.FT_KNOWLEDGE:null}
+function importKnowledge(json){const L=typeof json==='string'?JSON.parse(json):json; if(!L||!L.index) throw new Error('not a FireTake knowledge base'); try{localStorage.setItem(KBKEY,JSON.stringify(L))}catch(e){throw new Error('knowledge base too large for local storage')} return L.index.projects.length}
+
 /* ---------------------------------------------------------------- models */
 async function modelsFor(pages,say){const out=[];
   for(const p of pages){let m=FX.models.get(p.id); if(!m){say&&say(`${T('正在读取图纸')} ${out.length+1} / ${pages.length}…`); await new Promise(r=>setTimeout(r,0));
@@ -43,17 +49,20 @@ async function fveCount(){
   if(typeof currentTab!=='undefined'&&currentTab!=='takeoff') showTab('takeoff');
   const say=t=>{if(out) out.innerHTML=`<div class="aiout">${t}</div>`}; FX.busy=true; const btn=$('#lgAuto'); if(btn) btn.disabled=true;
   try{const t0=performance.now(); const models=await modelsFor(pages,say);
-    const consultant=S.consultant||consultantOf(models); FX.consultant=consultant;
+    // Learning Engine: the knowledge base built from finished jobs (data/knowledge → knowledge.bundle.js, plus any imported one)
+    const KB=knowledgeBase(); const ce=root.FT_LEARN&&FT_LEARN.consultant?FT_LEARN.consultant.extract(models,{known:KB?FT_LEARN.db.entries(KB.consultants):[]}):null;
+    const consultant=S.consultant||(ce&&ce.consultant)||consultantOf(models); FX.consultant=consultant;
+    const K=KB?FT_LEARN.db.forRecognition(KB,{consultant}):null; FX.knowledge=K;
     say(T('正在分析图例…')); await new Promise(r=>setTimeout(r,0));
-    let D=FVE.projectDictionary(models,{library:libFor(consultant),legendBoxes:FX.boxes});
+    let D=FVE.projectDictionary(models,{library:libFor(consultant).concat(K?K.library.filter(e=>e.consultant):[]),legendBoxes:FX.boxes,knowledge:K});
     if(!D.symbols.length&&!D.lineTypes.length){askBox(out); return}
     // legend rows nobody knows yet (CAD-lettered legends with no library entry): the estimator names each geometry once
     const unknown=D.symbols.filter(e=>!e.type&&e.geo&&e.geoHash);
     if(unknown.length){const named=await nameRows(D,unknown,consultant); if(named===null) return;
       if(named.consultant!==consultant){FX.consultant=named.consultant}
-      if(named.items.length){libLearn(FX.consultant,named.items); D=FVE.projectDictionary(models,{library:libFor(FX.consultant),legendBoxes:FX.boxes})}}
+      if(named.items.length){libLearn(FX.consultant,named.items); D=FVE.projectDictionary(models,{library:libFor(FX.consultant).concat(K?K.library.filter(e=>e.consultant):[]),legendBoxes:FX.boxes,knowledge:K})}}
     let calls=0; const lib=libFor(FX.consultant);
-    const dets=await FVE.detect(models,D,{library:lib,consultant:null,match:async(e,m,q)=>{
+    const dets=await FVE.detect(models,D,{library:lib,consultant:null,knowledge:K,match:async(e,m,q)=>{
       if(++calls%4===0){say(`${T('正在全图搜索图例符号')} · ${calls}`); await new Promise(r=>setTimeout(r,0))}
       const p=S.pages.find(x=>x.id===m.page.id); const Tp=await fveTemplate(e); if(!p||!Tp) return [];
       return (await vsmSearch(p,Tp,q||1)).filter(h=>h.score>=.85)}});
@@ -111,7 +120,7 @@ function showResults(R){const G=groupsOf(R); FX.groups=G; const multi=new Set(R.
     <td><select data-fxls="${i}">${Object.keys(SYS).filter(s=>SYS[s].mat).map(s=>`<option value="${s}" ${s===sys?'selected':''}>${SYS[s].zh}</option>`).join('')}</select></td>
     <td class="r num"><b>${l.total?Math.round(l.total*10)/10+' m':'—'}</b>${l.unscaled?`<div class="note">${T('部分图纸无比例')}</div>`:''}</td></tr>`}).join('');
   const W=R.warn.filter(w=>w.level!=='info').slice(0,12);
-  const d=ftModal(T('FVE 识别结果'),`<p class="note" style="margin:0 0 8px">${T('按图例在全部图纸上找到的设备（图例本身和图签不计）。置信度来自几何 / 文字 / 图例 / 上下文 / 回路五层证据。加入后为“待确认”，可以逐个核对。')}${R.consultant?` · ${T('设计单位')} ${esc(R.consultant)}`:''}</p>
+  const d=ftModal(T('FVE 识别结果'),`<p class="note" style="margin:0 0 8px">${T('按图例在全部图纸上找到的设备（图例本身和图签不计）。置信度来自几何 / 文字 / 图例 / 上下文 / 回路五层证据。加入后为“待确认”，可以逐个核对。')}${R.consultant?` · ${T('设计单位')} ${esc(R.consultant)}`:''}${FX.knowledge&&FX.knowledge.consultantKnown?` · ${T('已用历史项目知识')}`:''}</p>
     <div style="max-height:44vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('设备')}</th><th class="r">${T('数量')}</th><th class="r">${T('置信度')}</th><th>${T('证据')}</th></tr></thead><tbody>${rows||`<tr><td colspan="5" class="note">${T('没有找到设备')}</td></tr>`}</tbody></table></div>
     ${lrows?`<h4 style="margin:12px 0 4px">${T('管线 / 电缆（按图例线型量取）')}</h4><div style="max-height:22vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('图例线型')}</th><th>${T('系统')}</th><th class="r">${T('长度')}</th></tr></thead><tbody>${lrows}</tbody></table></div>`:''}
     ${W.length?`<details style="margin-top:10px"><summary>${T('需要注意')}（${W.length}）</summary><ul class="note">${W.map(w=>`<li>${esc(w.msg)}</li>`).join('')}</ul></details>`:''}`,
@@ -141,6 +150,6 @@ function commit(d,review){const R=FX.last, G=FX.groups||[]; if(!R) return; snap(
   return {marks:add.length,runs,paired,dup}}
 
 /* ---------------------------------------------------------------- wiring: the G key and the legend button run FVE; the old flow stays as fallback */
-FX.run=fveCount; FX.commit=commit; FX.showResults=showResults; FX.consultantOf=consultantOf; FX.libAll=libAll; FX.libLearn=libLearn; FX.libFor=libFor; FX.lineDn=lineDn;
+FX.run=fveCount; FX.commit=commit; FX.knowledgeBase=knowledgeBase; FX.importKnowledge=importKnowledge; FX.showResults=showResults; FX.consultantOf=consultantOf; FX.libAll=libAll; FX.libLearn=libLearn; FX.libFor=libFor; FX.lineDn=lineDn;
 FX.ready=()=>!!(root.FVE&&root.FVE_MSME&&typeof vsmSearch==='function'&&typeof fveTemplate==='function');
 })(typeof window!=='undefined'?window:globalThis);

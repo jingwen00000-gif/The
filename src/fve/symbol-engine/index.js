@@ -12,28 +12,28 @@
 (function(root){
 'use strict';
 const NS=root.FVE_MSME=root.FVE_MSME||{};
-if(typeof module!=='undefined'&&module.exports){require('./symbol-fingerprint'); require('./confidence-fusion'); require('./geometry-matcher'); require('./text-matcher'); require('./legend-matcher'); require('./context-matcher'); require('./network-matcher')}
+if(typeof module!=='undefined'&&module.exports){require('./symbol-fingerprint'); require('./confidence-fusion'); require('./geometry-matcher'); require('./text-matcher'); require('./legend-matcher'); require('./context-matcher'); require('./network-matcher'); require('./knowledge-matcher')}
 const hyp=Math.hypot;
 const PASS1_LABEL=75;
 const family=t=>/^spk_(pend|up|side|semi|space|conc|duct)/.test(t)?'sprinkler':/^ext_/.test(t)?'extinguisher':/^(speaker|spk_surf|horn|proj_spk)$/.test(t)?'speaker':/^(smoke|cs_smoke|duct_probe)$/.test(t)?'smoke':t; // % confidence a pass-1 result needs before context / network may lean on it
 
 function layersFor(cand,graph){const ctx=graph;
-  if(!cand._l){const G=NS.geometry.score(cand,ctx), T=NS.text.score(cand,ctx); cand.textEv=T.ev; const L=NS.legend.score(cand,ctx); cand._l={G,T,L}}
+  if(!cand._l){const G=NS.geometry.score(cand,ctx), T=NS.text.score(cand,ctx); cand.textEv=T.ev; const L=NS.legend.score(cand,ctx); const K=NS.knowledge?NS.knowledge.score(cand,ctx):{historical:{scores:{}},consultant:{scores:{}}}; cand._l={G,T,L,K}}
   return cand._l}
 // the device's status: the best legend hit of that device; otherwise the colour the project's legend uses for one status (blue = new …)
 function statusFor(device,cand,L,graph){if(L.statusBy&&L.statusBy[device]) return L.statusBy[device];
   const h=(cand.hits||[]).filter(x=>x.type===device&&x.status).sort((a,b)=>b.score-a.score)[0]; if(h) return h.status;
   const cs=graph.D&&graph.D.colStatus, col=cand.desc&&cand.desc.col; if(cs&&col&&cs[col]) return cs[col];
   return L.status||null}
-function matchSymbol(cand,graph){const {G,T,L}=layersFor(cand,graph); const C=graph.contextIndex?NS.context.score(cand,graph):{scores:{},ev:[]}, N=graph.networks?NS.network.score(cand,graph):{scores:{},ev:[]};
-  const layers={geometry:G.scores,text:T.scores,legend:L.scores,context:C.scores,network:N.scores};
+function matchSymbol(cand,graph){const {G,T,L,K}=layersFor(cand,graph); const C=graph.contextIndex?NS.context.score(cand,graph):{scores:{},ev:[]}, N=graph.networks?NS.network.score(cand,graph):{scores:{},ev:[]};
+  const layers={geometry:G.scores,text:T.scores,legend:L.scores,context:C.scores,network:N.scores,historical:K.historical.scores,consultant:K.consultant.scores};
   const f=NS.fusion.fuse(layers,{weights:graph.weights,hasShape:cand.hasShape!==false}); if(!f) return null;
   const text=(T.ev.find(e=>e.type===f.device)||{}).text||null, legend=L.entry||null;
   return {...f,geoHash:cand.geoHash||null,fingerprint:NS.fingerprint.fingerprint({device:f.device,geoHash:cand.geoHash,text,legend,network:N.network||null}),
     status:statusFor(f.device,cand,L,graph),entry:legend,network:N.network||null,layers,evidence:{geometry:G.ev,text:T.ev,legend:L.ev,context:C.ev,network:N.ev}}}
 
 async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; const minConf=opts.minConf!=null?opts.minConf:.6;
-  const graph={D,FVE,library:hooks.library||null,consultant:hooks.consultant||null,weights:opts.weights,networks:null,netMembers:null,contextIndex:null};
+  const graph={D,FVE,library:hooks.library||null,consultant:hooks.consultant||null,knowledge:hooks.knowledge||null,weights:opts.weights,networks:null,netMembers:null,contextIndex:null};
   const typed=NS.geometry.legendIndex(D).typed; const all=[]; let ref=0;
   for(const m of models){if(m.sheet.kind!=='plan') continue; const zones=(D.zones[m.page.id]||[]).concat(FVE.titleBlock(m)); const inZ=c=>zones.some(z=>c[0]>=z[0]&&c[0]<=z[2]&&c[1]>=z[1]&&c[1]<=z[3]);
     const list=[];
@@ -45,7 +45,7 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
       const qTop=Object.entries(qv).sort((a,b)=>b[1]-a[1])[0], qStar=qTop&&qTop[1]>=3?+qTop[0]:null;
       for(const e of typed){if(!e.segs||e.segs.length<3) continue; if(e.cols&&e.cols.length&&!e.cols.some(c=>pcols.has(c))) continue;
         const tr=trs.get(e), qs=(tr.length?tr:pr.slice(0,1)).map(x=>x.q); if(!qs.some(q=>Math.abs(q-1)<.08)&&!tr.length) qs.push(1);
-        if(qStar&&e.geo&&!qs.some(q=>Math.abs(q-qStar)<.06*qStar)) qs.push(qStar); // geometric rows only: on text legends it cost 12 s on 44-mandarin for no gain
+        if(qStar&&(e.geo||e.hist)&&!qs.some(q=>Math.abs(q-qStar)<.06*qStar)) qs.push(qStar); // geometric rows only: on text legends it cost 12 s on 44-mandarin for no gain
         for(const q of qs) for(const h of (await hooks.match(e,m,q))||[]){const s=Math.max(h.w,h.h)/1.6; list.push({page:m.page.id,bb:[h.x-s/2,h.y-s/2,h.x+s/2,h.y+s/2],c:[h.x,h.y],size:s,hits:[{type:e.type,status:e.status,entry:e.id,score:h.score}],src:{exact:e.id}})}}}
     list.push(...NS.geometry.candidates(m,D,FVE), ...NS.text.candidates(m,D,FVE));
     // one place, one candidate: merge what lands on the same spot (keeping every hit and source)

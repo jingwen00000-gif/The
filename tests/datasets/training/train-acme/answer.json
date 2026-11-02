@@ -1,0 +1,396 @@
+{
+ "devices": [
+  {
+   "id": "SMOKE-1-001",
+   "type": "smoke",
+   "page": 2,
+   "x": 129.82,
+   "y": 149.5
+  },
+  {
+   "id": "SPEAKER-1-002",
+   "type": "speaker",
+   "page": 2,
+   "x": 280.75,
+   "y": 82
+  },
+  {
+   "id": "HEAT-1-003",
+   "type": "heat",
+   "page": 2,
+   "x": 129.82,
+   "y": 375.07
+  },
+  {
+   "id": "MCP-1-004",
+   "type": "mcp",
+   "page": 2,
+   "x": 68,
+   "y": 502
+  },
+  {
+   "id": "SMOKE-1-005",
+   "type": "smoke",
+   "page": 2,
+   "x": 129.82,
+   "y": 598.34
+  },
+  {
+   "id": "HEAT-1-006",
+   "type": "heat",
+   "page": 2,
+   "x": 362.57,
+   "y": 153.68
+  },
+  {
+   "id": "SPEAKER-1-007",
+   "type": "speaker",
+   "page": 2,
+   "x": 513.5,
+   "y": 82
+  },
+  {
+   "id": "SMOKE-1-008",
+   "type": "smoke",
+   "page": 2,
+   "x": 362.57,
+   "y": 377.13
+  },
+  {
+   "id": "SMOKE-1-009",
+   "type": "smoke",
+   "page": 2,
+   "x": 362.57,
+   "y": 597.11
+  },
+  {
+   "id": "SMOKE-1-010",
+   "type": "smoke",
+   "page": 2,
+   "x": 595.33,
+   "y": 153.64
+  },
+  {
+   "id": "SPEAKER-1-011",
+   "type": "speaker",
+   "page": 2,
+   "x": 746.25,
+   "y": 82
+  },
+  {
+   "id": "MCP-1-012",
+   "type": "mcp",
+   "page": 2,
+   "x": 533.5,
+   "y": 278
+  },
+  {
+   "id": "SMOKE-1-013",
+   "type": "smoke",
+   "page": 2,
+   "x": 595.33,
+   "y": 374.22
+  },
+  {
+   "id": "SMOKE-1-014",
+   "type": "smoke",
+   "page": 2,
+   "x": 688.42,
+   "y": 377.94
+  },
+  {
+   "id": "SMOKE-1-015",
+   "type": "smoke",
+   "page": 2,
+   "x": 595.33,
+   "y": 600.33
+  },
+  {
+   "id": "SMOKE-1-016",
+   "type": "smoke",
+   "page": 2,
+   "x": 688.42,
+   "y": 598
+  },
+  {
+   "id": "SMOKE-1-017",
+   "type": "smoke",
+   "page": 2,
+   "x": 828.08,
+   "y": 150.57
+  },
+  {
+   "id": "SPEAKER-1-018",
+   "type": "speaker",
+   "page": 2,
+   "x": 979,
+   "y": 82
+  },
+  {
+   "id": "SMOKE-1-019",
+   "type": "smoke",
+   "page": 2,
+   "x": 828.08,
+   "y": 376.92
+  },
+  {
+   "id": "HEAT-1-020",
+   "type": "heat",
+   "page": 2,
+   "x": 828.08,
+   "y": 599.66
+  },
+  {
+   "id": "MCP-1-021",
+   "type": "mcp",
+   "page": 2,
+   "x": 766.25,
+   "y": 726
+  },
+  {
+   "id": "SMOKE-1-022",
+   "type": "smoke",
+   "page": 2,
+   "x": 892.63,
+   "y": 231.28
+  },
+  {
+   "id": "SMOKE-1-023",
+   "type": "smoke",
+   "page": 2,
+   "x": 194.38,
+   "y": 455.28
+  },
+  {
+   "id": "SMOKE-1-024",
+   "type": "smoke",
+   "page": 2,
+   "x": 427.13,
+   "y": 679.28
+  },
+  {
+   "id": "WIP-1-025",
+   "type": "wip",
+   "page": 2,
+   "x": 80,
+   "y": 314
+  },
+  {
+   "id": "HEAT-2-001",
+   "type": "heat",
+   "page": 3,
+   "x": 129.82,
+   "y": 150.04
+  },
+  {
+   "id": "SPEAKER-2-002",
+   "type": "speaker",
+   "page": 3,
+   "x": 280.75,
+   "y": 82
+  },
+  {
+   "id": "SMOKE-2-003",
+   "type": "smoke",
+   "page": 3,
+   "x": 129.82,
+   "y": 375.29
+  },
+  {
+   "id": "SMOKE-2-004",
+   "type": "smoke",
+   "page": 3,
+   "x": 222.92,
+   "y": 372.68
+  },
+  {
+   "id": "MCP-2-005",
+   "type": "mcp",
+   "page": 3,
+   "x": 68,
+   "y": 502
+  },
+  {
+   "id": "HEAT-2-006",
+   "type": "heat",
+   "page": 3,
+   "x": 129.82,
+   "y": 601.36
+  },
+  {
+   "id": "SMOKE-2-007",
+   "type": "smoke",
+   "page": 3,
+   "x": 362.57,
+   "y": 152.6
+  },
+  {
+   "id": "SMOKE-2-008",
+   "type": "smoke",
+   "page": 3,
+   "x": 455.67,
+   "y": 153.47
+  },
+  {
+   "id": "SPEAKER-2-009",
+   "type": "speaker",
+   "page": 3,
+   "x": 513.5,
+   "y": 82
+  },
+  {
+   "id": "SMOKE-2-010",
+   "type": "smoke",
+   "page": 3,
+   "x": 362.57,
+   "y": 377.22
+  },
+  {
+   "id": "SMOKE-2-011",
+   "type": "smoke",
+   "page": 3,
+   "x": 455.67,
+   "y": 373.03
+  },
+  {
+   "id": "SMOKE-2-012",
+   "type": "smoke",
+   "page": 3,
+   "x": 362.57,
+   "y": 596.58
+  },
+  {
+   "id": "SMOKE-2-013",
+   "type": "smoke",
+   "page": 3,
+   "x": 455.67,
+   "y": 601.01
+  },
+  {
+   "id": "SMOKE-2-014",
+   "type": "smoke",
+   "page": 3,
+   "x": 595.33,
+   "y": 152.28
+  },
+  {
+   "id": "SPEAKER-2-015",
+   "type": "speaker",
+   "page": 3,
+   "x": 746.25,
+   "y": 82
+  },
+  {
+   "id": "MCP-2-016",
+   "type": "mcp",
+   "page": 3,
+   "x": 533.5,
+   "y": 278
+  },
+  {
+   "id": "SMOKE-2-017",
+   "type": "smoke",
+   "page": 3,
+   "x": 595.33,
+   "y": 373.32
+  },
+  {
+   "id": "SMOKE-2-018",
+   "type": "smoke",
+   "page": 3,
+   "x": 688.42,
+   "y": 376.77
+  },
+  {
+   "id": "SMOKE-2-019",
+   "type": "smoke",
+   "page": 3,
+   "x": 595.33,
+   "y": 597.27
+  },
+  {
+   "id": "SMOKE-2-020",
+   "type": "smoke",
+   "page": 3,
+   "x": 688.42,
+   "y": 601.35
+  },
+  {
+   "id": "SMOKE-2-021",
+   "type": "smoke",
+   "page": 3,
+   "x": 828.08,
+   "y": 154.31
+  },
+  {
+   "id": "SMOKE-2-022",
+   "type": "smoke",
+   "page": 3,
+   "x": 921.17,
+   "y": 149.41
+  },
+  {
+   "id": "SPEAKER-2-023",
+   "type": "speaker",
+   "page": 3,
+   "x": 979,
+   "y": 82
+  },
+  {
+   "id": "HEAT-2-024",
+   "type": "heat",
+   "page": 3,
+   "x": 828.08,
+   "y": 374.02
+  },
+  {
+   "id": "SMOKE-2-025",
+   "type": "smoke",
+   "page": 3,
+   "x": 828.08,
+   "y": 598.02
+  },
+  {
+   "id": "SMOKE-2-026",
+   "type": "smoke",
+   "page": 3,
+   "x": 921.17,
+   "y": 599.01
+  },
+  {
+   "id": "MCP-2-027",
+   "type": "mcp",
+   "page": 3,
+   "x": 766.25,
+   "y": 726
+  },
+  {
+   "id": "SMOKE-2-028",
+   "type": "smoke",
+   "page": 3,
+   "x": 892.63,
+   "y": 455.28
+  },
+  {
+   "id": "SMOKE-2-029",
+   "type": "smoke",
+   "page": 3,
+   "x": 194.38,
+   "y": 679.28
+  },
+  {
+   "id": "SMOKE-2-030",
+   "type": "smoke",
+   "page": 3,
+   "x": 659.88,
+   "y": 231.28
+  },
+  {
+   "id": "WIP-2-031",
+   "type": "wip",
+   "page": 3,
+   "x": 80,
+   "y": 314
+  }
+ ]
+}

@@ -11,6 +11,7 @@ Every change to recognition is measured, not eyeballed.
 | `npm run test:regression` | compares each project with its accepted baseline (`tests/regression/baselines`); `UPDATE_BASELINES=1 npm run test:regression` accepts an intended change |
 | `npm run test:performance` | geometry < 30 s, legend < 10 s, total < 60 s per project |
 | `npm run benchmark` | runs validation + performance and writes `benchmarks/latest.md` (`-- --no-run` to rewrite from the last results) |
+| `npm run learn -- <job folder>… \| --all data/training-projects` | Learning Engine: finished jobs (original + takeoff + BOQ / quote) → `data/knowledge` (see `docs/learning-engine.md`); every runner analyses a project without its own contributions, `FT_KNOWLEDGE=off` disables the base |
 | `npm run status` | modules complete, stage status (definition of done), accuracy, outstanding issues, technical debt |
 | `npm run generate:testdata` | synthetic projects with exact ground truth (`tests/datasets/`) |
 | `npm run debug:legend -- <project or file.pdf>` | `debug/<project>/`: dictionary.json, detections.json, warnings.json, log.txt, one SVG overlay per sheet |
@@ -27,7 +28,8 @@ tests/
   validation/      run.js (scoring), truth-from-markups.js (ground truth from an estimator's count markups)
   regression/      regression.test.js + baselines/<project>.json
   performance/     run.js
-  datasets/        generate.js + synthetic-basic/, synthetic-large/ (project.pdf + ground-truth.json)
+  datasets/        generate.js + synthetic-basic/, synthetic-large/ (project.pdf + ground-truth.json);
+                   generate-training.js + training/ (train-acme: original / takeoff / boq / quote; eval-acme-nolegend)
   lib/             harness (drives the app), metrics, pdfwriter, fakepdf, projects, build
   modules.json     module registry + gates used by status / validation
   results/         latest run outputs (not committed)

@@ -10,3 +10,8 @@ tests/.cache/
 tests/results/
 debug/
 validation-projects/**/*.pdf
+
+# finished jobs used by the Learning Engine: client drawings and workbooks stay on the machine (metadata / markup maps are fine)
+data/training-projects/**/*.pdf
+data/training-projects/**/*.xlsx
+data/training-projects/**/*.xls

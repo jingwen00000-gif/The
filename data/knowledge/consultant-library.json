@@ -1,0 +1,202 @@
+{
+ "schema": "firetake.knowledge/1",
+ "updated": "2026-11-02T03:17:27.451Z",
+ "entries": [
+  {
+   "consultant": "Millimetre Consulting Engineers",
+   "key": "millimetreconsultingengineers",
+   "aliases": {
+    "Consulting Engineers": 1
+   },
+   "emailDomains": {},
+   "logoHashes": {},
+   "symbols": [
+    {
+     "geoHash": "GEO_CEZS3",
+     "deviceType": "smoke",
+     "n": 18,
+     "sources": {
+      "44-mandarin": 18
+     }
+    },
+    {
+     "geoHash": "GEO_Y2H2R",
+     "deviceType": "cs_smoke",
+     "n": 1,
+     "sources": {
+      "44-mandarin": 1
+     }
+    },
+    {
+     "geoHash": "GEO_Q08D9",
+     "deviceType": "spk_space",
+     "n": 135,
+     "sources": {
+      "44-mandarin": 135
+     }
+    },
+    {
+     "geoHash": "GEO_NPHMF",
+     "deviceType": "spk_space",
+     "n": 24,
+     "sources": {
+      "44-mandarin": 24
+     }
+    },
+    {
+     "geoHash": "GEO_SZDO2",
+     "deviceType": "spk_space",
+     "n": 14,
+     "sources": {
+      "44-mandarin": 14
+     }
+    },
+    {
+     "geoHash": "GEO_X8OQJ",
+     "deviceType": "spk_pend",
+     "n": 8,
+     "sources": {
+      "44-mandarin": 8
+     }
+    },
+    {
+     "geoHash": "GEO_CHUIC",
+     "deviceType": "heat",
+     "n": 27,
+     "sources": {
+      "44-mandarin": 27
+     }
+    },
+    {
+     "geoHash": "GEO_EIU54",
+     "deviceType": "heat",
+     "n": 24,
+     "sources": {
+      "44-mandarin": 24
+     }
+    },
+    {
+     "geoHash": "GEO_8SX03",
+     "deviceType": "heat",
+     "n": 24,
+     "sources": {
+      "44-mandarin": 24
+     }
+    },
+    {
+     "geoHash": "GEO_7PN7C",
+     "deviceType": "spk_surf",
+     "n": 66,
+     "sources": {
+      "44-mandarin": 66
+     }
+    },
+    {
+     "geoHash": "GEO_RCV78",
+     "deviceType": "sounder",
+     "n": 9,
+     "sources": {
+      "44-mandarin": 9
+     }
+    },
+    {
+     "geoHash": "GEO_8KYI5",
+     "deviceType": "sounder",
+     "n": 2,
+     "sources": {
+      "44-mandarin": 2
+     }
+    },
+    {
+     "geoHash": "GEO_PILHB",
+     "deviceType": "relay",
+     "n": 1,
+     "sources": {
+      "44-mandarin": 1
+     }
+    },
+    {
+     "geoHash": "GEO_78KQB",
+     "deviceType": "spk_up",
+     "n": 8,
+     "sources": {
+      "44-mandarin": 8
+     }
+    }
+   ],
+   "abbreviations": {},
+   "conventions": {
+    "statusColours": {},
+    "legendStyle": {
+     "text": 1
+    },
+    "scales": {
+     "125": 1,
+     "150": 1,
+     "500": 1
+    },
+    "lineTypes": {
+     "pipe|7f00ff|1": {
+      "cls": "pipe",
+      "desc": "UNDERGROUND FIRE SPRINKLER MAIN PIPE WORK",
+      "stroke": "7f00ff",
+      "dashed": true,
+      "n": 2
+     },
+     "pipe|7f00ff|0": {
+      "cls": "pipe",
+      "desc": "FIRE SPRINKLER MAIN PIPEWORK",
+      "stroke": "7f00ff",
+      "dashed": false,
+      "n": 1
+     },
+     "pipe|00ffff|0": {
+      "cls": "pipe",
+      "desc": "FIRE SPRINKLER RANGE PIPEWORK",
+      "stroke": "00ffff",
+      "dashed": false,
+      "n": 1
+     },
+     "pipe|00ffbf|1": {
+      "cls": "pipe",
+      "desc": "GAS SUPPRESSION PIPEWORK",
+      "stroke": "00ffbf",
+      "dashed": true,
+      "n": 1
+     },
+     "pipe|00ff00|1": {
+      "cls": "pipe",
+      "desc": "FIRE HOSEREEL PIPEWORK",
+      "stroke": "00ff00",
+      "dashed": true,
+      "n": 1
+     },
+     "pipe|00ffff|1": {
+      "cls": "pipe",
+      "desc": "DRAIN PIPEWORK",
+      "stroke": "00ffff",
+      "dashed": true,
+      "n": 1
+     },
+     "pipe|000000|0": {
+      "cls": "pipe",
+      "desc": "EXISTING PIPEWORK TO REMAIN",
+      "stroke": "000000",
+      "dashed": false,
+      "n": 1
+     },
+     "pipe|000000|1": {
+      "cls": "pipe",
+      "desc": "EXISTING PIPEWORK TO BE REMOVED",
+      "stroke": "000000",
+      "dashed": true,
+      "n": 1
+     }
+    }
+   },
+   "projects": [
+    "44-mandarin"
+   ]
+  }
+ ]
+}

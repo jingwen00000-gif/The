@@ -1,0 +1,499 @@
+{
+ "project": "eval-acme-nolegend",
+ "status": "generated",
+ "note": "no legend sheet: recognition depends on the knowledge base learnt from train-acme",
+ "files": [
+  "project.pdf"
+ ],
+ "devices": [
+  {
+   "id": "SMOKE-3-001",
+   "type": "smoke",
+   "level": "L03",
+   "x": 129.82,
+   "y": 148.94,
+   "page": 1
+  },
+  {
+   "id": "SPEAKER-3-002",
+   "type": "speaker",
+   "level": "L03",
+   "x": 280.75,
+   "y": 82,
+   "page": 1
+  },
+  {
+   "id": "HEAT-3-003",
+   "type": "heat",
+   "level": "L03",
+   "x": 129.82,
+   "y": 377.29,
+   "page": 1
+  },
+  {
+   "id": "MCP-3-004",
+   "type": "mcp",
+   "level": "L03",
+   "x": 68,
+   "y": 502,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-005",
+   "type": "smoke",
+   "level": "L03",
+   "x": 129.82,
+   "y": 601.21,
+   "page": 1
+  },
+  {
+   "id": "HEAT-3-006",
+   "type": "heat",
+   "level": "L03",
+   "x": 362.57,
+   "y": 148.64,
+   "page": 1
+  },
+  {
+   "id": "HEAT-3-007",
+   "type": "heat",
+   "level": "L03",
+   "x": 455.67,
+   "y": 150.07,
+   "page": 1
+  },
+  {
+   "id": "SPEAKER-3-008",
+   "type": "speaker",
+   "level": "L03",
+   "x": 513.5,
+   "y": 82,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-009",
+   "type": "smoke",
+   "level": "L03",
+   "x": 362.57,
+   "y": 377.57,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-010",
+   "type": "smoke",
+   "level": "L03",
+   "x": 362.57,
+   "y": 601.78,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-011",
+   "type": "smoke",
+   "level": "L03",
+   "x": 455.67,
+   "y": 598.75,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-012",
+   "type": "smoke",
+   "level": "L03",
+   "x": 595.33,
+   "y": 154.18,
+   "page": 1
+  },
+  {
+   "id": "SPEAKER-3-013",
+   "type": "speaker",
+   "level": "L03",
+   "x": 746.25,
+   "y": 82,
+   "page": 1
+  },
+  {
+   "id": "MCP-3-014",
+   "type": "mcp",
+   "level": "L03",
+   "x": 533.5,
+   "y": 278,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-015",
+   "type": "smoke",
+   "level": "L03",
+   "x": 595.33,
+   "y": 377.1,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-016",
+   "type": "smoke",
+   "level": "L03",
+   "x": 595.33,
+   "y": 597.21,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-017",
+   "type": "smoke",
+   "level": "L03",
+   "x": 688.42,
+   "y": 602.09,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-018",
+   "type": "smoke",
+   "level": "L03",
+   "x": 828.08,
+   "y": 149.47,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-019",
+   "type": "smoke",
+   "level": "L03",
+   "x": 921.17,
+   "y": 151.22,
+   "page": 1
+  },
+  {
+   "id": "SPEAKER-3-020",
+   "type": "speaker",
+   "level": "L03",
+   "x": 979,
+   "y": 82,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-021",
+   "type": "smoke",
+   "level": "L03",
+   "x": 828.08,
+   "y": 378.17,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-022",
+   "type": "smoke",
+   "level": "L03",
+   "x": 921.17,
+   "y": 375.78,
+   "page": 1
+  },
+  {
+   "id": "HEAT-3-023",
+   "type": "heat",
+   "level": "L03",
+   "x": 828.08,
+   "y": 599.75,
+   "page": 1
+  },
+  {
+   "id": "MCP-3-024",
+   "type": "mcp",
+   "level": "L03",
+   "x": 766.25,
+   "y": 726,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-025",
+   "type": "smoke",
+   "level": "L03",
+   "x": 659.88,
+   "y": 455.28,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-026",
+   "type": "smoke",
+   "level": "L03",
+   "x": 892.63,
+   "y": 679.28,
+   "page": 1
+  },
+  {
+   "id": "SMOKE-3-027",
+   "type": "smoke",
+   "level": "L03",
+   "x": 427.13,
+   "y": 231.28,
+   "page": 1
+  },
+  {
+   "id": "WIP-3-028",
+   "type": "wip",
+   "level": "L03",
+   "x": 80,
+   "y": 314,
+   "page": 1
+  },
+  {
+   "id": "HEAT-4-001",
+   "type": "heat",
+   "level": "L04",
+   "x": 129.82,
+   "y": 149.49,
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-4-002",
+   "type": "speaker",
+   "level": "L04",
+   "x": 280.75,
+   "y": 82,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-003",
+   "type": "smoke",
+   "level": "L04",
+   "x": 129.82,
+   "y": 377.51,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-004",
+   "type": "smoke",
+   "level": "L04",
+   "x": 222.92,
+   "y": 376.67,
+   "page": 2
+  },
+  {
+   "id": "MCP-4-005",
+   "type": "mcp",
+   "level": "L04",
+   "x": 68,
+   "y": 502,
+   "page": 2
+  },
+  {
+   "id": "HEAT-4-006",
+   "type": "heat",
+   "level": "L04",
+   "x": 129.82,
+   "y": 597.22,
+   "page": 2
+  },
+  {
+   "id": "HEAT-4-007",
+   "type": "heat",
+   "level": "L04",
+   "x": 222.92,
+   "y": 602.14,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-008",
+   "type": "smoke",
+   "level": "L04",
+   "x": 362.57,
+   "y": 150.92,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-009",
+   "type": "smoke",
+   "level": "L04",
+   "x": 455.67,
+   "y": 150.3,
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-4-010",
+   "type": "speaker",
+   "level": "L04",
+   "x": 513.5,
+   "y": 82,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-011",
+   "type": "smoke",
+   "level": "L04",
+   "x": 362.57,
+   "y": 377.64,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-012",
+   "type": "smoke",
+   "level": "L04",
+   "x": 455.67,
+   "y": 374.46,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-013",
+   "type": "smoke",
+   "level": "L04",
+   "x": 362.57,
+   "y": 598.98,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-014",
+   "type": "smoke",
+   "level": "L04",
+   "x": 595.33,
+   "y": 153.19,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-015",
+   "type": "smoke",
+   "level": "L04",
+   "x": 688.42,
+   "y": 154.03,
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-4-016",
+   "type": "speaker",
+   "level": "L04",
+   "x": 746.25,
+   "y": 82,
+   "page": 2
+  },
+  {
+   "id": "MCP-4-017",
+   "type": "mcp",
+   "level": "L04",
+   "x": 533.5,
+   "y": 278,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-018",
+   "type": "smoke",
+   "level": "L04",
+   "x": 595.33,
+   "y": 376.24,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-019",
+   "type": "smoke",
+   "level": "L04",
+   "x": 595.33,
+   "y": 601.49,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-020",
+   "type": "smoke",
+   "level": "L04",
+   "x": 688.42,
+   "y": 599.65,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-021",
+   "type": "smoke",
+   "level": "L04",
+   "x": 828.08,
+   "y": 150.82,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-022",
+   "type": "smoke",
+   "level": "L04",
+   "x": 921.17,
+   "y": 149.37,
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-4-023",
+   "type": "speaker",
+   "level": "L04",
+   "x": 979,
+   "y": 82,
+   "page": 2
+  },
+  {
+   "id": "HEAT-4-024",
+   "type": "heat",
+   "level": "L04",
+   "x": 828.08,
+   "y": 374.61,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-025",
+   "type": "smoke",
+   "level": "L04",
+   "x": 828.08,
+   "y": 597.28,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-026",
+   "type": "smoke",
+   "level": "L04",
+   "x": 921.17,
+   "y": 602.32,
+   "page": 2
+  },
+  {
+   "id": "MCP-4-027",
+   "type": "mcp",
+   "level": "L04",
+   "x": 766.25,
+   "y": 726,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-028",
+   "type": "smoke",
+   "level": "L04",
+   "x": 659.88,
+   "y": 679.28,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-029",
+   "type": "smoke",
+   "level": "L04",
+   "x": 194.38,
+   "y": 231.28,
+   "page": 2
+  },
+  {
+   "id": "SMOKE-4-030",
+   "type": "smoke",
+   "level": "L04",
+   "x": 427.13,
+   "y": 455.28,
+   "page": 2
+  },
+  {
+   "id": "WIP-4-031",
+   "type": "wip",
+   "level": "L04",
+   "x": 80,
+   "y": 314,
+   "page": 2
+  }
+ ],
+ "networks": [
+  {
+   "id": "LOOP-L3",
+   "type": "FIRE_LOOP",
+   "devices": 17,
+   "length_m": 162.23,
+   "page": 1
+  },
+  {
+   "id": "LOOP-L4",
+   "type": "FIRE_LOOP",
+   "devices": 20,
+   "length_m": 176.07,
+   "page": 2
+  }
+ ],
+ "rooms": []
+}

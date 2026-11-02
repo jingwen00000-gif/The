@@ -160,7 +160,10 @@
     {
      "id": "consultant-library-candidates",
      "name": "Consultant learning: candidates proposed from the library (projects without a legend)",
-     "implemented": false
+     "implemented": true,
+     "file": "app/fve.js (historical symbols in projectDictionary) + src/fve/symbol-engine/knowledge-matcher.js",
+     "accept": "integration",
+     "note": "tests/integration/learning.test.js: a set with no legend recognised from the consultant's earlier job (F1 23.9 → 100)"
     },
     {
      "id": "consultant-library-store",
@@ -168,6 +171,92 @@
      "implemented": true,
      "file": "src/fve/ui.js (localStorage ft_fve_library, consultant from the title block)",
      "accept": "integration"
+    }
+   ]
+  },
+  {
+   "id": "L",
+   "name": "Learning Engine (finished jobs → knowledge base)",
+   "modules": [
+    {
+     "id": "learning-ingestion",
+     "name": "Project ingestion (original / takeoff / BOQ / quote / metadata / markup map)",
+     "implemented": true,
+     "file": "src/learning-engine/project-ingestion.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-diff",
+     "name": "Drawing difference engine (annotations, flattened markups, added text)",
+     "implemented": true,
+     "file": "src/learning-engine/drawing-diff.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-symbols",
+     "name": "Symbol knowledge (markup classes → devices, symbol templates, abbreviations)",
+     "implemented": true,
+     "file": "src/learning-engine/symbol-extractor.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-consultant",
+     "name": "Consultant knowledge (role fields, copyright, e-mail, logo fingerprint)",
+     "implemented": true,
+     "file": "src/learning-engine/consultant-extractor.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-network",
+     "name": "Network knowledge (circuit patterns, mix, transitions, metres per device)",
+     "implemented": true,
+     "file": "src/learning-engine/network-extractor.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-rooms",
+     "name": "Room knowledge (rooms in closed outlines, expected devices)",
+     "implemented": true,
+     "file": "src/learning-engine/room-extractor.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-pricing",
+     "name": "Pricing knowledge (BOQ / quote .xlsx → keyed rates)",
+     "implemented": true,
+     "file": "src/learning-engine/pricing-extractor.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-graph",
+     "name": "Project knowledge graph + contributions",
+     "implemented": true,
+     "file": "src/learning-engine/knowledge-builder.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-database",
+     "name": "Learning database (derived libraries, leave-one-out recognition)",
+     "implemented": true,
+     "file": "src/learning-engine/learning-database.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-recognition",
+     "name": "Historical + consultant layers in recognition",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/knowledge-matcher.js",
+     "accept": "unit"
+    },
+    {
+     "id": "learning-room-priors",
+     "name": "Room expectations used in recognition / verification",
+     "implemented": false
+    },
+    {
+     "id": "learning-pricing-app",
+     "name": "Learnt rates suggested in the app's quote",
+     "implemented": false
     }
    ]
   },

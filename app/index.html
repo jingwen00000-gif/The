@@ -732,7 +732,18 @@ kbd{font-family:var(--f-mono)}
 <script src="../src/fve/symbol-engine/legend-matcher.js"></script>
 <script src="../src/fve/symbol-engine/context-matcher.js"></script>
 <script src="../src/fve/symbol-engine/network-matcher.js"></script>
+<script src="../src/fve/symbol-engine/knowledge-matcher.js"></script>
 <script src="../src/fve/symbol-engine/index.js"></script>
+<script src="../src/learning-engine/learning-database.js"></script>
+<script src="../data/knowledge/knowledge.bundle.js"></script>
+<script src="../src/learning-engine/drawing-diff.js"></script>
+<script src="../src/learning-engine/consultant-extractor.js"></script>
+<script src="../src/learning-engine/symbol-extractor.js"></script>
+<script src="../src/learning-engine/network-extractor.js"></script>
+<script src="../src/learning-engine/room-extractor.js"></script>
+<script src="../src/learning-engine/pricing-extractor.js"></script>
+<script src="../src/learning-engine/knowledge-builder.js"></script>
+<script src="../src/learning-engine/project-ingestion.js"></script>
 <!--PDFWORKER-->
 <script>/* desktop: parse PDFs in a real worker thread (the single-file builds inline the worker instead) */ if(window.pdfjsLib&&!globalThis.pdfjsWorker) pdfjsLib.GlobalWorkerOptions.workerSrc="pdf.worker.js";</script>
 <script>
@@ -3903,6 +3914,8 @@ async function fveTemplate(e){if(e._T!==undefined) return e._T; const bw=e.bb[2]
     const onSym=s=>{const M=[(s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2]; return own.some(o=>dS(M,o.a,o.b)<.25)};
     const seen=new Set(); // a stroke plotted two or three times over (heavy pens) counts once, or it crowds the anchors out
     sg=V.concat(V.fills||[]).filter(s=>{if(cols.size&&!cols.has(s.col)||!inB(s.a)||!inB(s.b)||!onSym(s)) return false; const k=s.col+'|'+(s.f?1:0)+'|'+[s.a,s.b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(k)) return false; seen.add(k); return true}).map(s=>({a:[s.a[0]-e.c[0],s.a[1]-e.c[1]],b:[s.b[0]-e.c[0],s.b[1]-e.c[1]],L:s.L,c:s.col,col:s.col,f:s.f?1:0}))}
+  // a historical symbol (Learning Engine) carries the app's own segments from the job it was learnt on
+  if((!sg||sg.length<3)&&e.vsegs&&e.vsegs.length>=3) sg=e.vsegs.map(s=>({...s,a:s.a.slice(),b:s.b.slice()}));
   if(!sg||sg.length<3) sg=e.segs.map(s=>({...s}));
   return e._T=vsmBuild(sg,bw*1.6,bh*1.6)}
 async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) return []; const {all,byL}=vsmIndex(V);

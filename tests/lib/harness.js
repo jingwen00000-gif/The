@@ -29,15 +29,22 @@ async function analyse(page, pdfs, opts = {}) {
     const pages = S.pages.filter(p => p.kind === 'pdf' && pdfPageRef.get(p.id));
     const t1 = performance.now(); const models = [];
     for (const p of pages) models.push(await FVE.buildModel(await pdfPageObj(p), pdfjsLib.OPS, { id: p.id, name: p.name, index: models.length }));
-    const t2 = performance.now(); const D = FVE.projectDictionary(models, { library: opts.library || null });
+    // Learning Engine: who drew the set, then what the knowledge base knows about them (the project's own contributions left out)
+    let K = null, consultant = null;
+    if (opts.knowledgeBase) { consultant = FT_LEARN.consultant.extract(models, { known: FT_LEARN.db.entries(opts.knowledgeBase.consultants) });
+      K = FT_LEARN.db.forRecognition(opts.knowledgeBase, { consultant: consultant.consultant, excludeProject: opts.projectId || null }); }
+    // naming legend rows: the estimator's library and this consultant's own history only (another consultant's geoHash is a coincidence)
+    const library = [].concat(opts.library || [], K ? K.library.filter(e => e.consultant) : []);
+    const t2 = performance.now(); const D = FVE.projectDictionary(models, { library: library.length ? library : null, knowledge: K });
     const t3 = performance.now();
-    const dets = await FVE.detect(models, D, { library: opts.library || null, match: async (e, m, q) => {
+    const dets = await FVE.detect(models, D, { library: opts.library || null, knowledge: K, match: async (e, m, q) => {
       const p = S.pages.find(x => x.id === m.page.id); const T = await fveTemplate(e); if (!T) return [];
       return (await vsmSearch(p, T, q || 1)).filter(h => h.score >= (opts.minScore || .85));
     } });
     const t4 = performance.now(); const warn = FVE.verify(models, D, dets); const lines = FVE.measureLines(models, D); const t5 = performance.now();
     const idx = id => pages.findIndex(p => p.id === id);
     return {
+      knowledge: K ? { consultant: consultant.consultant, known: K.consultantKnown, templates: K.templates.length, historical: D.hist, library: K.library.length } : null,
       ms: { open: t1 - t0, geometry: t2 - t1, legend: t3 - t2, detect: t4 - t3, verify: t5 - t4, total: t5 - t0 },
       pages: models.map((m, i) => ({ i, name: m.page.name, w: m.page.w, h: m.page.h, sheet: m.sheet.kind, title: m.sheet.title, scale: m.scale, objects: m.objects.length, texts: m.texts.length,
         kinds: m.objects.reduce((o, x) => (o[x.k] = (o[x.k] || 0) + 1, o), {}), markups: Object.fromEntries(Object.entries(m.markups || {}).map(([k, g]) => [k, { n: g.n, at: g.at }])) })),

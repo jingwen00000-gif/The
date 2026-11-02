@@ -361,11 +361,21 @@ FVE.projectDictionary=function(models,opts){opts=opts||{}; const D={symbols:[],l
     Object.assign(D.abbrev,lg.abbrev)}
   // two line types drawn the same way (colour, dash) cannot be told apart on a plan: the first keeps the strokes
   const seenLT=new Set(); D.lineTypes.forEach(l=>{if(!l.cls) return; const k=l.stroke+'|'+l.dashed; if(seenLT.has(k)) l.dupOf=true; else seenLT.add(k)});
+  // historical symbols (Learning Engine knowledge base): this consultant's symbols, and well-established ones, are searched like legend
+  // rows for devices this project's legend does not already cover (a set without a legend, a CAD-lettered row nobody named, a missing row)
+  const K=opts.knowledge; D.hist=0;
+  if(K&&K.templates){const legendTypes=new Set(D.symbols.filter(s=>s.type).map(s=>s.type)), have=new Set(D.symbols.map(s=>s.geoHash).filter(Boolean));
+    // another consultant's symbols only on a set with no legend of its own: where the project has a legend, only this consultant's history
+    for(const t of K.templates){const T=t.template; if(!T||!T.objs||!T.objs.length||legendTypes.has(t.deviceType)||have.has(t.geoHash)||(legendTypes.size&&!t.consultantMatch)) continue; have.add(t.geoHash);
+      D.symbols.push({id:'h',page:null,desc:`historical ${t.code||t.deviceType}`,hist:true,histN:t.n,consultantMatch:!!t.consultantMatch,type:t.deviceType,status:null,tags:t.text||[],bb:T.bb,c:[0,0],segs:T.segs,vsegs:T.vsegs,objs:T.objs,
+        color:(T.cols||[])[0]||null,key:T.key,cols:T.cols||[],circles:T.objs.filter(o=>o.k==='circle'&&o.stroke).map(o=>({col:o.stroke,r:o.r})),shapes:T.shapes||[],geoHash:t.geoHash,desc2:t.desc}); D.hist++}}
   D.symbols.forEach((s,i)=>s.id='sy'+i); D.lineTypes.forEach((l,i)=>l.id='lt'+i);
   // colour → status where the legend is colour-coded (refurbishment sets: blue new, grey existing, red remove …): ≥ 2 rows, ≥ 80 % agreeing
   const cv={}; D.symbols.forEach(e=>{if(e.color&&e.status) (cv[e.color]=cv[e.color]||{})[e.status]=(cv[e.color][e.status]||0)+1}); D.colStatus={};
   for(const c in cv){const [st,n]=Object.entries(cv[c]).sort((a,b)=>b[1]-a[1])[0], tot=Object.values(cv[c]).reduce((a,b)=>a+b,0); if(tot>=2&&n/tot>=.8) D.colStatus[c]=st}
   if(new Set(Object.values(D.colStatus)).size<2) D.colStatus={};
+  // no colour code of its own: the consultant's usual one (learnt from their earlier jobs)
+  if(!Object.keys(D.colStatus).length&&K&&K.statusColours&&new Set(Object.values(K.statusColours)).size>=2) D.colStatus={...K.statusColours};
   // tags: an abbreviation the project defines → the device it names
   D.tagType={}; for(const [k,v] of Object.entries(D.abbrev)){const t=FVE.classifyDesc(v).type; if(t) D.tagType[k]=t}
   return D};
@@ -467,7 +477,7 @@ FVE.verify=function(models,D,dets){const W=[]; const plans=models.filter(m=>m.sh
   for(const [type,pp] of Object.entries(per)){const counts=plans.map(m=>pp[m.page.id]||0); const nz=counts.filter(v=>v>0); if(nz.length<3) continue; const md=median(nz);
     plans.forEach((m,i)=>{const v=counts[i]; if(v>0&&v<md*.3) W.push({level:'warn',code:'low-count',type,page:m.page.id,msg:`${type}: ${v} on this sheet, ${md} typical on the others — possible missed detections`});
       if(v>md*3&&v>10) W.push({level:'warn',code:'high-count',type,page:m.page.id,msg:`${type}: ${v} on this sheet, ${md} typical — possible double counting`})})}
-  const found=new Set(dets.map(d=>d.entry).filter(Boolean)); for(const e of D.symbols) if(e.type&&!found.has(e.id)) W.push({level:'info',code:'legend-unused',entry:e.id,msg:`legend "${e.desc}" not found on any plan`});
+  const found=new Set(dets.map(d=>d.entry).filter(Boolean)); for(const e of D.symbols) if(e.type&&!e.hist&&!found.has(e.id)) W.push({level:'info',code:'legend-unused',entry:e.id,msg:`legend "${e.desc}" not found on any plan`});
   for(const e of D.symbols) if(!e.type) W.push({level:'ask',code:'legend-unknown',entry:e.id,msg:`legend "${e.desc}" — device type not recognised`});
   // tags that repeat on the plans but nothing explains
   const tagN={}; for(const m of plans) for(const t of m.texts){const tok=FVE.tagToken(t.s); if(tok&&tok.length>=2&&!(D.tagType&&D.tagType[tok])&&!FVE.TAG_RULES.some(r=>r.tag.test(tok))) tagN[tok]=(tagN[tok]||0)+1}

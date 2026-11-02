@@ -1,14 +1,14 @@
 # FireTake benchmark
 
-Generated 2026-11-02T02:35:06.317Z · engine app/fve.js 1.0.0
+Generated 2026-11-02T03:20:28.520Z · engine app/fve.js 1.0.0
 
 ## Test suites
 
 | Suite | Result | Detail |
 |---|---|---|
-| Unit | PASS | 32/32 passed, coverage 99.6 % lines / 83.5 % branches |
-| Integration | PASS | 4/7 passed, 3 todo (modules not implemented) |
-| Regression | PASS | 5/8 passed |
+| Unit | PASS | 42/42 passed, coverage 96.8 % lines / 78.4 % branches |
+| Integration | PASS | 10/13 passed, 3 todo (modules not implemented) |
+| Regression | PASS | 5/5 passed |
 
 ## Geometry extraction and legend detection
 
@@ -17,8 +17,8 @@ Generated 2026-11-02T02:35:06.317Z · engine app/fve.js 1.0.0
 | synthetic-basic | 4 | 191 | 0.1 | 0 |
 | synthetic-large | 8 | 1263 | 0.1 | 0 |
 | 383-kent | 3 | 215326 | 5.1 | 0.1 |
-| 44-mandarin | 8 | 122685 | 8 | 0 |
-| 443-willoughby | 8 | 118539 | 1.7000000000000002 | 0 |
+| 44-mandarin | 8 | 122685 | 7.199999999999999 | 0 |
+| 443-willoughby | 8 | 118539 | 1.6 | 0 |
 
 ## Device recognition
 
@@ -75,6 +75,6 @@ Not implemented yet (Stage 3 room intelligence, Stage 4 network graph). Ground t
 |---|---|---|---|---|---|---|
 | synthetic-basic | 0.1 | 0 | 0.1 | n/a | 0.2 | PASS |
 | synthetic-large | 0.1 | 0 | 0.2 | n/a | 0.3 | PASS |
-| 383-kent | 5.1 | 0.1 | 41.8 | n/a | 47 | PASS |
-| 44-mandarin | 8 | 0 | 48.2 | n/a | 56.3 | PASS |
-| 443-willoughby | 1.7000000000000002 | 0 | 12.1 | n/a | 13.9 | PASS |
+| 383-kent | 5.1 | 0.1 | 42.3 | n/a | 47.5 | PASS |
+| 44-mandarin | 7.199999999999999 | 0 | 48.3 | n/a | 55.7 | PASS |
+| 443-willoughby | 1.6 | 0 | 12.2 | n/a | 13.9 | PASS |

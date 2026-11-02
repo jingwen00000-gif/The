@@ -7,6 +7,8 @@ const assert = require('node:assert/strict');
 const fs = require('fs'), path = require('path');
 const { openApp, analyse } = require('../lib/harness');
 const { all, summary } = require('../lib/projects');
+// the Learning Engine's knowledge base (data/knowledge); each project is analysed without its own contributions
+const KB = require('../lib/knowledge').load();
 const BASE = path.join(__dirname, 'baselines'), UPDATE = !!process.env.UPDATE_BASELINES;
 
 let app;
@@ -17,7 +19,7 @@ for (const p of all()) {
   const bf = path.join(BASE, p.name + '.json');
   if (!fs.existsSync(bf) && !UPDATE) continue;
   test(`regression: ${p.name}`, { skip: p.present ? false : 'drawings not on this machine' }, async () => {
-    const got = summary(await analyse(app.page, p.files, { library: p.library }));
+    const got = summary(await analyse(app.page, p.files, { library: p.library, knowledgeBase: KB, projectId: p.name }));
     if (UPDATE) { fs.writeFileSync(bf, JSON.stringify({ project: p.name, accepted: new Date().toISOString(), ...got }, null, 1)); return; }
     const exp = JSON.parse(fs.readFileSync(bf, 'utf8'));
     assert.deepEqual(got.sheets, exp.sheets, 'sheet types changed');

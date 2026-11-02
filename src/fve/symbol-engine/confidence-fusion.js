@@ -5,8 +5,9 @@
 (function(root){
 'use strict';
 const NS=root.FVE_MSME=root.FVE_MSME||{};
-const WEIGHTS={geometry:.20,text:.25,legend:.30,context:.10,network:.15};
-const LAYER_NAME={geometry:'Geometry',text:'Text',legend:'Legend',context:'Context',network:'Network'};
+// historical / consultant: the Learning Engine's knowledge base (silent without one, so the five-layer behaviour is unchanged)
+const WEIGHTS={geometry:.20,text:.25,legend:.30,context:.10,network:.15,historical:.15,consultant:.15};
+const LAYER_NAME={geometry:'Geometry',text:'Text',legend:'Legend',context:'Context',network:'Network',historical:'Historical',consultant:'Consultant'};
 const SUPPORT=[0,.82,.95,1];   // by number of layers agreeing on the winner (≥ 0.5)
 
 // layers: {geometry:{smoke:.8,…}, text:{…}, …}; opts.weights to override; opts.hasShape=false for a bare text tag

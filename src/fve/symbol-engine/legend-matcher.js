@@ -7,8 +7,9 @@
 const NS=root.FVE_MSME=root.FVE_MSME||{};
 
 function score(cand,ctx){const {D,library,consultant}=ctx; const s={}, ev=[], statusBy={}; let status=null, entry=null;
-  const typed=NS.geometry.legendIndex(D).typed;
-  for(const h of cand.hits||[]) if(h.score>=.88&&h.score>(s[h.type]||0)){s[h.type]=h.score; status=h.status||status; statusBy[h.type]=h.status||null; entry=h.entry; ev.push({src:'exact',entry:h.entry,type:h.type,score:h.score})}
+  // historical templates (Learning Engine) are not this project's legend: their evidence goes to the historical / consultant layers
+  const typed=NS.geometry.legendIndex(D).typed.filter(e=>!e.hist), hist=new Set((D.symbols||[]).filter(e=>e.hist).map(e=>e.id));
+  for(const h of cand.hits||[]) if(!hist.has(h.entry)&&h.score>=.88&&h.score>(s[h.type]||0)){s[h.type]=h.score; status=h.status||status; statusBy[h.type]=h.status||null; entry=h.entry; ev.push({src:'exact',entry:h.entry,type:h.type,score:h.score})}
   if(cand.desc) for(const e of typed){if(!e.desc2) continue; const raw=NS.fingerprint.similarity(cand.desc,e.desc2), same=cand.geoHash&&cand.geoHash===e.geoHash&&raw>=.85; const sim=same?Math.max(raw,.95):raw; // a hash collision alone is not identity
     if(sim>=.9&&sim>(s[e.type]||0)){s[e.type]=sim; if(!status) status=e.status; if(!(e.type in statusBy)) statusBy[e.type]=e.status||null; entry=entry||e.id; ev.push({src:same?'geohash':'fingerprint',entry:e.id,type:e.type,score:Math.round(sim*100)/100})}}
   // the legend row's own label ('I/O' in the input / output module box, 'FS' in the flow switch): the same label on a candidate is that row

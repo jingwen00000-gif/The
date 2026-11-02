@@ -18,8 +18,11 @@ const SYM = {
   mcp: (p, x, y, k) => { p.stroke(RED, .5).rect(x - 3.5 * k, y - 3.5 * k, 7 * k, 7 * k).rect(x - 1.75 * k, y - 1.75 * k, 3.5 * k, 3.5 * k); },
   speaker: (p, x, y, k) => { p.stroke(BLUE, .5).rect(x - 4 * k, y - 1.5 * k, 2.5 * k, 3 * k).poly([[x - 1.5 * k, y - 1.5 * k], [x + 3.5 * k, y - 4 * k], [x + 3.5 * k, y + 4 * k], [x - 1.5 * k, y + 1.5 * k]], true); },
 };
+// the consultant's lines in the title block (training sets only; the scored datasets have none)
+let CONSULTANT = null; const setConsultant = c => { CONSULTANT = c; };
 function titleBlock(p, title, scale) {
   const x = W - 150; p.stroke('000000', .8).rect(10, 10, W - 20, H - 20).line(x, 10, x, H - 10);
+  if (CONSULTANT) { p.text(x + 8, H - 140, CONSULTANT.name, 6).text(x + 8, H - 128, 'E: ' + CONSULTANT.email, 5); if (CONSULTANT.logo) { p.stroke(CONSULTANT.logo, .8).rect(x + 10, H - 175, 20, 14).line(x + 10, H - 175, x + 30, H - 161).circle(x + 45, H - 168, 6); } }
   p.text(x + 8, H - 80, 'PROJECT: TEST BUILDING', 6).text(x + 8, H - 60, 'DRAWING TITLE', 5).text(x + 8, H - 50, title, 7);
   if (scale) p.text(x + 8, H - 30, `SCALE ${scale}`, 6);
 }
@@ -102,4 +105,4 @@ if (require.main === module) {
   console.log(project('synthetic-basic', [[1, 3, 4, 3], [2, 7, 4, 3]]));
   console.log(project('synthetic-large', [[1, 11, 7, 5], [2, 12, 7, 5], [3, 13, 7, 5], [4, 14, 7, 5], [5, 15, 7, 5], [6, 16, 7, 5]]));
 }
-module.exports = { project, SYM, MPU };
+module.exports = { project, SYM, MPU, W, H, planSheet, legendSheet, coverSheet, setConsultant, rng };
