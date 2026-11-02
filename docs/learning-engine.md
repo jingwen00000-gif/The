@@ -87,6 +87,24 @@ pricing-extractor, knowledge-builder, learning-database, cli (`npm run learn`) �
 4. Libraries and `knowledge.bundle.js` are rebuilt; the app and the test runners use them from then on.
 5. `npm run test:all`: every scored project is analysed without its own contributions.
 
+### In the app (no command line)
+
+Settings → **AI 学习：历史项目** → 从完成项目学习: pick the original PDF(s), the marked-up takeoff PDF(s) (none when the markups are on the
+originals) and optionally the BOQ / quote workbooks. `src/learning-engine/learn-app.js` reads the job in a sandbox (the open project is put
+aside and restored), with the same `ingestInApp` as the CLI. The count tables are read from the markups' own appearance streams
+(`FVE.markupWords`, the same words and positions poppler's `pdftotext -bbox` gives — khartoum: identical rows and 363 devices), so no
+`markup-map.json` and no poppler are needed.
+
+Before the job is added, recognition is scored on it blind (what was known until then, the job's own knowledge left out) against the
+estimator's markups, overall and per sheet (`src/learning-engine/metrics.js`, the scorer the test suites use). The list in Settings keeps
+that score per job in the order learnt: rising scores mean the software is getting better on new work. Learnt jobs live in IndexedDB
+(meta `learn-local`); the app recognises with the bundled jobs (`window.FT_KNOWLEDGE_CONTRIBS` in `knowledge.bundle.js`) plus the local ones,
+rebuilt with `FT_LEARN.db.rebuild` (a local job with the same id replaces the bundled one). 导出 / 导入学习记录 moves them between computers
+(and is how a job reaches `data/knowledge` for everyone: drop its contributions into `data/knowledge/projects/<id>/` and `npm run learn -- --rebuild`).
+
+Example, 44-market learnt in the app without its hand-written colour key: 219 devices (count tables 18 / 18 rows matched), blind F1 79 —
+dry and wet sheets 78–99, the ground-floor demolition sheet 0 (devices to be removed are drawn dashed red: not recognised yet).
+
 ## 6. Implementation status
 
 | Phase | Status |
@@ -99,6 +117,7 @@ pricing-extractor, knowledge-builder, learning-database, cli (`npm run learn`) �
 | 6 Room knowledge | rooms with closed outlines; **used**: the room engine finds this project's rooms and asks about a room type missing a device earlier jobs had in ≥ 80 % of ≥ 3 rooms (never adds devices) |
 | 7 Pricing knowledge | done; **used**: rates page → 按历史项目建议单价 shows current vs the jobs' median per item / work type / cable and writes the ticked ones into this project's rates (`src/fve/rates-from-history.js`) |
 | 8 Knowledge graph | done (per project) |
+| In-app learning | done: Settings → AI 学习 (sandboxed ingestion, count tables from markup appearances, blind score per job and sheet, local knowledge base, export / import) |
 | Integration | historical + consultant layers in MSME, historical symbols in the dictionary, consultant colour code, network priors, room expectations, rate suggestions |
 
 ## 7. Loops and rooms (current project)

@@ -32,10 +32,10 @@ function bboxWords(html){const pages=[]; for(const pg of html.split(/<page /).sl
     const s=m[5].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'"); w.push({s,x,x1,cx:(x+x1)/2,cy:(y+y1)/2,h:(y1-y)*.78,src:'markup'})} pages.push(w)} return pages}
 const hex=c=>Array.from(c).slice(0,3).map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
 // in the FireTake page (app globals: openFiles, pdfPageObj, pdfVectors, fveTemplate, vsmSearch, S)
-// input: {original:[[name,b64]], takeoff:[[name,b64]] | null (same file), metadata, markupMap, knowledge (libraries) }
+// input: {original:[[name, base64 | File]], takeoff:[[name, base64 | File]] | null (same file), metadata, markupMap, knowledge (libraries) }
 async function ingestInApp(input){const L=NS, FVE=root.FVE; const b64=s=>{const bin=atob(s),u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u};
   const t0=performance.now(); S.pages=[];
-  const open=async files=>{const before=S.pages.length; for(const [n,b] of files) await openFiles([new File([b64(b)],n,{type:'application/pdf'})]); return S.pages.slice(before).filter(p=>p.kind==='pdf')};
+  const open=async files=>{const before=S.pages.length; for(const [n,b] of files) await openFiles([typeof Blob!=='undefined'&&b instanceof Blob?new File([b],n,{type:'application/pdf'}):new File([b64(b)],n,{type:'application/pdf'})]); return S.pages.slice(before).filter(p=>p.kind==='pdf')};
   const PO=await open(input.original), PT=input.takeoff?await open(input.takeoff):PO;
   const model=async(p,i)=>FVE.buildModel(await pdfPageObj(p),pdfjsLib.OPS,{id:p.id,name:p.name,index:i});
   const annots=async p=>{const pg=await pdfPageObj(p), vp=pg.getViewport({scale:1}); return (await pg.getAnnotations()).map(a=>L.diff.normAnnot(a,vp,hex))};
@@ -43,11 +43,13 @@ async function ingestInApp(input){const L=NS, FVE=root.FVE; const b64=s=>{const 
   const MT=PT===PO?MO:[]; if(PT!==PO) for(const [i,p] of PT.entries()) MT.push(await model(p,i));
   const AT=[]; for(const p of PT) AT.push(await annots(p)); const AO=[]; if(PT!==PO) for(const p of PO) AO.push(await annots(p));
   const diff=L.diff.diff(MO,MT,AT,PT===PO?null:AO,{FVE});
+  // count-table words: given (poppler on the CLI) or read here from the markups' own appearance streams
+  let takeoffWords=input.takeoffWords; if(!takeoffWords&&FVE.markupWords){takeoffWords=[]; for(const p of PT){const pg=await pdfPageObj(p), vp=pg.getViewport({scale:1}); takeoffWords.push(pg.getAnnotations?FVE.markupWords(await pg.getOperatorList({annotationMode:pdfjsLib.AnnotationMode.ENABLE}),vp,pdfjsLib.OPS):[])}}
   // the estimator's count tables (Bluebeam markup summary) name the markup groups sheet by sheet; a hand-written markup-map still wins
   const tables=[], auto={pages:{}};
-  if(L.countTable){const read=[]; for(const [oi,ti] of diff.pairs){const words=(input.takeoffWords&&input.takeoffWords[ti])||[]; const tb=L.countTable.read(MT[ti],L.diff.addedObjects(MO[oi],MT[ti]),words); if(tb.length) read.push([oi,ti,tb])}
+  if(L.countTable){const read=[]; for(const [oi,ti] of diff.pairs){const words=(takeoffWords&&takeoffWords[ti])||[]; const tb=L.countTable.read(MT[ti],L.diff.addedObjects(MO[oi],MT[ti]),words); if(tb.length) read.push([oi,ti,tb])}
     // pass 1 learns which colour each description has where that is unambiguous; pass 2 uses it to settle ties (two rows of 25)
-    const prefer={}; for(const [oi,ti,tb] of read) for(const r of L.countTable.match(tb,AT[ti],FVE).rows) if(r.groups.length===1&&!r.ambiguous){const g=r.groups[0], col=g.split('#')[1].split('|')[0]; prefer[String(r.description).toUpperCase().replace(/\s+R$/,'').trim()]=col}
+    const prefer={}; for(const [oi,ti,tb] of read) for(const r of L.countTable.match(tb,AT[ti],FVE).rows) if(r.groups.length===1&&!r.ambiguous){const g=r.groups[0], col=g.split('#')[1].split('|')[0]; prefer[String(r.description).toUpperCase().replace(/\s+R$/,'').replace(/^X\s+/,'').trim()]=col}
     for(const [oi,ti,tb] of read){const mt=L.countTable.match(tb,AT[ti],FVE,prefer); tables.push({page:oi,tables:tb,rows:mt.rows}); if(Object.keys(mt.map).length) auto.pages[String(oi)]=mt.map}}
   const markupMap=Object.keys(auto.pages).length?{...(input.markupMap||{}),pages:{...auto.pages,...((input.markupMap||{}).pages||{})},fromCountTables:true}:input.markupMap;
   // consultant first: what the knowledge base already knows about them helps read this job's legend
@@ -65,11 +67,18 @@ async function ingestInApp(input){const L=NS, FVE=root.FVE; const b64=s=>{const 
   const networks=L.network.extract(MO,D,sym.devices,{FVE}), measurements=L.network.measurements(MO,diff), rooms=L.rooms.extract(MO,sym.devices,{FVE});
   const conventions={statusColours:D.colStatus||{},legendStyle:D.geo&&D.geo.length?'geometric':D.symbols.length?'text':'none',scales:[...new Set(MO.map(m=>m.scale&&m.scale.ratio).filter(Boolean))],
     lineTypes:D.lineTypes.filter(l=>l.cls).map(l=>({cls:l.cls,desc:l.desc,stroke:l.stroke,dashed:!!l.dashed}))};
+  // how well recognition did on this job BEFORE learning it (its own knowledge left out): detections against the estimator's markups
+  const idx=new Map(MO.map((m,i)=>[m.page.id,i])), found=dets.map(d=>({page:idx.get(d.page),type:d.type,status:d.status||null,x:d.x,y:d.y,conf:d.conf}));
+  const truth=sym.devices.filter(d=>d.type), score=L.metrics&&truth.length?L.metrics.scoreDevices(truth,found,{tol:input.tol||20}):null;
+  if(score){delete score.misses; delete score.falseAlarms; const tol=input.tol||20;
+    // per sheet, so the estimator sees where recognition falls short (a demolition sheet, a sheet with no legend …)
+    score.pages=[...new Set(truth.map(d=>d.page))].sort((a,b)=>a-b).map(pg=>{const s=L.metrics.scoreDevices(truth.filter(d=>d.page===pg),found.filter(d=>d.page===pg),{tol});
+      return {page:pg,title:MO[pg]&&MO[pg].sheet?MO[pg].sheet.title:null,truth:s.truePositive+s.falseNegative,found:s.truePositive,extra:s.falsePositive,f1:s.f1}})}
   return {projectId:input.projectId,consultant,sheets:MO.map((m,i)=>({i,name:m.page.name,kind:m.sheet.kind,title:m.sheet.title,scale:m.scale?m.scale.ratio:null})),
     devices:sym.devices,classes:sym.classes,trace:sym.trace,countTables:tables,unknownClasses:sym.unknownClasses,symbols:sym.symbols,abbreviations:Object.assign({},sym.abbreviations),
     labels:diff.labels,notes:diff.annotations.filter(a=>a.kind==='note').map(a=>({page:a.page,text:a.text,x:Math.round(a.x),y:Math.round(a.y)})),
     networks,measurements,rooms,conventions,diffStats:{...diff.stats,pairs:diff.pairs.length,additions:diff.additions.length,labels:diff.labels.length,annotations:diff.annotations.length},
-    legend:{symbols:D.symbols.length,typed:D.symbols.filter(s=>s.type).length,historical:D.symbols.filter(s=>s.hist).length,lineTypes:D.lineTypes.length,detections:dets.length},ms:Math.round(performance.now()-t0)}}
+    legend:{symbols:D.symbols.length,typed:D.symbols.filter(s=>s.type).length,historical:D.symbols.filter(s=>s.hist).length,lineTypes:D.lineTypes.length,detections:dets.length},score,knowledgeProjects:K&&K.index?L.db.entries(K.index.projects||[]).filter(p=>p.projectId!==input.projectId).length:0,ms:Math.round(performance.now()-t0)}}
 
 NS.ingest={loadFolder,ingestInApp,bboxWords,TAKEOFF,ORIGINAL};
 if(typeof module!=='undefined'&&module.exports) module.exports=NS.ingest;

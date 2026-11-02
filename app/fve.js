@@ -118,6 +118,30 @@ FVE.extractTexts=function(tc,vp){const out=[];
     const bb=vert?[x-h*.8,y-w,x+h*.2,y]:[x,y-h*.8,x+w,y+h*.2];
     out.push({s,x,y,h,w,ang:a,vert,bb,cx:(bb[0]+bb[2])/2,cy:(bb[1]+bb[3])/2})}
   return out};
+// words drawn inside PDF markups (a Bluebeam markup summary / count table is an annotation appearance: pdf.js has no text layer for it).
+// ol: operator list WITH annotations (annotationMode ENABLE); only ops between beginAnnotation / endAnnotation are read → [{s, x, x1, cx, cy, h}]
+FVE.markupWords=function(ol,vp,OPS){const out=[]; let inA=0, m=[1,0,0,1,0,0], stack=[], Tm=[1,0,0,1,0,0], Tlm=[1,0,0,1,0,0], fs=10, lead=0, cs=0, ws=0, hs=1, rise=0, word=null;
+  const P=(x,y)=>{const M=mul(m,Tm); return vp.convertToViewportPoint(M[0]*x+M[2]*y+M[4],M[1]*x+M[3]*y+M[5])};
+  const end=()=>{if(word&&word.s.trim()){const h=word.h; out.push({s:word.s.trim(),x:word.x,x1:word.x1,cx:(word.x+word.x1)/2,cy:word.y-h*.4,h,src:'markup'})} word=null}; /* h: glyph height as poppler's bbox words */
+  for(let i=0;i<ol.fnArray.length;i++){const fn=ol.fnArray[i], a=ol.argsArray[i];
+    if(fn===OPS.beginAnnotation){inA++; stack=[]; m=mul(mul([1,0,0,1,0,0],a[2]||[1,0,0,1,0,0]),a[3]||[1,0,0,1,0,0]); continue}
+    if(fn===OPS.endAnnotation){end(); inA=Math.max(0,inA-1); continue}
+    if(!inA) continue;
+    if(fn===OPS.save) stack.push([m.slice(),fs,lead,cs,ws,hs,rise]); else if(fn===OPS.restore){end(); const q=stack.pop(); if(q) [m,fs,lead,cs,ws,hs,rise]=q}
+    else if(fn===OPS.transform) m=mul(m,a);
+    else if(fn===OPS.paintFormXObjectBegin){stack.push([m.slice(),fs,lead,cs,ws,hs,rise]); if(a&&a[0]) m=mul(m,a[0])} else if(fn===OPS.paintFormXObjectEnd){end(); const q=stack.pop(); if(q) [m,fs,lead,cs,ws,hs,rise]=q}
+    else if(fn===OPS.beginText){Tm=[1,0,0,1,0,0]; Tlm=[1,0,0,1,0,0]} else if(fn===OPS.endText) end()
+    else if(fn===OPS.setFont) fs=a[1]; else if(fn===OPS.setLeading) lead=a[0]; else if(fn===OPS.setCharSpacing) cs=a[0]; else if(fn===OPS.setWordSpacing) ws=a[0]; else if(fn===OPS.setHScale) hs=a[0]/100; else if(fn===OPS.setTextRise) rise=a[0];
+    else if(fn===OPS.setTextMatrix){end(); Tm=a.slice(0,6); Tlm=Tm.slice()}
+    else if(fn===OPS.moveText||fn===OPS.setLeadingMoveText){end(); if(fn===OPS.setLeadingMoveText) lead=-a[1]; Tlm=mul(Tlm,[1,0,0,1,a[0],a[1]]); Tm=Tlm.slice()}
+    else if(fn===OPS.nextLine||fn===OPS.nextLineShowText||fn===OPS.nextLineSetSpacingShowText){end(); Tlm=mul(Tlm,[1,0,0,1,0,-lead]); Tm=Tlm.slice()}
+    if(fn===OPS.showText||fn===OPS.showSpacedText||fn===OPS.nextLineShowText||fn===OPS.nextLineSetSpacingShowText){const G=a[0]||[];
+      const sc=Math.hypot(...(()=>{const M=mul(m,Tm); return [M[2],M[3]]})())*fs||fs;
+      for(const g of G){if(typeof g==='number'){const dx=-g/1000*fs*hs; if(dx>fs*.25) end(); Tm=mul(Tm,[1,0,0,1,dx,0]); continue}
+        if(!g) continue; const u=g.unicode||'', w=(g.width||0)/1000*fs, dx=(w+cs+(g.isSpace||u===' '?ws:0))*hs;
+        if(g.isSpace||/^\s+$/.test(u)) end(); else {const [x0,y0]=P(0,rise), [x1]=P(dx,rise); if(!word) word={s:'',x:Math.min(x0,x1),x1:Math.max(x0,x1),y:y0,h:sc*.72}; word.s+=u; word.x=Math.min(word.x,x0,x1); word.x1=Math.max(word.x1,x0,x1)}
+        Tm=mul(Tm,[1,0,0,1,dx,0])}}}
+  end(); return out};
 // horizontal text pieces on one baseline joined left to right
 FVE.textLines=function(texts){const its=texts.filter(t=>!t.vert).sort((a,b)=>a.y-b.y||a.x-b.x), lines=[];
   for(const t of its){const l=lines.find(l=>Math.abs(l.y-t.y)<Math.max(l.h,t.h)*.45&&t.x>=l.x1-l.h*.3&&t.x-l.x1<l.h*1.6&&Math.abs(l.h-t.h)<l.h*.35);

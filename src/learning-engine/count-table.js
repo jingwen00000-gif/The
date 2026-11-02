@@ -16,7 +16,7 @@ const STATUS=[['relocate',/RELOCAT|^R$|RE-?SET/i],['remove',/REMOV|DEMOL|DELET|D
 const statusOf=s=>(STATUS.find(([,re])=>re.test(String(s||'').trim()))||[null])[0];
 const num=s=>{const m=String(s||'').replace(/,/g,'').match(/^\s*(\d+(?:\.\d+)?)\s*(m|lm|ea|no\.?|count)?\s*$/i); return m?+m[1]:null};
 // the device a row names; FVE's vocabulary first, then takeoff words FVE does not use ('Concealed head', 'FH')
-const EXTRA=[['spk_conc',/CONCEALED\s+(HEAD|PENDENT|PENDANT)/],['spk_semi',/SEMI.?RECESS/],['spk_pend',/PENDENT|PENDANT|SPRINKLER\s+HEAD|^HEAD\b/],['hydrant',/^FH$|FIRE\s+HYDRANT/],['hosereel',/^FHR$|HOSE\s*REEL/],
+const EXTRA=[['spk_conc',/CONCEALED\s+(HEAD|PENDENT|PENDANT)/],['spk_semi',/SEMI.?RECESS/],['spk_pend',/PENDENT|PENDANT|SPRINKLER\s+HEAD|^HEAD\b|EXPOSED\s+HEAD|^(STANDARD|UPRIGHT)\s+HEAD/],['hydrant',/^FH$|FIRE\s+HYDRANT/],['hosereel',/^FHR$|HOSE\s*REEL/],
   ['speaker',/SPEAKER/],['smoke',/SMOKE/],['heat',/THERMAL|HEAT/],['mcp',/MCP|MANUAL\s+CALL/],['relay',/RELAY|MODULE|\bI\/?O\b/],['sounder',/STROBE|SOUNDER|VAD/],['wip',/\bWIP\b|WARDEN/],['blanket',/BLANKET/],['ext_abe',/EXTINGUISH/]];
 function typeOf(desc,FVE){const d=String(desc||'').toUpperCase().replace(/\s+R$/,'').trim(); const t=FVE&&FVE.classifyDesc?FVE.classifyDesc(d).type:null; if(t) return t;
   const e=EXTRA.find(([,re])=>re.test(d)); return e?e[0]:null}
@@ -57,7 +57,7 @@ function match(tables,annots,FVE,prefer){const groups={};
     g.n++}
   const used=new Set(), map={}, rows=[], G=Object.values(groups);
   const fits=(g,q,isLen)=>isLen?Math.abs((g.total||0)-q)<.02:(g.total!=null?g.total===q&&g.n===q:g.n===q);
-  const key=d=>String(d||'').toUpperCase().replace(/\s+R$/,'').trim();
+  const key=d=>String(d||'').toUpperCase().replace(/\s+R$/,'').replace(/^X\s+/,'').trim();   /* 'X SMOKE DETECTOR' on a demolition sheet is the same device */
   for(const t of tables) for(const r of t.rows){const isLen=/^m$|metre|meter|lm/i.test(r.unit||''); const want=r.colour||(prefer&&prefer[key(r.description)])||null;
     let pick=null, amb=false; const one=G.filter(g=>!used.has(g.key)&&g.line===isLen&&fits(g,r.qty,isLen));
     if(one.length){one.sort((a,b)=>cdist(a.colour,want)-cdist(b.colour,want)); pick=[one[0]]; amb=one.length>1&&(!want||cdist(one[0].colour,want)===cdist(one[1].colour,want))}

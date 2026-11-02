@@ -30,8 +30,8 @@ function consultantOf(models){const votes={};
 
 /* ---------------------------------------------------------------- knowledge base */
 const KBKEY='ft_knowledge';
-// the bundled base (window.FT_KNOWLEDGE, written by npm run learn) or one the estimator imported (localStorage), the imported one first
-function knowledgeBase(){try{const s=localStorage.getItem(KBKEY); if(s) return JSON.parse(s)}catch(e){} return root.FT_KNOWLEDGE&&root.FT_KNOWLEDGE.index&&root.FT_KNOWLEDGE.index.projects&&root.FT_KNOWLEDGE.index.projects.length?root.FT_KNOWLEDGE:null}
+// an imported base (localStorage) first, then the bundled jobs + the jobs learnt in the app (learn-app.js), else the bundled base (npm run learn)
+function knowledgeBase(){try{const s=localStorage.getItem(KBKEY); if(s) return JSON.parse(s)}catch(e){} if(root.FT_LEARN_APP&&FT_LEARN_APP.kb) return FT_LEARN_APP.kb; /* bundled + jobs learnt on this computer */ return root.FT_KNOWLEDGE&&root.FT_KNOWLEDGE.index&&root.FT_KNOWLEDGE.index.projects&&root.FT_KNOWLEDGE.index.projects.length?root.FT_KNOWLEDGE:null}
 function importKnowledge(json){const L=typeof json==='string'?JSON.parse(json):json; if(!L||!L.index) throw new Error('not a FireTake knowledge base'); try{localStorage.setItem(KBKEY,JSON.stringify(L))}catch(e){throw new Error('knowledge base too large for local storage')} return L.index.projects.length}
 
 /* ---------------------------------------------------------------- models */

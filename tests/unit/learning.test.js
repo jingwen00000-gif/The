@@ -187,6 +187,10 @@ test('count tables: rows read, tied to markup groups by total (split groups, col
   assert.deepEqual(Object.entries(CT.match(two, an2, null, { 'RECESSED CEILING SPEAKER': '008040', 'SMOKE DETECTOR': 'ff0000' }).map).map(([k, v]) => [k, v.type]), [['Polygon#008040|25', 'speaker'], ['Polygon#ff0000|25', 'smoke']]);
   assert.ok(CT.match(two, an2, null).rows.every(r => r.ambiguous) && !Object.keys(CT.match(two, an2, null).map).length);
   assert.equal(CT.statusOf('Relocate'), 'relocate'); assert.equal(CT.typeOf('FH'), 'hydrant');
+  // 'Exposed head' is a sprinkler; a demolition sheet's 'X RECESSED CEILING SPEAKER' teaches the colour of 'RECESSED CEILING SPEAKER'
+  assert.equal(CT.typeOf('Exposed head'), 'spk_pend');
+  const x = [{ status: 'new', rows: [{ description: 'X RECESSED CEILING SPEAKER', qty: 25, unit: 'Count', status: 'remove' }, { description: 'SMOKE DETECTOR', qty: 25, unit: 'Count', status: 'new' }] }];
+  assert.deepEqual(Object.keys(CT.match(x, an2, null, { 'RECESSED CEILING SPEAKER': '008040', 'SMOKE DETECTOR': 'ff0000' }).map), ['Polygon#008040|25', 'Polygon#ff0000|25']);
 });
 
 test('metrics: a takeoff counting work items only does not hold existing-to-remain detections against recognition', () => {
