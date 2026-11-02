@@ -165,7 +165,9 @@
     {
      "id": "consultant-library-store",
      "name": "Consultant library persisted in the app per consultant",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/ui.js (localStorage ft_fve_library, consultant from the title block)",
+     "accept": "integration"
     }
    ]
   },
@@ -207,8 +209,10 @@
     {
      "id": "fve-ui",
      "name": "FVE results into the app (marks, runs, BOQ, quote)",
-     "implemented": false,
-     "note": "BOQ / quote already exist in the app; FVE output is not wired into them yet"
+     "implemented": true,
+     "file": "src/fve/ui.js",
+     "accept": "integration",
+     "note": "G key / legend button: FVE + MSME on all sheets, naming dialog for unknown CAD-lettered rows, results table, pending marks (status, relocation pairs) and runs; BOQ / quote read the marks as before"
     }
    ]
   }

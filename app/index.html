@@ -5522,8 +5522,10 @@ async function lgaCommit(d,review){const G=LGA.groups; G.forEach((g,i)=>{const c
   add.forEach(m=>S.marks.push(m)); n=add.length;
   changed(); draw(); toast(`${T('已加入')} ${n} ${T('个构件（待确认）')}${paired?`，${paired} ${T('个移位已与原位置配对（不重复计价）')}`:''}${dup?`，${dup} ${T('个已存在跳过')}`:''}`);
   if(review&&n) rvStart()}
-$('#lgAuto').onclick=legendAutoCount;
-document.addEventListener('keydown',e=>{if((e.key==='g'||e.key==='G')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&currentTab==='takeoff'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&!($('#ftModal')&&$('#ftModal').open)&&!RV.on){e.preventDefault(); legendAutoCount()}});
+// the vector engine (FVE + MSME, src/fve/ui.js) runs the count when it is loaded; this flow stays as the fallback (S.legacyLegend forces it)
+const ftCount=()=>window.FX&&FX.ready&&FX.ready()&&!S.legacyLegend?FX.run():legendAutoCount();
+$('#lgAuto').onclick=ftCount;
+document.addEventListener('keydown',e=>{if((e.key==='g'||e.key==='G')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&currentTab==='takeoff'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&!($('#ftModal')&&$('#ftModal').open)&&!RV.on){e.preventDefault(); ftCount()}});
 // after a PDF is opened: if the sheet carries a legend, say so right away and offer the one-click count
 const _openFiles=openFiles; openFiles=async function(files){await _openFiles.apply(this,arguments); const p=page(); if(!p||p.kind!=='pdf') return;
   const E=await lgEntries(p).catch(()=>[]); const out=$('#detectOut'); if(!E.length||!out) return; const ty=[...new Set(E.map(e=>e.type))];
@@ -5541,9 +5543,10 @@ document.addEventListener('click',e=>{$$('details.ftmenu[open]').forEach(d=>{if(
 const st=document.createElement('style'); st.textContent='#qPtype{display:none!important} #v-passive .card.ptype{display:none!important}'; document.head.appendChild(st);
 const ps=$('#ptypeSeg'); if(ps) ps.title=T('新建：按图纸统计新管线穿过防火墙 / 楼板。翻新：拆除旧管线、既有穿透勘察和整改、非工作时间。决定计价方式、Scope of Work 与 Exclusions');
 setTimeout(()=>{updBadges(); refreshNextbar(); buildSecnav(currentTab)},400);
-window.FT29={rvStart,rvStop,qIssues,lgRows,lga:()=>LGA};
+window.FT29={rvStart,rvStop,qIssues,lgRows,lgCrop,legendAutoCount,lga:()=>LGA};
 })();
 </script>
 
+<script src="../src/fve/ui.js"></script>
 </body>
 </html>

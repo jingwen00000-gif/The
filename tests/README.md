@@ -6,7 +6,7 @@ Every change to recognition is measured, not eyeballed.
 |---|---|
 | `npm run test:all` | unit → integration → regression → validation → performance; non-zero exit if any fails |
 | `npm run test:unit` | `app/fve.js` and `src/fve/symbol-engine/*` in plain Node on a fake pdf.js page; line-coverage gate 80 % |
-| `npm run test:integration` | the real app in headless Chromium on the synthetic project: PDF → geometry → legend → detection → lines (graph / network / rooms are `todo` until those modules exist) |
+| `npm run test:integration` | the real app in headless Chromium on the synthetic project: PDF → geometry → legend → detection → lines (graph / network / rooms are `todo` until those modules exist); `ui.test.js` drives the G key → results table → pending marks / runs |
 | `npm run test:validation [project…] [--strict]` | every project with a `ground-truth.json`: precision / recall / F1, false positives / negatives, type accuracy, cable error; gate F1 ≥ 95, cable accuracy ≥ 95 % |
 | `npm run test:regression` | compares each project with its accepted baseline (`tests/regression/baselines`); `UPDATE_BASELINES=1 npm run test:regression` accepts an intended change |
 | `npm run test:performance` | geometry < 30 s, legend < 10 s, total < 60 s per project |
@@ -23,7 +23,7 @@ Setup on a new machine: `npm install` then `npx playwright install chromium`. No
 ```
 tests/
   unit/            node:test, no browser (fve.test.js, msme/msme.test.js)
-  integration/     real app in Chromium (pipeline.test.js)
+  integration/     real app in Chromium (pipeline.test.js, ui.test.js)
   validation/      run.js (scoring), truth-from-markups.js (ground truth from an estimator's count markups)
   regression/      regression.test.js + baselines/<project>.json
   performance/     run.js
