@@ -62,9 +62,9 @@ test('AS 1670.4: WIP on each floor, bedrooms need a speaker, rooms without one, 
 
 test('combined: standards in order, most severe first, verified flags, per-standard summary', () => {
   const r = C.check([model()], [dev('smoke', 5, 5), dev('ext_abe', 1, 5)], [room('OFFICE', 'OFFICE', 40, 10)], []);
-  assert.deepEqual(r.standards.map(s => [s.id, s.verified]), [['AS 1670.1', false], ['AS 1670.4', true], ['AS 2444', true], ['AS 2441', true]]);
+  assert.deepEqual(r.standards.map(s => [s.id, s.verified]), [['AS 1670.1', true], ['AS 1670.4', true], ['AS 2444', true], ['AS 2441', true]]);
   assert.equal(r.findings[0].level, 'fail'); assert.ok(r.findings.every((f, i) => !i || ['fail', 'warn', 'advisory', 'info'].indexOf(r.findings[i - 1].level) <= ['fail', 'warn', 'advisory', 'info'].indexOf(f.level)));
-  assert.ok(r.findings.some(f => f.standard === 'AS 1670.1' && f.verified === false && f.clause === null));
+  assert.ok(r.findings.some(f => f.standard === 'AS 1670.1' && f.clause === '5.1.2' && f.verified)); assert.ok(r.findings.filter(f => f.verified === false).every(f => f.clause === null), 'only non-clause notes are unverified');
   assert.ok(r.byStandard['AS 2444'].fail === 1 && r.byStandard['AS 1670.1'].fail === 1);
 });
 

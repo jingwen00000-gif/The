@@ -291,7 +291,7 @@
      "implemented": true,
      "file": "src/fve/compliance/",
      "accept": "unit",
-     "note": "AS 1670.4, AS 2444, AS 2441 limits checked against the supplied standards; AS 1670.1 limits are common values, not verified (standard not supplied)"
+     "note": "AS 1670.1:2018, AS 1670.4:2015, AS 2444-2001, AS 2441-2005 limits checked against the supplied standards (level ceilings)"
     }
    ]
   },
