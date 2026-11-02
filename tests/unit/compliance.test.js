@@ -62,7 +62,7 @@ test('AS 1670.4: WIP on each floor, bedrooms need a speaker, rooms without one, 
 
 test('combined: standards in order, most severe first, verified flags, per-standard summary', () => {
   const r = C.check([model()], [dev('smoke', 5, 5), dev('ext_abe', 1, 5)], [room('OFFICE', 'OFFICE', 40, 10)], []);
-  assert.deepEqual(r.standards.map(s => [s.id, s.verified]), [['AS 1670.1', true], ['AS 1670.4', true], ['AS 2444', true], ['AS 2441', true]]);
+  assert.deepEqual(r.standards.map(s => [s.id, s.verified]), [['AS 1670.1', true], ['AS 1670.4', true], ['AS 2118.1', true], ['AS 2444', true], ['AS 2441', true]]);
   assert.equal(r.findings[0].level, 'fail'); assert.ok(r.findings.every((f, i) => !i || ['fail', 'warn', 'advisory', 'info'].indexOf(r.findings[i - 1].level) <= ['fail', 'warn', 'advisory', 'info'].indexOf(f.level)));
   assert.ok(r.findings.some(f => f.standard === 'AS 1670.1' && f.clause === '5.1.2' && f.verified)); assert.ok(r.findings.filter(f => f.verified === false).every(f => f.clause === null), 'only non-clause notes are unverified');
   assert.ok(r.byStandard['AS 2444'].fail === 1 && r.byStandard['AS 1670.1'].fail === 1);
@@ -72,4 +72,33 @@ test('AS 1670.4: rooms without a speaker are one question per sheet, listing the
   const rooms = [room('STORE 1', 'STORE', 4, 4, 0, 0), room('STORE 2', 'STORE', 4, 4, 5, 0), room('WC', 'BATHROOM', 2, 2, 10, 0), room('OFFICE', 'OFFICE', 4, 4, 20, 0)];
   const f = C.check([model()], [dev('speaker', 22, 2), dev('wip', 23, 2)], rooms, [], { only: ['AS 1670.4'] }).findings;
   assert.deepEqual(f.map(x => [x.rule, x.value, x.rooms]), [['room-speaker', 2, ['STORE 1', 'STORE 2']]], 'WC exempt, office has one');
+});
+
+test('AS 2118.1 Light Hazard office 12 × 9 m: a 4 × 4.5 m grid of 6 heads complies; 4 heads fail area, spacing and walls', () => {
+  const r = room('OFFICE', 'OFFICE', 12, 9), grid = [2, 6, 10].flatMap(x => [2.25, 6.75].map(y => dev('spk_pend', x, y)));
+  // 108 m² / 6 = 18 m² ≤ 21 (9.4.2); 4 m and 4.5 m ≤ 4.8 m, 2 m / 2.25 m from walls ≤ 2.4 m (9.4.4)
+  assert.deepEqual(only('AS 2118.1', grid, [r]), []);
+  const four = only('AS 2118.1', [3, 9].flatMap(x => [2.25, 6.75].map(y => dev('spk_pend', x, y))), [r]);
+  // 27 m² per head > 21; nearest head 4.5 m ≤ 4.8 (spacing fine) but 3 m from the end walls > 2.4 m → coverage
+  assert.deepEqual(four.map(f => [f.rule, f.clause, f.level]), [['area-per-head', '9.4.2', 'fail'], ['coverage', '9.4.4 / 9.4.4', 'fail']]);
+  assert.equal(four[0].value, 27); assert.ok(four.every(f => f.verified && f.standard === 'AS 2118.1'));
+  // concealed-space heads protect the void, not the room: they do not count
+  assert.ok(only('AS 2118.1', grid.map(d => ({ ...d, type: 'spk_space' })), [r]).length === 0, 'no room heads → not a sprinklered floor here');
+});
+
+test('AS 2118.1 reduced coverage (9.4.3), Ordinary Hazard (10.4), minimum distances (5.3 / 5.4), rooms without heads (3.1.1 / 3.1.3)', () => {
+  // a 6 × 4 m kitchen in an LH building: one head = 24 m² > 12 m² (9.4.3); two at 1.5 m and 4.5 m: 12 m², 3 m apart, 1.5 m / 2 m from walls
+  // (and it sits 3 m from the end walls > 2.1 m)
+  assert.deepEqual(only('AS 2118.1', [dev('spk_pend', 3, 2)], [room('KITCHEN', 'KITCHEN', 6, 4)]).map(f => [f.rule, f.clause]), [['area-per-head', '9.4.3'], ['coverage', '9.4.3 / 9.4.3']]);
+  assert.deepEqual(only('AS 2118.1', [dev('spk_pend', 1.5, 2), dev('spk_pend', 4.5, 2)], [room('KITCHEN', 'KITCHEN', 6, 4)]), []);
+  // the compliant LH office grid under Ordinary Hazard: 18 m² > 12 m² (10.4.2) and 2.25 m from the side walls > 2.1 m (10.4.6)
+  const grid = [2, 6, 10].flatMap(x => [2.25, 6.75].map(y => dev('spk_pend', x, y)));
+  assert.deepEqual(only('AS 2118.1', grid, [room('OFFICE', 'OFFICE', 12, 9)], { rules: { as2118: { hazard: 'OH' } } }).map(f => [f.rule, f.clause]), [['area-per-head', '10.4.2'], ['coverage', '10.4.4 / 10.4.6']]);
+  // car parks are OH whatever the building (A3.2)
+  assert.ok(only('AS 2118.1', grid, [room('CAR PARK', 'CARPARK', 12, 9)]).some(f => f.clause === '10.4.2'));
+  const close = only('AS 2118.1', [dev('spk_pend', 1, 2), dev('spk_pend', 2.5, 2), dev('spk_pend', .05, 3.5)], [room('STORE 2', 'STORE', 4, 4)]);
+  assert.ok(close.some(f => f.rule === 'min-spacing' && f.clause === '5.3' && f.value === 1.5)); assert.ok(close.some(f => f.rule === 'wall-min' && f.clause === '5.4'));
+  const none = only('AS 2118.1', [dev('spk_pend', 2, 2)], [room('OFFICE', 'OFFICE', 4, 4), room('STORE 1', 'STORE', 4, 4, 10, 0), room('STAIR 1', 'STAIR', 3, 5, 20, 0)]);
+  assert.deepEqual(none.map(f => [f.rule, f.clause, f.level, f.room]), [['no-sprinklers', '3.1.1', 'warn', 'STORE 1'], ['no-sprinklers', '3.1.3', 'advisory', 'STAIR 1']]);
+  assert.deepEqual(only('AS 2118.1', [dev('smoke', 2, 2)], [room('OFFICE', 'OFFICE', 4, 4)]), [], 'no sprinklers in the project: not checked');
 });

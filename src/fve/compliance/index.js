@@ -6,7 +6,7 @@
 (function(root){
 'use strict';
 const NS=root.FVE_COMPLIANCE=root.FVE_COMPLIANCE||{standards:{}};
-const ORDER=['AS 1670.1','AS 1670.4','AS 2444','AS 2441'], LEVEL={fail:0,warn:1,advisory:2,info:3};
+const ORDER=['AS 1670.1','AS 1670.4','AS 2118.1','AS 2444','AS 2441'], LEVEL={fail:0,warn:1,advisory:2,info:3};
 function check(models,dets,rooms,loops,opts){opts=opts||{}; let F=[];
   for(const k of ORDER){const s=NS.standards[k]; if(!s||(opts.only&&!opts.only.includes(k))) continue; F=F.concat(s.check(models,dets,rooms,loops,opts).map(f=>({standard:k,...f})))}
   F.sort((a,b)=>LEVEL[a.level]-LEVEL[b.level]||ORDER.indexOf(a.standard)-ORDER.indexOf(b.standard));
@@ -14,5 +14,5 @@ function check(models,dets,rooms,loops,opts){opts=opts||{}; let F=[];
   return {findings:F,summary,byStandard,standards:ORDER.filter(k=>NS.standards[k]).map(k=>({id:k,title:NS.standards[k].title,verified:true})),
     isolators:F.filter(f=>f.rule==='isolators').reduce((a,f)=>a+(f.value||0),0)}}
 NS.check=check; NS.ORDER=ORDER;
-if(typeof module!=='undefined'&&module.exports){require('./common'); require('./as1670-1'); require('./as1670-4'); require('./as2444'); require('./as2441'); module.exports=NS}
+if(typeof module!=='undefined'&&module.exports){require('./common'); require('./as1670-1'); require('./as1670-4'); require('./as2118-1'); require('./as2444'); require('./as2441'); module.exports=NS}
 })(typeof window!=='undefined'?window:globalThis);
