@@ -18,6 +18,8 @@ const fnv=s=>{let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i); 
 const titleCase=s=>String(s).toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()).replace(/\bPty\b/,'Pty').replace(/\bLtd\b/,'Ltd');
 const grey=c=>{if(!c) return true; const r=parseInt(c.slice(0,2),16), g=parseInt(c.slice(2,4),16), b=parseInt(c.slice(4,6),16); return Math.max(r,g,b)-Math.min(r,g,b)<40};
 
+// 'Copyright Lucid Consulting', '© 2024 Lucid Consulting', 'Prepared by …': the firm is what follows
+const cleanName=n=>String(n||'').replace(/^\s*(?:(?:(?:copyright|property\s+of|prepared\s+by|designed\s+by|drawn\s+by|of)\b|©|\(c\))[\s.:]*|\d{4}\s+)+/i,'').trim();
 function titleZone(m,FVE){const z=FVE&&FVE.titleBlock?FVE.titleBlock(m):[]; return z.length?z:[[m.page.w*.78,0,m.page.w,m.page.h],[0,m.page.h*.85,m.page.w,m.page.h]]}
 const inZ=(z,x,y)=>z.some(b=>x>=b[0]&&x<=b[2]&&y>=b[1]&&y<=b[3]);
 // the logo: coloured (not black / grey / white) objects in the title block
@@ -28,7 +30,7 @@ function logoHash(m,FVE){const z=titleZone(m,FVE); const objs=m.objects.filter(o
 
 // known: consultant-library entries [{consultant, aliases:{}, emailDomains:{}, logoHashes:{}}]
 function extract(models,opts){opts=opts||{}; const FVE=opts.FVE||root.FVE; const known=opts.known||[]; const votes={}, ev=[], domains=new Set(), names={}; let logo=null;
-  const vote=(name,w,src,val)=>{if(!name) return; const k=ckey(name); if(!k) return; votes[k]=(votes[k]||0)+w; names[k]=names[k]||name; ev.push({src,value:val||name,w})};
+  const vote=(name,w,src,val)=>{name=cleanName(name); if(!name) return; const k=ckey(name); if(!k) return; votes[k]=(votes[k]||0)+w; names[k]=names[k]||name; ev.push({src,value:val||name,w})};
   if(opts.metadata&&opts.metadata.consultant) vote(opts.metadata.consultant,10,'metadata');
   for(const m of models){const z=titleZone(m,FVE); const tb=m.texts.filter(t=>inZ(z,t.cx,t.cy)); const TL=(m.lines||[]).filter(l=>inZ(z,l.x,l.cy));
     // role columns: words under CLIENT / ARCHITECT / BUILDER / PROJECT are not the consultant; words under CONSULTANT / ENGINEER are
@@ -52,6 +54,6 @@ function extract(models,opts){opts=opts||{}; const FVE=opts.FVE||root.FVE; const
   return {consultant:K?K.consultant:consultant,key:consultant?ckey(K?K.consultant:consultant):null,known:!!K,score:best?best[1]:0,evidence:ev,emailDomains:[...domains],logoHash:logo,
     aliases:[...new Set(Object.values(names).filter(n=>consultant&&n!==consultant))]}}
 
-NS.consultant={extract,logoHash,ckey};
+NS.consultant={extract,logoHash,ckey,cleanName};
 if(typeof module!=='undefined'&&module.exports) module.exports=NS.consultant;
 })(typeof window!=='undefined'?window:globalThis);
