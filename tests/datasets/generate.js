@@ -92,7 +92,7 @@ function planSheet(level, seed, cols, rows) {
 function project(name, plans) {
   const sheets = [coverSheet(), legendSheet()]; const gt = { project: name, generated: true, units: 'PDF points, top-left origin; page = sheet index (0-based)', devices: [], networks: [], rooms: [], lines: {} };
   plans.forEach(([level, seed, c, r]) => { const s = planSheet(level, seed, c, r), page = sheets.length; sheets.push(s.p);
-    s.devices.forEach(d => gt.devices.push({ ...d, page })); gt.networks.push(...s.networks); gt.rooms.push(...s.rooms);
+    s.devices.forEach(d => gt.devices.push({ ...d, page })); gt.networks.push(...s.networks.map(n => ({ ...n, page }))); gt.rooms.push(...s.rooms.map(r => ({ ...r, page })));
     for (const [k, v] of Object.entries(s.lines)) gt.lines[k] = +((gt.lines[k] || 0) + v).toFixed(2); });
   gt.summary = gt.devices.reduce((o, d) => (o[d.type] = (o[d.type] || 0) + 1, o), {});
   const dir = path.join(__dirname, name); fs.mkdirSync(dir, { recursive: true });

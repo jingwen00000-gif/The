@@ -90,7 +90,7 @@ function forRecognition(L,opts){opts=opts||{}; const ex=opts.excludeProject||nul
   const abbrev={}; if(cons) for(const [ab,c] of Object.entries(cons.abbreviations||{})){const [t,n]=Object.entries(c).sort((a,b)=>b[1]-a[1])[0]; if(n>=1) abbrev[ab]=t}
   const statusColours={}; if(cons) for(const [col,c] of Object.entries(cons.conventions.statusColours||{})) statusColours[col]=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
   const net=L.networks&&L.networks.schema?L.networks.entries:(L.networks||{}); const networkPriors=(net.circuits||[]).filter(c=>c.share&&keep(c)).map(c=>({circuit:c.circuit,share:c.share,loops:c.loops}));
-  return {consultant:cons?cons.consultant:(opts.consultant||null),consultantKnown:!!cons,library,templates,abbrev,statusColours,networkPriors,rooms:ent(L.rooms),symbols:symbols.length}}
+  return {consultant:cons?cons.consultant:(opts.consultant||null),consultantKnown:!!cons,library,templates,abbrev,statusColours,networkPriors,rooms:ent(L.rooms).filter(keep),loops:net.loops||null,symbols:symbols.length}}
 
 /* ---- Node file IO ---- */
 function fsx(){return typeof require==='function'?{fs:require('fs'),path:require('path')}:null}

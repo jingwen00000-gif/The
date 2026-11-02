@@ -67,7 +67,10 @@ async function fveCount(){
       const p=S.pages.find(x=>x.id===m.page.id); const Tp=await fveTemplate(e); if(!p||!Tp) return [];
       return (await vsmSearch(p,Tp,q||1)).filter(h=>h.score>=.85)}});
     const warn=FVE.verify(models,D,dets), lines=FVE.measureLines(models,D);
-    FX.last={models,D,dets,warn,lines,consultant:FX.consultant,ms:performance.now()-t0};
+    // loops (drawn cable traced; estimated where no cable reaches) and rooms; room expectations from finished jobs become questions
+    const loops=root.FVE_LOOPS?FVE_LOOPS.run(models,D,dets,{knowledge:K}):[], rooms=root.FVE_ROOMS?FVE_ROOMS.detect(models,dets):[];
+    if(root.FVE_ROOMS) warn.push(...FVE_ROOMS.expectations(rooms,K));
+    FX.last={models,D,dets,warn,lines,loops,rooms,consultant:FX.consultant,ms:performance.now()-t0};
     if(!dets.length&&!lines.length){say(T('读到了图例，但在平面图上没有找到相同的符号。可以用“框选图标 · 全图搜索”。')); return}
     say(`${T('FVE 识别完成')}：<b>${dets.length}</b> ${T('个设备')}${lines.length?`，${lines.length} ${T('种管线 / 电缆')}`:''}（${Math.round(FX.last.ms/100)/10}s）`);
     showResults(FX.last)}
@@ -120,9 +123,15 @@ function showResults(R){const G=groupsOf(R); FX.groups=G; const multi=new Set(R.
     <td><select data-fxls="${i}">${Object.keys(SYS).filter(s=>SYS[s].mat).map(s=>`<option value="${s}" ${s===sys?'selected':''}>${SYS[s].zh}</option>`).join('')}</select></td>
     <td class="r num"><b>${l.total?Math.round(l.total*10)/10+' m':'—'}</b>${l.unscaled?`<div class="note">${T('部分图纸无比例')}</div>`:''}</td></tr>`}).join('');
   const W=R.warn.filter(w=>w.level!=='info').slice(0,12);
+  const L=R.loops||[]; const circ=c=>c==='ewis'?T('EWIS 广播回路'):T('探测回路');
+  const looprows=L.map((l,i)=>`<tr><td>${l.source==='estimated'?`<input type="checkbox" data-fxloop="${i}" ${l.length_m?'checked':''}>`:''}</td><td>${pname(l.page)} · ${esc(l.id)}<div class="note">${circ(l.circuit)} · ${l.source==='drawn'?T('按图纸电缆'):T('估算')+(l.note==='no cable drawn'?'（'+T('图纸未画电缆')+'）':'（'+T('电缆未连到的设备')+'）')}</div></td>
+    <td class="r num"><b>${l.devices}</b>${l.panel?`<div class="note">${T('含 FIP')}</div>`:''}</td><td class="r num"><b>${l.length_m!=null?l.length_m+' m':'—'}</b>${l.historical_m?`<div class="note">${T('历史')} ≈ ${l.historical_m} m</div>`:''}</td><td class="note" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.pattern)}${l.closed&&l.source==='drawn'?' · '+T('闭合环路'):''}</td></tr>`).join('');
+  const RM=R.rooms||[];
   const d=ftModal(T('FVE 识别结果'),`<p class="note" style="margin:0 0 8px">${T('按图例在全部图纸上找到的设备（图例本身和图签不计）。置信度来自几何 / 文字 / 图例 / 上下文 / 回路五层证据。加入后为“待确认”，可以逐个核对。')}${R.consultant?` · ${T('设计单位')} ${esc(R.consultant)}`:''}${FX.knowledge&&FX.knowledge.consultantKnown?` · ${T('已用历史项目知识')}`:''}</p>
     <div style="max-height:44vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('设备')}</th><th class="r">${T('数量')}</th><th class="r">${T('置信度')}</th><th>${T('证据')}</th></tr></thead><tbody>${rows||`<tr><td colspan="5" class="note">${T('没有找到设备')}</td></tr>`}</tbody></table></div>
     ${lrows?`<h4 style="margin:12px 0 4px">${T('管线 / 电缆（按图例线型量取）')}</h4><div style="max-height:22vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('图例线型')}</th><th>${T('系统')}</th><th class="r">${T('长度')}</th></tr></thead><tbody>${lrows}</tbody></table></div>`:''}
+    ${looprows?`<h4 style="margin:12px 0 4px">${T('回路与回路长度')}</h4><div style="max-height:22vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${T('回路')}</th><th class="r">${T('设备')}</th><th class="r">${T('长度')}</th><th>${T('顺序')}</th></tr></thead><tbody>${looprows}</tbody></table></div><p class="note" style="margin:4px 0 0">${T('按图纸画的回路电缆已在上面的管线 / 电缆中计入；勾选的估算回路会加入为待确认电缆（正交走线 + 10% 余量 + 每个设备 1.5 m）。')}</p>`:''}
+    ${RM.length?`<p class="note" style="margin:8px 0 0">${T('识别到房间')} ${RM.length} ${T('个')}${RM.some(r=>r.area_m2)?`，${T('总面积')} ${Math.round(RM.reduce((a,r)=>a+(r.area_m2||0),0))} m²`:''}</p>`:''}
     ${W.length?`<details style="margin-top:10px"><summary>${T('需要注意')}（${W.length}）</summary><ul class="note">${W.map(w=>`<li>${esc(w.msg)}</li>`).join('')}</ul></details>`:''}`,
     [{t:T('取消')},{t:T('加入计数'),fn:()=>commit(d,false)},{t:T('加入并逐个核对'),cls:'primary',fn:()=>commit(d,true)}]);
   d.style.width='min(980px,96vw)'; d.addEventListener('close',()=>{d.style.width=''},{once:true}); return d}
@@ -144,6 +153,11 @@ function commit(d,review){const R=FX.last, G=FX.groups||[]; if(!R) return; snap(
     for(const [pid,pg] of Object.entries(l.pages)){const p=S.pages.find(q=>q.id===pid); const mpu=(pg.m&&pg.paper)?pg.m/pg.paper:(p&&p.mPerUnit)||null;
       for(const pts of pg.chains||[]){const L=pts.reduce((a,q,k)=>k?a+Math.hypot(q[0]-pts[k-1][0],q[1]-pts[k-1][1]):0,0); if(mpu&&L*mpu<.3) continue; if(pts.length<2) continue;
         S.runs.push({id:uid(),page:pid,sys,mat,dn,pts:pts.map(q=>[q[0],q[1]]),extra:0,pending:true,src:'fve',...(l.status==='remove'&&isRef()?{demo:true}:{})}); runs++}}});
+  // estimated loop cable: one pending run along the estimated route (orthogonal), its slack and drops as the run's extra metres
+  (R.loops||[]).forEach((l,i)=>{const c=d.querySelector(`[data-fxloop="${i}"]`); if(!c||!c.checked||!l.route||l.route.length<2) return; const p=S.pages.find(q=>q.id===l.page);
+    const pts=[]; for(let k=0;k<l.route.length;k++){const q=l.route[k]; if(k){const pr=l.route[k-1]; if(pr[0]!==q[0]&&pr[1]!==q[1]) pts.push([q[0],pr[1]])} pts.push([q[0],q[1]])}
+    const mpu=p&&p.mPerUnit; const base=mpu?pts.reduce((a,q,k)=>k?a+Math.hypot(q[0]-pts[k-1][0],q[1]-pts[k-1][1]):0,0)*mpu:null;
+    S.runs.push({id:uid(),page:l.page,sys:'DET',mat:'CBH',dn:l.circuit==='ewis'?3:1,pts,extra:base!=null&&l.length_m?Math.max(0,Math.round((l.length_m-base)*10)/10):0,pending:true,src:'fve-loop-estimate',loop:l.id}); runs++});
   changed(); draw();
   toast(`${T('已加入')} ${add.length} ${T('个构件（待确认）')}${runs?`，${runs} ${T('段管线 / 电缆')}`:''}${paired?`，${paired} ${T('个移位已与原位置配对（不重复计价）')}`:''}${dup?`，${dup} ${T('个已存在跳过')}`:''}`);
   if(review&&add.length&&root.FT29&&FT29.rvStart) FT29.rvStart();

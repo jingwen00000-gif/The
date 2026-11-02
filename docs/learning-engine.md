@@ -95,13 +95,22 @@ pricing-extractor, knowledge-builder, learning-database, cli (`npm run learn`) �
 | 2 Drawing difference | done (annotations, flattened vector markups, added text, revision sheets) |
 | 3 Symbol knowledge | done; templates, fingerprints, abbreviations |
 | 4 Consultant knowledge | done; role fields, copyright, e-mail, logo fingerprint |
-| 5 Network knowledge | patterns, circuit mix, transitions, metres / device — from drawn cable line types; loops without drawn cable wait for the loop module (task 3 of the earlier plan) |
-| 6 Room knowledge | rooms with closed outlines; expected-device priors are stored, not yet used in scoring (Stage 3) |
-| 7 Pricing knowledge | done; not yet fed into the app's rate library (next: suggest rates from `pricing-library` in the quote page) |
+| 5 Network knowledge | patterns, circuit mix, transitions, metres / device; **used**: the circuit mix is a prior in MSME's network layer (≥ 2 loops), metres / device is shown beside estimated loops |
+| 6 Room knowledge | rooms with closed outlines; **used**: the room engine finds this project's rooms and asks about a room type missing a device earlier jobs had in ≥ 80 % of ≥ 3 rooms (never adds devices) |
+| 7 Pricing knowledge | done; **used**: rates page → 按历史项目建议单价 shows current vs the jobs' median per item / work type / cable and writes the ticked ones into this project's rates (`src/fve/rates-from-history.js`) |
 | 8 Knowledge graph | done (per project) |
-| Integration | historical + consultant layers in MSME, historical symbols in the dictionary, consultant colour code; network priors and room expectations are exposed by `forRecognition` but not yet scored |
+| Integration | historical + consultant layers in MSME, historical symbols in the dictionary, consultant colour code, network priors, room expectations, rate suggestions |
 
-## 7. Measured (not projected)
+## 7. Loops and rooms (current project)
+
+`src/fve/network/loop-engine.js`: drawn loops from the legend's cable line types (dash gaps bridged, chains broken at device symbols merged, a
+device is on the loop where the cable turns or ends at it or runs through it; order, closed / radial, panel, metres) and estimated loops for
+devices no cable reaches (orthogonal route from the FIP, nearest neighbour + 2-opt, ≤ 125 devices per loop, + 10 % slack + 1.5 m drop per
+device, always labelled). `src/fve/rooms/room-engine.js`: named rooms in closed outlines with area and devices. Synthetic: 8/8 loops,
+length error 0 %, device count within 5 %; 234/234 rooms, area 100 %. In the app the results dialog lists both; estimated loops can be
+added as pending cable runs.
+
+## 8. Measured (not projected)
 
 | Case | Without knowledge | With knowledge |
 |---|---|---|
@@ -114,7 +123,7 @@ The accuracy bands in the brief (95–97 % with a knowledge base, 97–98 % with
 They need real finished jobs from several consultants to measure: each new job in `data/training-projects` that shares a consultant
 with a scored project is the evidence.
 
-## 8. Impact on existing code
+## 9. Impact on existing code
 
 - No behaviour change without a knowledge base (fusion ignores silent layers; dictionary adds nothing).
 - With one: projects with a legend only gain this consultant's symbols for devices their legend lacks; sets without a legend gain the most.

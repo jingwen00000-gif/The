@@ -251,12 +251,17 @@
     {
      "id": "learning-room-priors",
      "name": "Room expectations used in recognition / verification",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/rooms/room-engine.js (expectations)",
+     "accept": "unit",
+     "note": "questions for the estimator, never devices added"
     },
     {
      "id": "learning-pricing-app",
      "name": "Learnt rates suggested in the app's quote",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/rates-from-history.js",
+     "accept": "integration"
     }
    ]
   },
@@ -267,12 +272,18 @@
     {
      "id": "room-detection",
      "name": "Room detection (walls + room names → closed spaces)",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/rooms/room-engine.js",
+     "accept": "validation",
+     "note": "named rooms inside closed black / grey outlines (synthetic 234/234); rooms drawn as loose wall lines not yet"
     },
     {
      "id": "room-area",
      "name": "Room area",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/rooms/room-engine.js",
+     "accept": "validation",
+     "note": "area from the outline and the drawing scale (synthetic area accuracy 100 %)"
     },
     {
      "id": "as1670",
@@ -288,12 +299,18 @@
     {
      "id": "network-graph",
      "name": "Device / cable graph",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/network/loop-engine.js",
+     "accept": "integration",
+     "note": "devices joined by the legend cable line types; chains broken at device symbols merged"
     },
     {
      "id": "loop-detection",
      "name": "Loop detection and loop cable length",
-     "implemented": false
+     "implemented": true,
+     "file": "src/fve/network/loop-engine.js",
+     "accept": "validation",
+     "note": "drawn loops: devices, order, closed / radial, panel, metres; estimated loops where no cable reaches; synthetic 8/8 loops, length error 0 %"
     },
     {
      "id": "fve-ui",

@@ -1,13 +1,13 @@
 # FireTake benchmark
 
-Generated 2026-11-02T03:20:28.520Z · engine app/fve.js 1.0.0
+Generated 2026-11-02T03:41:12.533Z · engine app/fve.js 1.0.0
 
 ## Test suites
 
 | Suite | Result | Detail |
 |---|---|---|
-| Unit | PASS | 42/42 passed, coverage 96.8 % lines / 78.4 % branches |
-| Integration | PASS | 10/13 passed, 3 todo (modules not implemented) |
+| Unit | PASS | 48/48 passed, coverage 96.5 % lines / 77.9 % branches |
+| Integration | PASS | 14/14 passed |
 | Regression | PASS | 5/5 passed |
 
 ## Geometry extraction and legend detection
@@ -16,9 +16,9 @@ Generated 2026-11-02T03:20:28.520Z · engine app/fve.js 1.0.0
 |---|---|---|---|---|
 | synthetic-basic | 4 | 191 | 0.1 | 0 |
 | synthetic-large | 8 | 1263 | 0.1 | 0 |
-| 383-kent | 3 | 215326 | 5.1 | 0.1 |
-| 44-mandarin | 8 | 122685 | 7.199999999999999 | 0 |
-| 443-willoughby | 8 | 118539 | 1.6 | 0 |
+| 383-kent | 3 | 215326 | 6.3 | 0.1 |
+| 44-mandarin | 8 | 122685 | 8.2 | 0 |
+| 443-willoughby | 8 | 118539 | 1.7000000000000002 | 0 |
 
 ## Device recognition
 
@@ -65,9 +65,31 @@ Generated 2026-11-02T03:20:28.520Z · engine app/fve.js 1.0.0
 | synthetic-large | FIRE SPRINKLER RANGE PIPEWORK | 957.2 | 957.2 | 0 |
 | synthetic-large | FIRE DETECTION LOOP CABLE | 1941.5 | 1941.5 | 0 |
 
-## Loop detection · Room detection · Compliance
+## Loop detection
 
-Not implemented yet (Stage 3 room intelligence, Stage 4 network graph). Ground truth for loops and rooms exists in the synthetic datasets, so these sections fill in as soon as the modules land.
+Drawn loops matched to ground truth on their sheet: devices within 10 %, length within 5 %. Estimated loops (no cable reaches the devices) are reported by the app, not scored.
+
+| Project | Loop | Expected devices | Found | Device error % | Expected m | Found m | Length error % | Matched |
+|---|---|---|---|---|---|---|---|---|
+| synthetic-basic | LOOP-L1 | 19 | 20 | 5.3 | 170.09 | 170.09 | 0 | yes |
+| synthetic-basic | LOOP-L2 | 20 | 21 | 5 | 173.43 | 173.43 | 0 | yes |
+| synthetic-large | LOOP-L1 | 56 | 57 | 1.8 | 330.68 | 330.68 | 0 | yes |
+| synthetic-large | LOOP-L2 | 53 | 54 | 1.9 | 321.92 | 321.92 | 0 | yes |
+| synthetic-large | LOOP-L3 | 55 | 55 | 0 | 326.58 | 326.58 | 0 | yes |
+| synthetic-large | LOOP-L4 | 48 | 49 | 2.1 | 311.71 | 311.71 | 0 | yes |
+| synthetic-large | LOOP-L5 | 52 | 54 | 3.8 | 320.53 | 320.53 | 0 | yes |
+| synthetic-large | LOOP-L6 | 56 | 56 | 0 | 330.08 | 330.08 | 0 | yes |
+
+## Room detection
+
+| Project | Expected | Found | Matched by name | Detection % | Area accuracy % |
+|---|---|---|---|---|---|
+| synthetic-basic | 24 | 24 | 24 | 100 | 100 |
+| synthetic-large | 210 | 210 | 210 | 100 | 100 |
+
+## Compliance
+
+AS 1670 checks: not implemented yet.
 
 ## Processing time
 
@@ -75,6 +97,6 @@ Not implemented yet (Stage 3 room intelligence, Stage 4 network graph). Ground t
 |---|---|---|---|---|---|---|
 | synthetic-basic | 0.1 | 0 | 0.1 | n/a | 0.2 | PASS |
 | synthetic-large | 0.1 | 0 | 0.2 | n/a | 0.3 | PASS |
-| 383-kent | 5.1 | 0.1 | 42.3 | n/a | 47.5 | PASS |
-| 44-mandarin | 7.199999999999999 | 0 | 48.3 | n/a | 55.7 | PASS |
-| 443-willoughby | 1.6 | 0 | 12.2 | n/a | 13.9 | PASS |
+| 383-kent | 6.3 | 0.1 | 43.2 | n/a | 49.6 | PASS |
+| 44-mandarin | 8.2 | 0 | 47.4 | n/a | 55.6 | PASS |
+| 443-willoughby | 1.7000000000000002 | 0 | 11.7 | n/a | 13.5 | PASS |

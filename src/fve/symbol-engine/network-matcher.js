@@ -25,6 +25,10 @@ function score(cand,ctx){const nets=ctx.networks&&ctx.networks[cand.page]; if(!n
   const s={}; const mem=(ctx.netMembers&&ctx.netMembers[n.id]||[]).filter(l=>l.ref!==cand.ref);
   if(mem.length){const c={}; mem.forEach(l=>c[l.device]=(c[l.device]||0)+1); const k=Math.min(1,mem.length/3); for(const [t,v] of Object.entries(c)) s[t]=(v/mem.length)*k}
   const pr=FAMILY_PRIOR.find(([re])=>re.test(String(n.desc).toUpperCase())); if(pr) for(const [t,v] of Object.entries(pr[1])) if(!(s[t]>=v)) s[t]=Math.max(s[t]||0,v*(mem.length?.5:1));
+  // what finished jobs found on circuits of this kind (Learning Engine network library): the share of each device on such loops
+  const K=ctx.knowledge, circ=/EWIS|SPEAKER|WARNING|EVAC|\bPA\b/.test(String(n.desc).toUpperCase())?'ewis':'detection';
+  const np=K&&(K.networkPriors||[]).find(p=>p.circuit===circ&&p.loops>=2);
+  if(np) for(const [t,sh] of Object.entries(np.share||{})) if(sh>=.1){const v=(.4+.4*sh)*(mem.length?.5:1); if(!(s[t]>=v)) s[t]=v}
   return {scores:s,ev:[{src:'network',network:n.id,desc:n.desc,members:mem.length}],network:n.id}}
 
 NS.network={build,attach,score,FAMILY_PRIOR};

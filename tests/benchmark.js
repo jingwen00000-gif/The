@@ -19,7 +19,11 @@ const per = V.rows.filter(r => det(r.project)).map(r => [r.project, det(r.projec
 if (per.length) { L.push('', '### By device family', '', '| Project | Family | Truth | Found | False alarms |', '|---|---|---|---|---|'); for (const [n, bt] of per) for (const [k, v] of Object.entries(bt)) L.push(`| ${n} | ${k} | ${v.truth} | ${v.tp} | ${v.fp} |`); }
 L.push('', '## Cable / pipe lengths', '', '| Project | Line type | Expected m | Actual m | Error % |', '|---|---|---|---|---|');
 for (const r of V.rows) { const d = det(r.project); if (d) for (const c of d.cables) L.push(`| ${r.project} | ${c.loop} | ${c.expected} | ${c.actual} | ${c.errorPct} |`); }
-L.push('', '## Loop detection · Room detection · Compliance', '', 'Not implemented yet (Stage 3 room intelligence, Stage 4 network graph). Ground truth for loops and rooms exists in the synthetic datasets, so these sections fill in as soon as the modules land.', '');
+L.push('', '## Loop detection', '', 'Drawn loops matched to ground truth on their sheet: devices within 10 %, length within 5 %. Estimated loops (no cable reaches the devices) are reported by the app, not scored.', '', '| Project | Loop | Expected devices | Found | Device error % | Expected m | Found m | Length error % | Matched |', '|---|---|---|---|---|---|---|---|---|');
+for (const r of V.rows) { const d = det(r.project); if (d && d.network) for (const l of d.network.loops) L.push(`| ${r.project} | ${l.id} | ${l.expectedDevices} | ${l.devices ?? '–'} | ${l.devicesErrorPct ?? '–'} | ${l.expected_m} | ${l.length_m ?? '–'} | ${l.lengthErrorPct ?? '–'} | ${l.matched ? 'yes' : 'no'} |`); }
+L.push('', '## Room detection', '', '| Project | Expected | Found | Matched by name | Detection % | Area accuracy % |', '|---|---|---|---|---|---|');
+for (const r of V.rows) { const d = det(r.project); if (d && d.rooms) L.push(`| ${r.project} | ${d.rooms.expected} | ${d.rooms.found} | ${d.rooms.matched} | ${d.rooms.roomDetection} | ${d.rooms.areaAccuracy ?? '–'} |`); }
+L.push('', '## Compliance', '', 'AS 1670 checks: not implemented yet.', '');
 L.push('## Processing time', '', '| Project | Geometry s | Legend s | Detection s | Network s | Total s | Target ≤ 60 s |', '|---|---|---|---|---|---|---|');
 for (const r of P.rows) L.push(`| ${r.project} | ${r.geometry_s} | ${r.legend_s} | ${r.detect_s} | n/a | ${r.total_s} | ${r.ok.total ? 'PASS' : 'FAIL'} |`);
 fs.mkdirSync(path.join(ROOT, 'benchmarks'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'benchmarks/latest.md'), L.join('\n') + '\n');

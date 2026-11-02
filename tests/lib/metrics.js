@@ -49,4 +49,27 @@ function scoreCounts(expected, dets) {
 
 function scoreLength(expected, actual) { return { expected: r1(expected), actual: r1(actual), errorPct: expected ? r1(100 * Math.abs(actual - expected) / expected) : null }; }
 
-module.exports = { scoreDevices, scoreCounts, scoreLength, norm, fam, ALIAS, FAMILY };
+// loops: each ground-truth loop matched to a found loop on its sheet (most devices first); matched when devices are within 10 % and length
+// within 5 %. Estimated loops count only for ground truth marked estimated (a drawn loop is measured, not guessed).
+function scoreLoops(truth, loops) {
+  const used = new Set(), rows = [];
+  for (const t of truth) {
+    const cand = loops.filter((l, i) => !used.has(i) && l.page === t.page && (t.estimated || l.source === 'drawn') && (!t.circuit || l.circuit === t.circuit))
+      .map(l => ({ l, i: loops.indexOf(l), d: Math.abs(l.devices - t.devices) })).sort((a, b) => a.d - b.d)[0];
+    if (cand) used.add(cand.i);
+    const devErr = cand ? r1(100 * Math.abs(cand.l.devices - t.devices) / (t.devices || 1)) : null, lenErr = cand && t.length_m && cand.l.length_m != null ? r1(100 * Math.abs(cand.l.length_m - t.length_m) / t.length_m) : null;
+    rows.push({ id: t.id, page: t.page, expectedDevices: t.devices, devices: cand ? cand.l.devices : null, devicesErrorPct: devErr, expected_m: t.length_m, length_m: cand ? cand.l.length_m : null, lengthErrorPct: lenErr,
+      matched: !!cand && devErr <= 10 && (lenErr == null || lenErr <= 5), closed: cand ? cand.l.closed : null });
+  }
+  const m = rows.filter(r => r.matched).length, le = rows.filter(r => r.lengthErrorPct != null);
+  return { expectedLoops: truth.length, detectedLoops: loops.filter(l => l.source === 'drawn').length, estimatedLoops: loops.filter(l => l.source === 'estimated').length, matched: m,
+    accuracy: truth.length ? r1(100 * m / truth.length) : null, lengthErrorPct: le.length ? r1(le.reduce((a, r) => a + r.lengthErrorPct, 0) / le.length) : null, loops: rows };
+}
+// rooms: matched by sheet and name; area error on the matched ones
+function scoreRooms(truth, rooms) {
+  const used = new Set(); let named = 0; const errs = [];
+  for (const t of truth) { const i = rooms.findIndex((r, k) => !used.has(k) && r.page === t.page && String(r.name).toUpperCase() === String(t.name).toUpperCase()); if (i < 0) continue; used.add(i); named++; if (t.area && rooms[i].area_m2) errs.push(100 * Math.abs(rooms[i].area_m2 - t.area) / t.area); }
+  return { expected: truth.length, found: rooms.length, matched: named, roomDetection: truth.length ? r1(100 * named / truth.length) : null, areaAccuracy: errs.length ? r1(100 - errs.reduce((a, b) => a + b, 0) / errs.length) : null };
+}
+
+module.exports = { scoreLoops, scoreRooms, scoreDevices, scoreCounts, scoreLength, norm, fam, ALIAS, FAMILY };

@@ -558,135 +558,161 @@
    "id": "LOOP-L1",
    "type": "FIRE_LOOP",
    "devices": 19,
-   "length_m": 170.09
+   "length_m": 170.09,
+   "page": 2
   },
   {
    "id": "LOOP-L2",
    "type": "FIRE_LOOP",
    "devices": 20,
-   "length_m": 173.43
+   "length_m": 173.43,
+   "page": 3
   }
  ],
  "rooms": [
   {
    "name": "STORE",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "KITCHEN",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "OFFICE",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "CORRIDOR",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "LOBBY",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "COMMS",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "OFFICE",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "OFFICE",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "MEETING",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "PLANT ROOM",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "STORE",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "KITCHEN",
    "level": "L01",
-   "area": 64.88
+   "area": 64.88,
+   "page": 2
   },
   {
    "name": "LOBBY",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "COMMS",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "OFFICE",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "OFFICE",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "MEETING",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "PLANT ROOM",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "STORE",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "KITCHEN",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "OFFICE",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "CORRIDOR",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "LOBBY",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   },
   {
    "name": "COMMS",
    "level": "L02",
-   "area": 64.88
+   "area": 64.88,
+   "page": 3
   }
  ],
  "lines": {

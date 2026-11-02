@@ -2,10 +2,10 @@
 // npm run test:validation — every project with a ground-truth.json (validation-projects/* and tests/datasets/*):
 // runs the engine, compares with ground truth, writes tests/results/validation/<project>.json and a summary.
 // Gates (tests/modules.json): device recognition F1 and cable accuracy on scored projects. Modules that do not exist yet
-// (loops, rooms, compliance) are reported NOT IMPLEMENTED; --strict makes that a failure too.
+// (compliance) is reported NOT IMPLEMENTED; --strict makes that a failure too. Loops and rooms are scored against ground truth when it has them.
 const fs = require('fs'), path = require('path');
 const { openApp, analyse } = require('../lib/harness');
-const { scoreDevices, scoreLength } = require('../lib/metrics');
+const { scoreLoops, scoreRooms, scoreDevices, scoreLength } = require('../lib/metrics');
 const ROOT = path.resolve(__dirname, '../..'), OUT = path.join(ROOT, 'tests/results/validation');
 const GATES = require('../modules.json').gates, strict = process.argv.includes('--strict');
 // the Learning Engine's knowledge base (data/knowledge); each project is analysed without its own contributions
@@ -38,17 +38,17 @@ const scored = gt => (gt.generated || /^verified/.test(gt.status || '')) && (gt.
     const s = scoreDevices(p.gt.devices, R.detections);
     const detection = { project: p.name, precision: s.precision, recall: s.recall, f1: s.f1, falsePositive: s.falsePositive, falseNegative: s.falseNegative, typeAccuracy: s.typeAccuracy, byType: s.byType, confusion: s.confusion };
     const cables = Object.entries(p.gt.lines || {}).map(([k, exp]) => { const got = R.lines.find(l => l.desc === k); return { loop: k, ...scoreLength(exp, got ? got.total_m : 0) }; });
-    const network = (p.gt.networks || []).length ? { project: p.name, expectedLoops: p.gt.networks.length, detectedLoops: null, accuracy: null, status: 'NOT IMPLEMENTED' } : null;
-    const rooms = (p.gt.rooms || []).length ? { roomDetection: null, roomNaming: null, areaAccuracy: null, expected: p.gt.rooms.length, status: 'NOT IMPLEMENTED' } : null;
+    const network = (p.gt.networks || []).length ? { project: p.name, ...scoreLoops(p.gt.networks, R.loops) } : null;
+    const rooms = (p.gt.rooms || []).length ? scoreRooms(p.gt.rooms, R.rooms) : null;
     const compliance = p.gt.compliance ? { expectedIssues: p.gt.compliance.length, detectedIssues: null, falseWarnings: null, status: 'NOT IMPLEMENTED' } : null;
     const cableAcc = cables.length ? Math.round(10 * (100 - cables.reduce((a, c) => a + (c.errorPct || 0), 0) / cables.length)) / 10 : null;
-    const gates = { device: s.f1 >= GATES.deviceRecognitionF1, cable: cableAcc == null || cableAcc >= GATES.cableAccuracy, network: !network || !strict, rooms: !rooms || !strict };
+    const gates = { device: s.f1 >= GATES.deviceRecognitionF1, cable: cableAcc == null || cableAcc >= GATES.cableAccuracy, network: !network || network.accuracy >= GATES.loopDetection, rooms: !rooms || rooms.roomDetection >= GATES.roomDetection };
     const ok = Object.values(gates).every(Boolean); if (!ok) failed = true;
     const res = { project: p.name, at: new Date().toISOString(), ok, gates, detection, cables, cableAccuracy: cableAcc, network, rooms, compliance,
       timing_s: Object.fromEntries(Object.entries(R.ms).map(([k, v]) => [k, Math.round(v / 100) / 10])), sheets: R.pages.map(x => x.sheet),
       misses: s.misses, falseAlarms: s.falseAlarms, warnings: R.warnings.filter(w => w.level !== 'info').slice(0, 40) };
     fs.writeFileSync(path.join(OUT, p.name + '.json'), JSON.stringify(res, null, 1));
-    Object.assign(row, { result: ok ? 'PASS' : 'FAIL', precision: s.precision, recall: s.recall, f1: s.f1, fp: s.falsePositive, fn: s.falseNegative, cableAccuracy: cableAcc, loops: network ? 'NOT IMPLEMENTED' : '-', rooms: rooms ? 'NOT IMPLEMENTED' : '-', total_s: res.timing_s.total });
+    Object.assign(row, { result: ok ? 'PASS' : 'FAIL', precision: s.precision, recall: s.recall, f1: s.f1, fp: s.falsePositive, fn: s.falseNegative, cableAccuracy: cableAcc, loops: network ? `${network.accuracy}% (${network.matched}/${network.expectedLoops}, length ±${network.lengthErrorPct}%)` : '-', rooms: rooms ? `${rooms.roomDetection}% (area ${rooms.areaAccuracy}%)` : '-', total_s: res.timing_s.total });
     rows.push(row);
   }
   if (app) await app.browser.close();

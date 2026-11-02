@@ -41,7 +41,10 @@ async function analyse(page, pdfs, opts = {}) {
       const p = S.pages.find(x => x.id === m.page.id); const T = await fveTemplate(e); if (!T) return [];
       return (await vsmSearch(p, T, q || 1)).filter(h => h.score >= (opts.minScore || .85));
     } });
-    const t4 = performance.now(); const warn = FVE.verify(models, D, dets); const lines = FVE.measureLines(models, D); const t5 = performance.now();
+    const t4 = performance.now(); const warn = FVE.verify(models, D, dets); const lines = FVE.measureLines(models, D);
+    // loops (drawn + estimated) and rooms; room expectations from the knowledge base become questions
+    const loops = FVE_LOOPS.run(models, D, dets, { knowledge: K }); const rooms = FVE_ROOMS.detect(models, dets); warn.push(...FVE_ROOMS.expectations(rooms, K));
+    const t5 = performance.now();
     const idx = id => pages.findIndex(p => p.id === id);
     return {
       knowledge: K ? { consultant: consultant.consultant, known: K.consultantKnown, templates: K.templates.length, historical: D.hist, library: K.library.length } : null,
@@ -53,6 +56,8 @@ async function analyse(page, pdfs, opts = {}) {
         lineTypes: D.lineTypes.map(l => ({ id: l.id, desc: l.desc, cls: l.cls, stroke: l.stroke, w: l.w, dashed: l.dashed, dupOf: !!l.dupOf })), zones: D.zones },
       detections: dets.map(d => ({ page: idx(d.page), x: d.x, y: d.y, w: d.w, h: d.h, type: d.type, status: d.status, conf: d.conf, entry: d.entry, src: [...new Set(d.ev.map(e => e.src))].sort().join('+'), rules: d.rules })),
       warnings: warn.map(w => ({ ...w, page: w.page ? idx(w.page) : undefined })),
+      loops: loops.map(l => ({ id: l.id, page: idx(l.page), source: l.source, circuit: l.circuit, closed: l.closed, panel: l.panel, devices: l.devices, mix: l.mix, pattern: l.pattern, length_m: l.length_m, paper: l.paper, chains: l.chains, historical_m: l.historical_m, note: l.note, members: l.members.map(d => [Math.round(d.x * 10) / 10, Math.round(d.y * 10) / 10, d.type]) })),
+      rooms: rooms.map(r => ({ page: idx(r.page), name: r.name, type: r.type, area_m2: r.area_m2, devices: r.devices })),
       lines: lines.map(l => ({ id: l.id, desc: l.desc, cls: l.cls, status: l.status, dashed: l.dashed, total_m: l.total, unscaled: l.unscaled,
         pages: Object.fromEntries(Object.entries(l.pages).map(([k, v]) => [idx(k), { m: v.m, paper: v.paper, chains: v.chains.length, ratio: v.ratio }])) }))
     };

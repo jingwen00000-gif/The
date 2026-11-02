@@ -1,11 +1,11 @@
 // Integration: the real app in headless Chromium, synthetic project with exact ground truth.
 //   PDF → Geometry → Legend → Detection → Lines        (implemented)
-//   Detection → Graph → Network                       (Stage 4, not implemented: reported as todo)
+//   Detection → Graph → Network, Rooms               (loop engine, room engine)
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const { openApp, analyse } = require('../lib/harness');
-const { scoreDevices, scoreLength } = require('../lib/metrics');
+const { scoreDevices, scoreLength, scoreLoops, scoreRooms } = require('../lib/metrics');
 const DS = path.join(__dirname, '../datasets/synthetic-basic');
 const GT = require(path.join(DS, 'ground-truth.json'));
 
@@ -40,6 +40,29 @@ test('Detection → Lines: pipe and cable lengths within 1 %', () => {
   }
 });
 
-test('Detection → Graph: devices joined by cabling into a graph', { todo: 'Stage 4 network-graph module not implemented' }, () => {});
-test('Graph → Network: loops with device counts and loop lengths', { todo: 'Stage 4 loop-detection module not implemented' }, () => {});
-test('Rooms: closed spaces with names and areas', { todo: 'Stage 3 room-detection module not implemented' }, () => {});
+test('Detection → Graph: devices joined by the legend\'s loop cable, ordered along it', () => {
+  const drawn = R.loops.filter(l => l.source === 'drawn');
+  assert.equal(drawn.length, 2); assert.ok(drawn.every(l => l.circuit === 'detection' && l.closed && l.chains === 1));
+  // every device the generator put on the loop is a member, in the order the cable visits them
+  for (const l of drawn) { const on = GT.devices.filter(d => d.page === l.page && d.how === 'legend' && /smoke|heat/.test(d.type));
+    assert.ok(on.every(d => l.members.some(m => Math.hypot(m[0] - d.x, m[1] - d.y) < 3)), 'loop member missing');
+    const idx = on.map(d => l.members.findIndex(m => Math.hypot(m[0] - d.x, m[1] - d.y) < 3)); const steps = idx.slice(1).map((v, k) => (v - idx[k] + l.members.length) % l.members.length);
+    assert.ok(steps.every(v => v === 1 || v === 2) || steps.every(v => v === l.members.length - 1 || v === l.members.length - 2), 'members follow the cable: ' + steps.join(',')); }
+});
+test('Graph → Network: loops with device counts and loop lengths against ground truth; estimates for devices no cable reaches', async () => {
+  const s = scoreLoops(GT.networks, R.loops);
+  assert.equal(s.accuracy, 100, JSON.stringify(s.loops)); assert.equal(s.lengthErrorPct, 0);
+  const est = R.loops.filter(l => l.source === 'estimated'); assert.ok(est.length >= 2 && est.every(l => l.length_m > 0)); assert.ok(est.every(l => l.note === (l.circuit === 'detection' ? 'devices the drawn cable does not reach' : 'no cable drawn')));
+  assert.ok(est.some(l => l.circuit === 'ewis' && /^SPK/.test(l.pattern)));
+  // the estimator on the looped devices themselves, against the drawn cable (generator route: room order, not shortest): within 35 %
+  const LOOPS = require('../../src/fve/network/loop-engine.js'); const MPU = 100 * 25.4 / 72 / 1000;
+  for (const l of R.loops.filter(x => x.source === 'drawn')) {
+    const dets = l.members.map(([x, y, type]) => ({ page: l.page, x, y, type })); const pg = R.pages[l.page];
+    const [e] = LOOPS.estimate([{ page: { id: l.page, w: pg.w, h: pg.h }, sheet: { kind: 'plan' }, scale: { mPerUnit: MPU } }], dets, [], {});
+    assert.equal(e.devices, l.devices); const err = Math.abs(e.length_m - l.length_m) / l.length_m; assert.ok(err < .35, `estimate ${e.length_m} m vs drawn ${l.length_m} m`);
+  }
+});
+test('Rooms: closed spaces with names and areas', () => {
+  const s = scoreRooms(GT.rooms, R.rooms); assert.equal(s.roomDetection, 100); assert.equal(s.areaAccuracy, 100);
+  assert.ok(R.rooms.find(r => r.type === 'PLANT ROOM').devices.heat >= 1);
+});
