@@ -88,6 +88,12 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
   for(let i=0;i<keep.length;i++) for(let j=i+1;j<keep.length;j++){const a=keep[i], b=keep[j]; if(gone.has(a)||gone.has(b)||a.page!==b.page||family(a.type)===family(b.type)) continue;
     const r=Math.min(Math.max(a.w,a.h),Math.max(b.w,b.h))*.35; if(hyp(a.x-b.x,a.y-b.y)>r) continue;
     const sa=a.score||0, sb=b.score||0; const lose=Math.abs(sa-sb)>.02?(sa>sb?b:a):(a.conf>=b.conf?b:a); gone.add(lose)}
+  // two sub-types of one family on one spot (a learnt 'pendent' template that is this legend's 'upright' block under another name): one
+  // device — a match to this project's own legend before a learnt one, then the better score
+  const histE=new Set((D.symbols||[]).filter(e=>e.hist).map(e=>e.id)), isHist=d=>{const h=(d._hits||[]).filter(x=>x.type===d.type).sort((p,q)=>q.score-p.score)[0]; return h?histE.has(h.entry):false};
+  for(let i=0;i<keep.length;i++) for(let j=i+1;j<keep.length;j++){const a=keep[i], b=keep[j]; if(gone.has(a)||gone.has(b)||a.page!==b.page||a.type===b.type||family(a.type)!==family(b.type)) continue;
+    const r=Math.min(Math.max(a.w,a.h),Math.max(b.w,b.h))*.35; if(hyp(a.x-b.x,a.y-b.y)>r) continue;
+    const ha=isHist(a), hb=isHist(b); const lose=ha!==hb?(ha?a:b):((a.score||0)>=(b.score||0)?b:a); gone.add(lose)}
   // a match centred off the sheet (a symbol clipped at the sheet edge, content outside the media box) is not a device
   const dims=new Map(models.map(m=>[m.page.id,m.page]));
   const onSheet=d=>{const pg=dims.get(d.page); return !pg||(d.x>=0&&d.y>=0&&d.x<=pg.w&&d.y<=pg.h)};

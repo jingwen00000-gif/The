@@ -409,11 +409,14 @@ FVE.projectDictionary=function(models,opts){opts=opts||{}; const D={symbols:[],l
   // two line types drawn the same way (colour, dash) cannot be told apart on a plan: the first keeps the strokes
   const seenLT=new Set(); D.lineTypes.forEach(l=>{if(!l.cls) return; const k=l.stroke+'|'+l.dashed; if(seenLT.has(k)) l.dupOf=true; else seenLT.add(k)});
   // historical symbols (Learning Engine knowledge base): this consultant's symbols, and well-established ones, are searched like legend
-  // rows for devices this project's legend does not already cover (a set without a legend, a CAD-lettered row nobody named, a missing row)
+  // rows for devices this project's legend does not already cover (a set without a legend, a CAD-lettered row nobody named, a missing row).
+  // A family the legend already shows is left to it: a learnt 'pendent' that is this legend's 'upright' block (with pipe pieces learnt
+  // round it) would count every head twice
   const K=opts.knowledge; D.hist=0;
-  if(K&&K.templates){const legendTypes=new Set(D.symbols.filter(s=>s.type).map(s=>s.type)), have=new Set(D.symbols.map(s=>s.geoHash).filter(Boolean));
+  const famOf=t=>/^spk_/.test(t)?'sprinkler':/^ext_/.test(t)?'extinguisher':/^(speaker|spk_surf|horn|proj_spk)$/.test(t)?'speaker':/^(smoke|cs_smoke|duct_probe)$/.test(t)?'smoke':t;
+  if(K&&K.templates){const legendTypes=new Set(D.symbols.filter(s=>s.type).map(s=>s.type)), legendFams=new Set([...legendTypes].map(famOf)), have=new Set(D.symbols.map(s=>s.geoHash).filter(Boolean));
     // another consultant's symbols only on a set with no legend of its own: where the project has a legend, only this consultant's history
-    for(const t of K.templates){const T=t.template; if(!T||!T.objs||!T.objs.length||legendTypes.has(t.deviceType)||have.has(t.geoHash)||(legendTypes.size&&!t.consultantMatch)) continue; have.add(t.geoHash);
+    for(const t of K.templates){const T=t.template; if(!T||!T.objs||!T.objs.length||legendTypes.has(t.deviceType)||legendFams.has(famOf(t.deviceType))||have.has(t.geoHash)||(legendTypes.size&&!t.consultantMatch)) continue; have.add(t.geoHash);
       D.symbols.push({id:'h',page:null,desc:`historical ${t.code||t.deviceType}`,hist:true,histN:t.n,consultantMatch:!!t.consultantMatch,type:t.deviceType,status:null,tags:t.text||[],bb:T.bb,c:[0,0],segs:T.segs,vsegs:T.vsegs,objs:T.objs,
         color:(T.cols||[])[0]||null,key:T.key,cols:T.cols||[],circles:T.objs.filter(o=>o.k==='circle'&&o.stroke).map(o=>({col:o.stroke,r:o.r})),shapes:T.shapes||[],geoHash:t.geoHash,desc2:t.desc}); D.hist++}}
   D.symbols.forEach((s,i)=>s.id='sy'+i); D.lineTypes.forEach((l,i)=>l.id='lt'+i);

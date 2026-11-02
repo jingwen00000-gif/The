@@ -167,6 +167,6 @@ function commit(d,review){const R=FX.last, G=FX.groups||[]; if(!R) return; snap(
   return {marks:add.length,runs,paired,dup}}
 
 /* ---------------------------------------------------------------- wiring: the G key and the legend button run FVE; the old flow stays as fallback */
-FX.run=fveCount; FX.commit=commit; FX.knowledgeBase=knowledgeBase; FX.importKnowledge=importKnowledge; FX.showResults=showResults; FX.consultantOf=consultantOf; FX.libAll=libAll; FX.libLearn=libLearn; FX.libFor=libFor; FX.lineDn=lineDn;
+FX.run=fveCount; FX.typeOptions=typeOptions; FX.commit=commit; FX.knowledgeBase=knowledgeBase; FX.importKnowledge=importKnowledge; FX.showResults=showResults; FX.consultantOf=consultantOf; FX.libAll=libAll; FX.libLearn=libLearn; FX.libFor=libFor; FX.lineDn=lineDn;
 FX.ready=()=>!!(root.FVE&&root.FVE_MSME&&typeof vsmSearch==='function'&&typeof fveTemplate==='function');
 })(typeof window!=='undefined'?window:globalThis);

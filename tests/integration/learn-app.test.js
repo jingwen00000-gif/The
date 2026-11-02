@@ -62,3 +62,16 @@ test('remove a learnt job (back to the bundled base); export → import round tr
     return { empty, bundledOnly: kbBundled ? kbBundled.index.projects.map(p => p.projectId) : [], n, contribs: st.contribs.length, scored: st.scores[0].score.f1 === rec.score.f1, kb: FX.knowledgeBase().index.projects.map(p => p.projectId) }; });
   assert.equal(r.empty, 0); assert.ok(!r.bundledOnly.includes('train-acme')); assert.equal(r.n, 1); assert.equal(r.contribs, 1); assert.ok(r.scored); assert.ok(r.kb.includes('train-acme'));
 });
+
+test('learning again with the estimator\'s names: a group marked "not a device" is dropped, the names are kept with the job', async () => {
+  const { page } = app;
+  const b64 = f => fs.readFileSync(path.join(JOB, f)).toString('base64');
+  const r = await page.evaluate(async ([o, t]) => { const file = (b, n) => { const bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new File([u], n, { type: 'application/pdf' }); };
+    const files = { name: 'Train Acme', original: [file(o, 'original.pdf')], takeoff: [file(t, 'takeoff.pdf')] };
+    const a = await FT_LEARN_APP.learnJob(files); const cls = a.ex.classes.find(c => c.type && c.n >= 3);
+    const b = await FT_LEARN_APP.learnJob({ ...files, markupMap: { classes: { [cls.key]: '-' }, partial: true } });
+    const c = await FT_LEARN_APP.learnJob(files);   // the names come back from the stored job
+    return { n: cls.n, before: a.rec.devices, after: b.rec.devices, kept: c.rec.devices, map: c.rec.markupMap, others: b.ex.classes.filter(x => x.key !== cls.key && x.type).length }; }, [b64('original.pdf'), b64('takeoff.pdf')]);
+  assert.equal(r.after, r.before - r.n, JSON.stringify(r)); assert.equal(r.kept, r.after); assert.ok(r.map && r.map.partial && Object.values(r.map.classes)[0] === '-');
+  assert.ok(r.others >= 3, 'the other groups are still named from the symbols under them');
+});

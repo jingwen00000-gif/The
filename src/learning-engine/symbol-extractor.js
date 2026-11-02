@@ -37,7 +37,8 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
   for(const c of classes.values()){
     // the estimator's key decides markup by markup (one colour can mean smoke on the dry sheet and sprinkler on the wet one);
     // markups the key does not cover are not counts
-    if(ctx.markupMap){c.items.forEach(a=>{a.mtype=mapType(ctx.markupMap,a); a.mstatus=mapStatus(ctx.markupMap,a)}); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length){c.type=mode(mt); c.how='markup-map'; c.confidence=1; c.perItem=true; continue} if(!ctx.markupMap.fromCountTables){c.type=null; c.how='not in markup-map'; continue}
+    if(ctx.markupMap){c.items.forEach(a=>{a.mtype=mapType(ctx.markupMap,a); a.mstatus=mapStatus(ctx.markupMap,a)}); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length&&mt.every(t=>t==='-')){c.type=null; c.how='not a device (estimator)'; c.ignored=true; c.items.forEach(a=>a.mtype=null); continue} /* '-': the estimator said these markups are not devices */
+      if(mt.length){c.items.forEach(a=>{if(a.mtype==='-') a.mtype=null}); c.type=mode(mt.filter(t=>t!=='-')); c.how='markup-map'; c.confidence=1; c.perItem=true; continue} if(!ctx.markupMap.fromCountTables&&!ctx.markupMap.partial){c.type=null; c.how='not in markup-map'; continue}
       /* a group the count tables do not list (the estimator left it out of the summary): named like a job without a key, from its words or the symbols under it */}
     const ws=Object.entries(c.words).sort((a,b)=>b[1]-a[1]); const wt=ws.map(([w])=>wordType(w,FVE,D)).find(Boolean); if(wt){c.type=wt; c.how='markup text'; c.confidence=.95; continue}
     const under=c.items.map(detAt).filter(Boolean).map(d=>d.type); if(under.length){const t=mode(under), share=under.filter(x=>x===t).length/c.items.length; if(share>=.6){c.type=t; c.how='legend under markups'; c.confidence=Math.round(share*100)/100; continue}}
@@ -101,8 +102,8 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
       symbols.push({fingerprint:FP.fingerprint({device:type,geoHash,text:text.join(' ')}),geoHash,deviceType:type,code:CODE[type]||null,text,status:[...new Set(g.map(x=>x.d.status).filter(Boolean))],
         n:g.length,confidence:cls?cls.confidence||1:1,desc,template:{objs:rel,segs,vsegs,bb:[bb[0]-cc[0],bb[1]-cc[1],bb[2]-cc[0],bb[3]-cc[1]],cols:[...new Set(rel.map(o=>o.stroke||o.fill).filter(Boolean))],key,shapes:[...new Set(rel.map(o=>o.k))]}})}}
   const abbreviations={}; for(const [tok,c] of Object.entries(abbrev)) abbreviations[tok]=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
-  return {classes:[...classes.values()].map(c=>({key:c.key,src:c.src,kind:c.kind,colour:c.colour,type:c.type,how:c.how,perPage:c.perPage||null,confidence:c.confidence||0,n:c.items.length,words:Object.keys(c.words)})),
-    devices:devices.map(({box,...d})=>d),symbols,abbreviations,trace,unknownClasses:[...classes.values()].filter(c=>!c.type).map(c=>c.key)}}
+  return {classes:[...classes.values()].map(c=>({key:c.key,src:c.src,kind:c.kind,colour:c.colour,type:c.type,how:c.how,perPage:c.perPage||null,confidence:c.confidence||0,n:c.items.length,words:Object.keys(c.words),sample:c.items.slice(0,3).map(a=>({page:a.page,c:a.c,size:a.size}))})),
+    devices:devices.map(({box,...d})=>d),symbols,abbreviations,trace,unknownClasses:[...classes.values()].filter(c=>!c.type&&!c.ignored).map(c=>c.key)}}
 const family=t=>/^spk_(pend|up|side|semi|space|conc|duct)/.test(t)?'sprinkler':/^ext_/.test(t)?'extinguisher':/^(speaker|spk_surf|horn|proj_spk)$/.test(t)?'speaker':/^(smoke|cs_smoke|duct_probe)$/.test(t)?'smoke':t;
 const liteOf=o=>({k:o.k,bb:o.bb,c:o.c,r:o.r,pts:o.pts,stroke:o.stroke,fill:o.fill,closed:o.closed,len:o.len,w:o.w});
 function mode(a){const c={}; a.forEach(x=>c[x]=(c[x]||0)+1); return Object.entries(c).sort((p,q)=>q[1]-p[1])[0][0]}

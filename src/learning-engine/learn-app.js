@@ -37,6 +37,10 @@ async function sandbox(fn){if(typeof saveNow==='function') await saveNow();
     S=keep.S; curId=keep.curId; curPage=keep.curPage; root.FT_LEARNING=false;
     try{pagesInit(); await showPage(); changed()}catch(e){console.error(e)}}}
 
+// a region of a PDF page rendered sharp (markups included), px pixels across
+async function cropPdf(p,b,px){const pg=await pdfPageObj(p); const w=b[2]-b[0], h=b[3]-b[1], k=px/Math.max(w,h);
+  const vp=pg.getViewport({scale:k,offsetX:-b[0]*k,offsetY:-b[1]*k}); const cv=document.createElement('canvas'); cv.width=Math.ceil(w*k); cv.height=Math.ceil(h*k);
+  const ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); await pg.render({canvasContext:ctx,viewport:vp}).promise; return cv}
 const inflate=async d=>new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
 const slug=s=>String(s||'').trim().toLowerCase().replace(/[^a-z0-9一-龥]+/g,'-').replace(/^-|-$/g,'').slice(0,60);
 
@@ -44,15 +48,24 @@ const slug=s=>String(s||'').trim().toLowerCase().replace(/[^a-z0-9一-龥]+/g,'-
 async function learnJob(files,say){const name=(files.name||'').trim()||files.original[0].name.replace(/\.pdf$/i,''); const projectId=slug(name)||('job-'+Date.now());
   const KB=root.FX&&FX.knowledgeBase?FX.knowledgeBase():null; const t0=Date.now();
   say&&say(tt('正在读取图纸并比对标记…'));
-  const ex=await sandbox(()=>FT_LEARN.ingest.ingestInApp({projectId,original:files.original.map(f=>[f.name,f]),takeoff:files.takeoff&&files.takeoff.length?files.takeoff.map(f=>[f.name,f]):null,
-    metadata:{name},markupMap:null,knowledge:KB}));
+  // the estimator's own names for markup groups (from an earlier run of this job): {classes: {'annotation:Polygon#8080c0': 'spk_up' | '-'}}
+  const known0=(await store()).scores.find(s=>s.projectId===projectId), markupMap=files.markupMap||(known0&&known0.markupMap)||null;
+  let pics={};
+  const ex=await sandbox(async()=>{const ex=await FT_LEARN.ingest.ingestInApp({projectId,original:files.original.map(f=>[f.name,f]),takeoff:files.takeoff&&files.takeoff.length?files.takeoff.map(f=>[f.name,f]):null,
+    metadata:{name},markupMap,knowledge:KB});
+    // a picture of each group nobody could name, cut from the takeoff (the markup visible on its symbol), for the estimator to name
+    try{const pages=S.pages.filter(p=>p.kind==='pdf'), off=files.takeoff&&files.takeoff.length?ex.sheets.length:0;
+      for(const c of ex.classes.filter(c=>ex.unknownClasses.includes(c.key)).slice(0,12)){const a=(c.sample||[])[0]; const p=a&&pages[off+a.page]; if(!p) continue;
+        const r=Math.max(30,(a.size||20)*1.3), cv=await cropPdf(p,[a.c[0]-r,a.c[1]-r,a.c[0]+r,a.c[1]+r],180); if(cv) pics[c.key]=cv.toDataURL('image/png')}}catch(e){console.error(e)}
+    return ex});
   const pricing={};
   for(const k of ['boq','quote']) if(files[k]){say&&say(tt('正在读取报价表…')); try{pricing[k]=FT_LEARN.pricing.extract(await FT_LEARN.pricing.readXlsx(await files[k].arrayBuffer(),inflate),{FVE,source:k})}catch(e){console.error(e)}}
   const fl={original:files.original.map(f=>f.name),takeoff:(files.takeoff||[]).map(f=>f.name),boq:files.boq&&files.boq.name,quote:files.quote&&files.quote.name};
   const {graph,contributions}=FT_LEARN.builder.build({projectId,metadata:{name},files:fl},ex,pricing);
   const st=await store(); const known=st.scores.find(s=>s.projectId===projectId);
   const rec={projectId,name,at:new Date().toISOString(),score:ex.score,knowledgeProjects:ex.knowledgeProjects,consultant:ex.consultant&&ex.consultant.consultant||null,
-    devices:graph.summary.devices,byType:graph.summary.byType,unknown:ex.unknownClasses,pricingItems:graph.summary.pricingItems,seconds:Math.round((Date.now()-t0)/1000),
+    devices:graph.summary.devices,byType:graph.summary.byType,unknown:ex.unknownClasses,markupMap,
+    unknownGroups:ex.classes.filter(c=>ex.unknownClasses.includes(c.key)).map(c=>({key:c.key,kind:c.kind,colour:c.colour,n:c.n,pic:pics[c.key]||null})),pricingItems:graph.summary.pricingItems,seconds:Math.round((Date.now()-t0)/1000),
     countRows:graph.countTables.flatMap(t=>t.rows.filter(r=>r.found!=null).map(r=>({page:t.page,description:r.description,qty:r.qty,found:r.found}))),
     first:known?known.first||{at:known.at,score:known.score,knowledgeProjects:known.knowledgeProjects}:null};
   st.contribs=st.contribs.filter(c=>c.projectId!==projectId).concat(contributions); st.scores=st.scores.filter(s=>s.projectId!==projectId).concat(rec);
@@ -102,12 +115,13 @@ function openLearn(done){
 
 async function run(files,done){const d=ftModal(tt('正在学习'),`<p id="lrSay" style="margin:0">${tt('准备中…')}</p>`,[]);
   const say=t=>{const e=d.querySelector('#lrSay'); if(e) e.textContent=t};
-  try{const {rec,graph}=await learnJob(files,say); showResult(rec,graph)}
+  try{const {rec,graph}=await learnJob(files,say); showResult(rec,graph,files,done)}
   catch(e){console.error(e); ftModal(tt('学习失败'),`<p style="margin:0">${html(e.message||String(e))}</p>`,[{t:tt('关闭')}])}
   finally{done&&done()}}
 
-function showResult(rec,graph){const by=Object.entries(rec.byType||{}).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${html(NAME(k))} ${n}`).join(' · ');
+function showResult(rec,graph,files,done){const by=Object.entries(rec.byType||{}).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${html(NAME(k))} ${n}`).join(' · ');
   const bad=rec.countRows.filter(r=>r.found!==r.qty);
+  const G=rec.unknownGroups||[];
   const s=rec.score;
   ftModal(tt('学习完成'),`<p style="margin:0"><b>${html(rec.name)}</b>：${tt('从你的标记里学到')} <b>${rec.devices}</b> ${tt('个设备')}${rec.consultant?`（${tt('设计单位')} ${html(rec.consultant)}）`:''}${rec.pricingItems?`，${rec.pricingItems} ${tt('条单价')}`:''}，${rec.seconds}s</p>
     <p class="note">${by}</p>
@@ -115,8 +129,14 @@ function showResult(rec,graph){const by=Object.entries(rec.byType||{}).sort((a,b
       ${s.pages&&s.pages.length>1?`<table class="t" style="margin-top:4px"><thead><tr><th>${tt('图纸')}</th><th class="r">${tt('你标记')}</th><th class="r">${tt('软件找到')}</th><th class="r">${tt('多识别')}</th><th class="r">F1</th></tr></thead><tbody>${s.pages.map(p=>`<tr><td>${html(p.title||('p'+(p.page+1)))}</td><td class="r num">${p.truth}</td><td class="r num">${p.found}</td><td class="r num">${p.extra}</td><td class="r num">${pct(p.f1)}</td></tr>`).join('')}</tbody></table>`:''}
       ${rec.first&&rec.first.score?`<p class="note">${tt('第一次学习这个项目时')}：${pct(rec.first.score.f1)}</p>`:''}`:`<p class="note">${tt('标记里没有可对比位置的设备，没有计算准确率。')}</p>`}
     ${rec.countRows.length?`<p class="note">${tt('数量表核对')}：${rec.countRows.length-bad.length} / ${rec.countRows.length} ${tt('行与标记数量一致')}${bad.length?'；'+bad.slice(0,6).map(r=>`${html(r.description)} ${tt('表')} ${r.qty} / ${tt('标记')} ${r.found}`).join('；'):''}</p>`:''}
-    ${rec.unknown&&rec.unknown.length?`<p class="note" style="color:#b45309">${tt('有些标记分不出是什么设备，没有学习')}：${rec.unknown.slice(0,8).map(html).join('、')}</p>`:''}
-    <p class="note">${tt('已加入本机知识库，之后的识别会用到。')}</p>`,[{t:tt('关闭'),cls:'primary'}])}
+    ${G.length?`<div style="margin-top:8px;padding:8px;border:1px solid #f0c27a;border-radius:8px"><p style="margin:0 0 6px;color:#b45309"><b>${tt('这些标记分不出是什么设备')}</b>（${G.reduce((a,g)=>a+g.n,0)} ${tt('个')}）。${tt('选一下“统计为”，软件会按你的选择重新学习这个项目。')}</p>
+      <div style="max-height:34vh;overflow:auto"><table class="t"><thead><tr><th>${tt('标记')}</th><th>${tt('组')}</th><th>${tt('统计为')}</th></tr></thead><tbody>${G.map((g,i)=>`<tr>
+        <td>${g.pic?`<img src="${g.pic}" alt="" style="height:110px;width:auto;display:block;border:1px solid #ddd;border-radius:4px">`:''}</td>
+        <td class="note"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;background:#${html(g.colour||'888')}"></span> ${html(g.kind||'')} · ${g.n} ${tt('个')}</td>
+        <td><select data-lrg="${i}" style="max-width:220px"><option value="">${tt('— 先不管 —')}</option><option value="-">${tt('不是设备（不计）')}</option>${root.FX&&FX.typeOptions?FX.typeOptions(''):''}</select></td></tr>`).join('')}</tbody></table></div></div>`:''}
+    <p class="note">${tt('已加入本机知识库，之后的识别会用到。')}</p>`,G.length&&files?[{t:tt('关闭')},{t:tt('保存命名并重新学习'),cls:'primary',fn:()=>{const dd=$('#ftModal'); const cls={...((rec.markupMap&&rec.markupMap.classes)||{})}; let n=0;
+      G.forEach((g,i)=>{const v=(dd.querySelector(`[data-lrg="${i}"]`)||{}).value; if(v){cls[g.key]=v; n++}}); if(!n) return;
+      run({...files,markupMap:{...(rec.markupMap||{}),classes:cls,partial:true}},done)}}]:[{t:tt('关闭'),cls:'primary'}])}
 
 if(typeof I18N!=='undefined') Object.assign(I18N,{'正在读取图纸并比对标记…':'Reading the drawings and comparing the markups…','正在读取报价表…':'Reading the price sheets…','不是 FireTake 学习记录文件':'Not a FireTake learnt-jobs file',
   '把做完的项目交给软件学习：原图 + 你的算量标记图（Bluebeam 计数标记，带每层的数量表更好）+ 报价表（可选）。软件先用已经学过的知识盲测这个项目，记下准确率，再把它学进知识库。下面的准确率一项比一项高，就说明软件在变准。':'Teach FireTake a finished job: the original drawings + your marked-up takeoff (Bluebeam count markups, ideally with the per-sheet count tables) + the price sheets (optional). FireTake first tests itself on the job blind, with what it learnt so far, records the accuracy, then adds the job to its knowledge. Rising accuracy down the list means it is getting better.',
@@ -125,5 +145,5 @@ if(typeof I18N!=='undefined') Object.assign(I18N,{'正在读取图纸并比对�
   '算量标记图（你标记后的 PDF，可多选；原图上直接标记的可不选）':'Marked-up takeoff (PDF; leave empty if the markups are on the originals)','BOQ / 报价表（xlsx，可选）':'BOQ / quote (xlsx, optional)','大项目需要 1–3 分钟。学习时当前项目会暂时收起，完成后自动恢复。':'Large jobs take 1–3 minutes. The open project is put aside while learning and restored afterwards.',
   '开始学习':'Learn','请选择原图 PDF':'Choose the original drawings','正在学习':'Learning','准备中…':'Starting…','学习失败':'Learning failed','学习完成':'Learnt','从你的标记里学到':'learnt from your markups:','学习前，软件在这个项目上的识别准确率':'Recognition accuracy on this job before learning it',
   '漏识别':'missed','多识别':'extra','知识库里还没有其他项目':'no other jobs in the knowledge base yet','第一次学习这个项目时':'When this job was first learnt','标记里没有可对比位置的设备，没有计算准确率。':'No positioned devices in the markups; accuracy not scored.','数量表核对':'Count tables',
-  '行与标记数量一致':'rows match the markups','表':'table','标记':'markups','有些标记分不出是什么设备，没有学习':'Some markups could not be named and were not learnt','已加入本机知识库，之后的识别会用到。':'Added to this computer\'s knowledge base; recognition uses it from now on.','AI 学习：历史项目':'AI learning: finished jobs','图纸':'Sheet','你标记':'You marked','软件找到':'Found'});
+  '行与标记数量一致':'rows match the markups','表':'table','标记':'markups','有些标记分不出是什么设备，没有学习':'Some markups could not be named and were not learnt','已加入本机知识库，之后的识别会用到。':'Added to this computer\'s knowledge base; recognition uses it from now on.','AI 学习：历史项目':'AI learning: finished jobs','这些标记分不出是什么设备':'These markups could not be named','选一下“统计为”，软件会按你的选择重新学习这个项目。':'Choose “Count as” and FireTake learns the job again with your names.','标记':'Markup','组':'Group','统计为':'Count as','— 先不管 —':'— leave —','不是设备（不计）':'Not a device (ignore)','保存命名并重新学习':'Save names and learn again','个':'','图纸':'Sheet','你标记':'You marked','软件找到':'Found'});
 })(typeof window!=='undefined'?window:globalThis);

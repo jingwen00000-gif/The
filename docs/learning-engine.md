@@ -102,6 +102,10 @@ that score per job in the order learnt: rising scores mean the software is getti
 rebuilt with `FT_LEARN.db.rebuild` (a local job with the same id replaces the bundled one). 导出 / 导入学习记录 moves them between computers
 (and is how a job reaches `data/knowledge` for everyone: drop its contributions into `data/knowledge/projects/<id>/` and `npm run learn -- --rebuild`).
 
+Groups nobody could name are listed in the result with a sharp picture of one of them (cut from the takeoff, markup visible) and a
+"count as" choice (a device type, or "not a device"). Saving relearns the job with those names (`markupMap.classes`, marked `partial`, so the
+other groups are still named from their words or the symbols under them); the names are kept with the job for later relearning.
+
 Example, 44-market learnt in the app without its hand-written colour key: 219 devices (count tables 18 / 18 rows matched), blind F1 79 —
 dry and wet sheets 78–99, the ground-floor demolition sheet 0 (devices to be removed are drawn dashed red: not recognised yet).
 
