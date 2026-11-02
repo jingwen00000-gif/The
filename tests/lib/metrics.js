@@ -16,11 +16,12 @@ function scoreDevices(truth, dets, opts = {}) {
   const pairs = [];
   T.forEach((t, i) => D.forEach((d, j) => { if (d.page !== t.page) return; const dist = Math.hypot(d.x - t.x, d.y - t.y); if (dist <= tol) pairs.push([dist, i, j]); }));
   pairs.sort((a, b) => a[0] - b[0]);
-  const ut = new Set(), ud = new Set(); let tp = 0, typeOk = 0; const confusion = {};
+  const ut = new Set(), ud = new Set(); let tp = 0, typeOk = 0, typed = 0; const confusion = {};
   for (const [, i, j] of pairs) {
     if (ut.has(i) || ud.has(j)) continue; const t = T[i], d = D[j];
     if (fam(t.type) !== fam(d.type)) continue; // a wrong device on the right spot is a miss and a false alarm
-    ut.add(i); ud.add(j); tp++; if (norm(t.type) === norm(d.type)) typeOk++; else { const k = norm(t.type) + '→' + d.type; confusion[k] = (confusion[k] || 0) + 1; }
+    ut.add(i); ud.add(j); tp++; if (t.typeLevel === 'family') continue; typed++; // family-level truth judges recognition, not sub-type
+    if (norm(t.type) === norm(d.type)) typeOk++; else { const k = norm(t.type) + '→' + d.type; confusion[k] = (confusion[k] || 0) + 1; }
   }
   // only detections of families the truth covers on pages the truth covers count as false positives
   const fams = new Set(T.map(t => fam(t.type))), pages = new Set(T.map(t => t.page));
@@ -34,7 +35,7 @@ function scoreDevices(truth, dets, opts = {}) {
   T.forEach((t, i) => { if (ut.has(i)) byType[fam(t.type)].tp++; });
   for (const d of fpList) { const k = fam(d.type); (byType[k] = byType[k] || { truth: 0, tp: 0, fp: 0 }).fp++; }
   return { precision: r1(precision), recall: r1(recall), f1: r1(f1), truePositive: tp, falsePositive: fp, falseNegative: fn,
-    typeAccuracy: tp ? r1(100 * typeOk / tp) : null, confusion, byType,
+    typeAccuracy: typed ? r1(100 * typeOk / typed) : null, typeScored: typed, confusion, byType,
     misses: fnList.slice(0, 50).map(t => ({ page: t.page, x: r1(t.x), y: r1(t.y), type: t.type })),
     falseAlarms: fpList.slice(0, 50).map(d => ({ page: d.page, x: r1(d.x), y: r1(d.y), type: d.type, conf: r1(d.conf * 100) / 100 })) };
 }

@@ -13,7 +13,7 @@ function ensureData() { if (!fs.existsSync(path.join(ROOT, 'tests/datasets/synth
 function suite(name) {
   const tap = path.join(RES, name + '.tap');
   const args = ['--test', '--test-reporter=spec', '--test-reporter-destination=stdout', '--test-reporter=tap', `--test-reporter-destination=${tap}`];
-  if (name === 'unit') args.push('--experimental-test-coverage', '--test-coverage-include=app/fve.js', `--test-coverage-lines=${GATES.unitLineCoverage}`,
+  if (name === 'unit') args.push('--experimental-test-coverage', '--test-coverage-include=app/fve.js', '--test-coverage-include=src/**/*.js', `--test-coverage-lines=${GATES.unitLineCoverage}`,
     '--test-reporter=lcov', `--test-reporter-destination=${path.join(RES, 'lcov.info')}`);
   else args.push('--test-concurrency=1');
   args.push(`tests/${name}/**/*.test.js`);

@@ -5,7 +5,7 @@
   "project.pdf"
  ],
  "source": "Estimator's Bluebeam count markups on the tender drawings (one polygon per device). Colour → device type read by inspecting the symbol under a sample of each colour.",
- "notes": "Sprinkler sub-type not confirmed (red ticks and orange ticks are two head types) – scored at family level only.",
+ "notes": "Sprinkler sub-type not confirmed (red ticks and orange ticks are two head types); speakers marked as one colour (recessed / surface not separated). Both are scored at family level only — recognition counts, type accuracy does not.",
  "generatedBy": "tests/validation/truth-from-markups.js",
  "summary": {
   "GF-DRY:heat": 86,
@@ -1004,7 +1004,8 @@
    "page": 3,
    "x": 259.2,
    "y": 965.09,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-002",
@@ -1013,7 +1014,8 @@
    "page": 3,
    "x": 258.91,
    "y": 1107.07,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-003",
@@ -1022,7 +1024,8 @@
    "page": 3,
    "x": 279.36,
    "y": 865.73,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-004",
@@ -1031,7 +1034,8 @@
    "page": 3,
    "x": 288.29,
    "y": 1196.93,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-005",
@@ -1040,7 +1044,8 @@
    "page": 3,
    "x": 340.99,
    "y": 963.65,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-006",
@@ -1049,7 +1054,8 @@
    "page": 3,
    "x": 340.99,
    "y": 1106.21,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-007",
@@ -1058,7 +1064,8 @@
    "page": 3,
    "x": 355.97,
    "y": 821.66,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-008",
@@ -1067,7 +1074,8 @@
    "page": 3,
    "x": 411.84,
    "y": 953.57,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-009",
@@ -1076,7 +1084,8 @@
    "page": 3,
    "x": 411.84,
    "y": 1171.01,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-010",
@@ -1085,7 +1094,8 @@
    "page": 3,
    "x": 420.77,
    "y": 795.17,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-011",
@@ -1094,7 +1104,8 @@
    "page": 3,
    "x": 501.12,
    "y": 832.32,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-012",
@@ -1103,7 +1114,8 @@
    "page": 3,
    "x": 493.34,
    "y": 1009.15,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-013",
@@ -1112,7 +1124,8 @@
    "page": 3,
    "x": 492.77,
    "y": 1195.2,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-014",
@@ -1121,7 +1134,8 @@
    "page": 3,
    "x": 573.98,
    "y": 819.65,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-015",
@@ -1130,7 +1144,8 @@
    "page": 3,
    "x": 602.21,
    "y": 1009.15,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-016",
@@ -1139,7 +1154,8 @@
    "page": 3,
    "x": 601.63,
    "y": 1195.2,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-017",
@@ -1148,7 +1164,8 @@
    "page": 3,
    "x": 618.62,
    "y": 931.97,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-018",
@@ -1157,7 +1174,8 @@
    "page": 3,
    "x": 693.22,
    "y": 827.42,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-019",
@@ -1166,7 +1184,8 @@
    "page": 3,
    "x": 711.07,
    "y": 1009.15,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-020",
@@ -1175,7 +1194,8 @@
    "page": 3,
    "x": 710.5,
    "y": 1195.2,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-021",
@@ -1184,7 +1204,8 @@
    "page": 3,
    "x": 780.48,
    "y": 844.99,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-022",
@@ -1193,7 +1214,8 @@
    "page": 3,
    "x": 819.94,
    "y": 1009.15,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-023",
@@ -1202,7 +1224,8 @@
    "page": 3,
    "x": 819.36,
    "y": 1195.2,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-024",
@@ -1211,7 +1234,8 @@
    "page": 3,
    "x": 855.36,
    "y": 845.57,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-025",
@@ -1220,7 +1244,8 @@
    "page": 3,
    "x": 857.38,
    "y": 931.97,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-026",
@@ -1229,7 +1254,8 @@
    "page": 3,
    "x": 910.66,
    "y": 1009.15,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-027",
@@ -1238,7 +1264,8 @@
    "page": 3,
    "x": 910.08,
    "y": 1195.2,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-028",
@@ -1247,7 +1274,8 @@
    "page": 3,
    "x": 917.86,
    "y": 800.93,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-029",
@@ -1256,7 +1284,8 @@
    "page": 3,
    "x": 1021.54,
    "y": 780.48,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-030",
@@ -1265,7 +1294,8 @@
    "page": 3,
    "x": 1008.29,
    "y": 855.07,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-031",
@@ -1274,7 +1304,8 @@
    "page": 3,
    "x": 1013.76,
    "y": 927.65,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-032",
@@ -1283,7 +1314,8 @@
    "page": 3,
    "x": 1010.3,
    "y": 1009.15,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-033",
@@ -1292,7 +1324,8 @@
    "page": 3,
    "x": 1009.73,
    "y": 1195.2,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-034",
@@ -1301,7 +1334,8 @@
    "page": 3,
    "x": 1126.94,
    "y": 826.27,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-035",
@@ -1310,7 +1344,8 @@
    "page": 3,
    "x": 1126.94,
    "y": 1023.55,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-036",
@@ -1319,7 +1354,8 @@
    "page": 3,
    "x": 1126.94,
    "y": 1180.8,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-037",
@@ -1328,7 +1364,8 @@
    "page": 3,
    "x": 1213.63,
    "y": 1212.77,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-038",
@@ -1337,7 +1374,8 @@
    "page": 3,
    "x": 1229.76,
    "y": 956.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-039",
@@ -1346,7 +1384,8 @@
    "page": 3,
    "x": 1254.53,
    "y": 831.46,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-040",
@@ -1355,7 +1394,8 @@
    "page": 3,
    "x": 1317.89,
    "y": 1083.46,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-041",
@@ -1364,7 +1404,8 @@
    "page": 3,
    "x": 1336.03,
    "y": 831.46,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-042",
@@ -1373,7 +1414,8 @@
    "page": 3,
    "x": 1344.96,
    "y": 956.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-043",
@@ -1382,7 +1424,8 @@
    "page": 3,
    "x": 1371.17,
    "y": 1182.82,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-044",
@@ -1391,7 +1434,8 @@
    "page": 3,
    "x": 1433.66,
    "y": 957.02,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-045",
@@ -1400,7 +1444,8 @@
    "page": 3,
    "x": 1508.26,
    "y": 956.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-046",
@@ -1409,7 +1454,8 @@
    "page": 3,
    "x": 1511.71,
    "y": 1182.82,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-047",
@@ -1418,7 +1464,8 @@
    "page": 3,
    "x": 1527.26,
    "y": 1083.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-048",
@@ -1427,7 +1474,8 @@
    "page": 3,
    "x": 1610.5,
    "y": 956.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-049",
@@ -1436,7 +1484,8 @@
    "page": 3,
    "x": 1671.55,
    "y": 1163.23,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-050",
@@ -1445,7 +1494,8 @@
    "page": 3,
    "x": 1705.82,
    "y": 821.95,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-051",
@@ -1454,7 +1504,8 @@
    "page": 3,
    "x": 1721.09,
    "y": 1084.03,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-052",
@@ -1463,7 +1514,8 @@
    "page": 3,
    "x": 1725.98,
    "y": 956.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-053",
@@ -1472,7 +1524,8 @@
    "page": 3,
    "x": 1750.75,
    "y": 1175.33,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-054",
@@ -1481,7 +1534,8 @@
    "page": 3,
    "x": 1807.78,
    "y": 956.74,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-055",
@@ -1490,7 +1544,8 @@
    "page": 3,
    "x": 1835.42,
    "y": 1169.86,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-056",
@@ -1499,7 +1554,8 @@
    "page": 3,
    "x": 1860.48,
    "y": 812.45,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-057",
@@ -1508,7 +1564,8 @@
    "page": 3,
    "x": 1887.26,
    "y": 1080.29,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-058",
@@ -1517,7 +1574,8 @@
    "page": 3,
    "x": 1907.42,
    "y": 1178.78,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-059",
@@ -1526,7 +1584,8 @@
    "page": 3,
    "x": 1952.06,
    "y": 959.33,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-060",
@@ -1535,7 +1594,8 @@
    "page": 3,
    "x": 1948.9,
    "y": 1061.57,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-061",
@@ -1544,7 +1604,8 @@
    "page": 3,
    "x": 1969.92,
    "y": 812.45,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-062",
@@ -1553,7 +1614,8 @@
    "page": 3,
    "x": 1971.07,
    "y": 933.98,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-063",
@@ -1562,7 +1624,8 @@
    "page": 3,
    "x": 2023.49,
    "y": 957.89,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-064",
@@ -1571,7 +1634,8 @@
    "page": 3,
    "x": 2033.86,
    "y": 1061.57,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-065",
@@ -1580,7 +1644,8 @@
    "page": 3,
    "x": 2025.5,
    "y": 1178.78,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "speaker-3-066",
@@ -1589,7 +1654,8 @@
    "page": 3,
    "x": 906.91,
    "y": 847.87,
-   "source": "Polygon#008040"
+   "source": "Polygon#008040",
+   "typeLevel": "family"
   },
   {
    "id": "sounder-3-001",
@@ -1769,7 +1835,8 @@
    "page": 4,
    "x": 258.19,
    "y": 799.49,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-002",
@@ -1778,7 +1845,8 @@
    "page": 4,
    "x": 258.19,
    "y": 865.15,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-003",
@@ -1787,7 +1855,8 @@
    "page": 4,
    "x": 255.89,
    "y": 933.7,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-004",
@@ -1796,7 +1865,8 @@
    "page": 4,
    "x": 255.89,
    "y": 1001.66,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-005",
@@ -1805,7 +1875,8 @@
    "page": 4,
    "x": 255.89,
    "y": 1070.5,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-006",
@@ -1814,7 +1885,8 @@
    "page": 4,
    "x": 255.89,
    "y": 1138.46,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-007",
@@ -1823,7 +1895,8 @@
    "page": 4,
    "x": 255.89,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-008",
@@ -1832,7 +1905,8 @@
    "page": 4,
    "x": 312.62,
    "y": 799.49,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-009",
@@ -1841,7 +1915,8 @@
    "page": 4,
    "x": 329.62,
    "y": 865.15,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-010",
@@ -1850,7 +1925,8 @@
    "page": 4,
    "x": 337.68,
    "y": 933.7,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-011",
@@ -1859,7 +1935,8 @@
    "page": 4,
    "x": 337.68,
    "y": 1001.66,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-012",
@@ -1868,7 +1945,8 @@
    "page": 4,
    "x": 337.68,
    "y": 1070.5,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-013",
@@ -1877,7 +1955,8 @@
    "page": 4,
    "x": 337.68,
    "y": 1138.46,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-014",
@@ -1886,7 +1965,8 @@
    "page": 4,
    "x": 337.68,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-015",
@@ -1895,7 +1975,8 @@
    "page": 4,
    "x": 346.61,
    "y": 802.66,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-016",
@@ -1904,7 +1985,8 @@
    "page": 4,
    "x": 411.7,
    "y": 790.56,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-017",
@@ -1913,7 +1995,8 @@
    "page": 4,
    "x": 411.7,
    "y": 859.1,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-018",
@@ -1922,7 +2005,8 @@
    "page": 4,
    "x": 411.7,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-019",
@@ -1931,7 +2015,8 @@
    "page": 4,
    "x": 411.7,
    "y": 982.66,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-020",
@@ -1940,7 +2025,8 @@
    "page": 4,
    "x": 411.7,
    "y": 1057.54,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-021",
@@ -1949,7 +2035,8 @@
    "page": 4,
    "x": 412.56,
    "y": 1135.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-022",
@@ -1958,7 +2045,8 @@
    "page": 4,
    "x": 411.7,
    "y": 1215.07,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-023",
@@ -1967,7 +2055,8 @@
    "page": 4,
    "x": 450.86,
    "y": 798.34,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-024",
@@ -1976,7 +2065,8 @@
    "page": 4,
    "x": 450.86,
    "y": 864.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-025",
@@ -1985,7 +2075,8 @@
    "page": 4,
    "x": 473.62,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-026",
@@ -1994,7 +2085,8 @@
    "page": 4,
    "x": 473.62,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-027",
@@ -2003,7 +2095,8 @@
    "page": 4,
    "x": 473.62,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-028",
@@ -2012,7 +2105,8 @@
    "page": 4,
    "x": 473.62,
    "y": 1138.18,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-029",
@@ -2021,7 +2115,8 @@
    "page": 4,
    "x": 473.62,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-030",
@@ -2030,7 +2125,8 @@
    "page": 4,
    "x": 525.17,
    "y": 798.34,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-031",
@@ -2039,7 +2135,8 @@
    "page": 4,
    "x": 525.17,
    "y": 864.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-032",
@@ -2048,7 +2145,8 @@
    "page": 4,
    "x": 559.44,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-033",
@@ -2057,7 +2155,8 @@
    "page": 4,
    "x": 555.41,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-034",
@@ -2066,7 +2165,8 @@
    "page": 4,
    "x": 555.41,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-035",
@@ -2075,7 +2175,8 @@
    "page": 4,
    "x": 555.41,
    "y": 1138.46,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-036",
@@ -2084,7 +2185,8 @@
    "page": 4,
    "x": 555.41,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-037",
@@ -2093,7 +2195,8 @@
    "page": 4,
    "x": 582.48,
    "y": 864.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-038",
@@ -2102,7 +2205,8 @@
    "page": 4,
    "x": 582.48,
    "y": 798.34,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-039",
@@ -2111,7 +2215,8 @@
    "page": 4,
    "x": 636.91,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-040",
@@ -2120,7 +2225,8 @@
    "page": 4,
    "x": 636.91,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-041",
@@ -2129,7 +2235,8 @@
    "page": 4,
    "x": 636.91,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-042",
@@ -2138,7 +2245,8 @@
    "page": 4,
    "x": 636.91,
    "y": 864,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-043",
@@ -2147,7 +2255,8 @@
    "page": 4,
    "x": 636.91,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-044",
@@ -2156,7 +2265,8 @@
    "page": 4,
    "x": 636.91,
    "y": 1138.46,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-045",
@@ -2165,7 +2275,8 @@
    "page": 4,
    "x": 710.06,
    "y": 864,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-046",
@@ -2174,7 +2285,8 @@
    "page": 4,
    "x": 718.42,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-047",
@@ -2183,7 +2295,8 @@
    "page": 4,
    "x": 718.7,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-048",
@@ -2192,7 +2305,8 @@
    "page": 4,
    "x": 718.42,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-049",
@@ -2201,7 +2315,8 @@
    "page": 4,
    "x": 718.7,
    "y": 1138.46,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-050",
@@ -2210,7 +2325,8 @@
    "page": 4,
    "x": 718.7,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-051",
@@ -2219,7 +2335,8 @@
    "page": 4,
    "x": 798.48,
    "y": 798.34,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-052",
@@ -2228,7 +2345,8 @@
    "page": 4,
    "x": 798.48,
    "y": 864.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-053",
@@ -2237,7 +2355,8 @@
    "page": 4,
    "x": 800.21,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-054",
@@ -2246,7 +2365,8 @@
    "page": 4,
    "x": 800.21,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-055",
@@ -2255,7 +2375,8 @@
    "page": 4,
    "x": 800.21,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-056",
@@ -2264,7 +2385,8 @@
    "page": 4,
    "x": 800.21,
    "y": 1138.18,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-057",
@@ -2273,7 +2395,8 @@
    "page": 4,
    "x": 800.21,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-058",
@@ -2282,7 +2405,8 @@
    "page": 4,
    "x": 854.64,
    "y": 798.34,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-059",
@@ -2291,7 +2415,8 @@
    "page": 4,
    "x": 854.64,
    "y": 864.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-060",
@@ -2300,7 +2425,8 @@
    "page": 4,
    "x": 884.02,
    "y": 854.78,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-061",
@@ -2309,7 +2435,8 @@
    "page": 4,
    "x": 881.71,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-062",
@@ -2318,7 +2445,8 @@
    "page": 4,
    "x": 881.71,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-063",
@@ -2327,7 +2455,8 @@
    "page": 4,
    "x": 881.71,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-064",
@@ -2336,7 +2465,8 @@
    "page": 4,
    "x": 881.71,
    "y": 1138.18,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-065",
@@ -2345,7 +2475,8 @@
    "page": 4,
    "x": 881.71,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-066",
@@ -2354,7 +2485,8 @@
    "page": 4,
    "x": 916.56,
    "y": 780.48,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-067",
@@ -2363,7 +2495,8 @@
    "page": 4,
    "x": 943.06,
    "y": 854.78,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-068",
@@ -2372,7 +2505,8 @@
    "page": 4,
    "x": 963.5,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-069",
@@ -2381,7 +2515,8 @@
    "page": 4,
    "x": 963.5,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-070",
@@ -2390,7 +2525,8 @@
    "page": 4,
    "x": 963.5,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-071",
@@ -2399,7 +2535,8 @@
    "page": 4,
    "x": 963.5,
    "y": 1138.18,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-072",
@@ -2408,7 +2545,8 @@
    "page": 4,
    "x": 963.5,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-073",
@@ -2417,7 +2555,8 @@
    "page": 4,
    "x": 990.58,
    "y": 789.12,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-074",
@@ -2426,7 +2565,8 @@
    "page": 4,
    "x": 990.58,
    "y": 854.78,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-075",
@@ -2435,7 +2575,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 789.12,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-076",
@@ -2444,7 +2585,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 854.78,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-077",
@@ -2453,7 +2595,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 931.68,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-078",
@@ -2462,7 +2605,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 999.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-079",
@@ -2471,7 +2615,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 1069.06,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-080",
@@ -2480,7 +2625,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 1138.18,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-081",
@@ -2489,7 +2635,8 @@
    "page": 4,
    "x": 1045.01,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-082",
@@ -2498,7 +2645,8 @@
    "page": 4,
    "x": 1091.09,
    "y": 806.11,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-083",
@@ -2507,7 +2655,8 @@
    "page": 4,
    "x": 1091.09,
    "y": 885.6,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-084",
@@ -2516,7 +2665,8 @@
    "page": 4,
    "x": 1091.09,
    "y": 963.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-085",
@@ -2525,7 +2675,8 @@
    "page": 4,
    "x": 1091.09,
    "y": 1043.71,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-086",
@@ -2534,7 +2685,8 @@
    "page": 4,
    "x": 1091.09,
    "y": 1122.91,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-087",
@@ -2543,7 +2695,8 @@
    "page": 4,
    "x": 1091.09,
    "y": 1202.11,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-088",
@@ -2552,7 +2705,8 @@
    "page": 4,
    "x": 1162.51,
    "y": 806.11,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-089",
@@ -2561,7 +2715,8 @@
    "page": 4,
    "x": 1162.51,
    "y": 885.6,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-090",
@@ -2570,7 +2725,8 @@
    "page": 4,
    "x": 1162.51,
    "y": 963.94,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-091",
@@ -2579,7 +2735,8 @@
    "page": 4,
    "x": 1162.51,
    "y": 1043.71,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-092",
@@ -2588,7 +2745,8 @@
    "page": 4,
    "x": 1162.51,
    "y": 1122.91,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-093",
@@ -2597,7 +2755,8 @@
    "page": 4,
    "x": 1162.51,
    "y": 1202.11,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-094",
@@ -2606,7 +2765,8 @@
    "page": 4,
    "x": 1215.5,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-095",
@@ -2615,7 +2775,8 @@
    "page": 4,
    "x": 1215.5,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-096",
@@ -2624,7 +2785,8 @@
    "page": 4,
    "x": 1215.22,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-097",
@@ -2633,7 +2795,8 @@
    "page": 4,
    "x": 1235.66,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-098",
@@ -2642,7 +2805,8 @@
    "page": 4,
    "x": 1235.66,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-099",
@@ -2651,7 +2815,8 @@
    "page": 4,
    "x": 1237.39,
    "y": 1140.48,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-100",
@@ -2660,7 +2825,8 @@
    "page": 4,
    "x": 1237.39,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-101",
@@ -2669,7 +2835,8 @@
    "page": 4,
    "x": 1291.82,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-102",
@@ -2678,7 +2845,8 @@
    "page": 4,
    "x": 1291.82,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-103",
@@ -2687,7 +2855,8 @@
    "page": 4,
    "x": 1290.38,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-104",
@@ -2696,7 +2865,8 @@
    "page": 4,
    "x": 1290.38,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-105",
@@ -2705,7 +2875,8 @@
    "page": 4,
    "x": 1296.72,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-106",
@@ -2714,7 +2885,8 @@
    "page": 4,
    "x": 1317.46,
    "y": 1140.19,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-107",
@@ -2723,7 +2895,8 @@
    "page": 4,
    "x": 1317.17,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-108",
@@ -2732,7 +2905,8 @@
    "page": 4,
    "x": 1344.24,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-109",
@@ -2741,7 +2915,8 @@
    "page": 4,
    "x": 1344.24,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-110",
@@ -2750,7 +2925,8 @@
    "page": 4,
    "x": 1363.25,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-111",
@@ -2759,7 +2935,8 @@
    "page": 4,
    "x": 1363.25,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-112",
@@ -2768,7 +2945,8 @@
    "page": 4,
    "x": 1378.22,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-113",
@@ -2777,7 +2955,8 @@
    "page": 4,
    "x": 1407.89,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-114",
@@ -2786,7 +2965,8 @@
    "page": 4,
    "x": 1407.89,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-115",
@@ -2795,7 +2975,8 @@
    "page": 4,
    "x": 1396.08,
    "y": 1140.48,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-116",
@@ -2804,7 +2985,8 @@
    "page": 4,
    "x": 1396.08,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-117",
@@ -2813,7 +2995,8 @@
    "page": 4,
    "x": 1434.67,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-118",
@@ -2822,7 +3005,8 @@
    "page": 4,
    "x": 1434.67,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-119",
@@ -2831,7 +3015,8 @@
    "page": 4,
    "x": 1454.54,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-120",
@@ -2840,7 +3025,8 @@
    "page": 4,
    "x": 1452.82,
    "y": 1140.48,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-121",
@@ -2849,7 +3035,8 @@
    "page": 4,
    "x": 1452.82,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-122",
@@ -2858,7 +3045,8 @@
    "page": 4,
    "x": 1480.46,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-123",
@@ -2867,7 +3055,8 @@
    "page": 4,
    "x": 1480.46,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-124",
@@ -2876,7 +3065,8 @@
    "page": 4,
    "x": 1489.1,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-125",
@@ -2885,7 +3075,8 @@
    "page": 4,
    "x": 1489.1,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-126",
@@ -2894,7 +3085,8 @@
    "page": 4,
    "x": 1509.55,
    "y": 1140.19,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-127",
@@ -2903,7 +3095,8 @@
    "page": 4,
    "x": 1509.55,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-128",
@@ -2912,7 +3105,8 @@
    "page": 4,
    "x": 1534.9,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-129",
@@ -2921,7 +3115,8 @@
    "page": 4,
    "x": 1562.26,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-130",
@@ -2930,7 +3125,8 @@
    "page": 4,
    "x": 1562.26,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-131",
@@ -2939,7 +3135,8 @@
    "page": 4,
    "x": 1562.26,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-132",
@@ -2948,7 +3145,8 @@
    "page": 4,
    "x": 1562.26,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-133",
@@ -2957,7 +3155,8 @@
    "page": 4,
    "x": 1588.75,
    "y": 1140.48,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-134",
@@ -2966,7 +3165,8 @@
    "page": 4,
    "x": 1588.75,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-135",
@@ -2975,7 +3175,8 @@
    "page": 4,
    "x": 1616.69,
    "y": 1071.07,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-136",
@@ -2984,7 +3185,8 @@
    "page": 4,
    "x": 1635.7,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-137",
@@ -2993,7 +3195,8 @@
    "page": 4,
    "x": 1635.98,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-138",
@@ -3002,7 +3205,8 @@
    "page": 4,
    "x": 1635.41,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-139",
@@ -3011,7 +3215,8 @@
    "page": 4,
    "x": 1635.41,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-140",
@@ -3020,7 +3225,8 @@
    "page": 4,
    "x": 1643.76,
    "y": 1139.33,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-141",
@@ -3029,7 +3235,8 @@
    "page": 4,
    "x": 1643.76,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-142",
@@ -3038,7 +3245,8 @@
    "page": 4,
    "x": 1673.14,
    "y": 1071.07,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-143",
@@ -3047,7 +3255,8 @@
    "page": 4,
    "x": 1698.19,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-144",
@@ -3056,7 +3265,8 @@
    "page": 4,
    "x": 1698.19,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-145",
@@ -3065,7 +3275,8 @@
    "page": 4,
    "x": 1689.55,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-146",
@@ -3074,7 +3285,8 @@
    "page": 4,
    "x": 1689.55,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-147",
@@ -3083,7 +3295,8 @@
    "page": 4,
    "x": 1698.19,
    "y": 1139.33,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-148",
@@ -3092,7 +3305,8 @@
    "page": 4,
    "x": 1698.19,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-149",
@@ -3101,7 +3315,8 @@
    "page": 4,
    "x": 1759.54,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-150",
@@ -3110,7 +3325,8 @@
    "page": 4,
    "x": 1759.54,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-151",
@@ -3119,7 +3335,8 @@
    "page": 4,
    "x": 1757.81,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-152",
@@ -3128,7 +3345,8 @@
    "page": 4,
    "x": 1757.81,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-153",
@@ -3137,7 +3355,8 @@
    "page": 4,
    "x": 1752.62,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-154",
@@ -3146,7 +3365,8 @@
    "page": 4,
    "x": 1779.98,
    "y": 1139.33,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-155",
@@ -3155,7 +3375,8 @@
    "page": 4,
    "x": 1779.98,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-156",
@@ -3164,7 +3385,8 @@
    "page": 4,
    "x": 1807.06,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-157",
@@ -3173,7 +3395,8 @@
    "page": 4,
    "x": 1807.06,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-158",
@@ -3182,7 +3405,8 @@
    "page": 4,
    "x": 1825.78,
    "y": 916.13,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-159",
@@ -3191,7 +3415,8 @@
    "page": 4,
    "x": 1834.13,
    "y": 956.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-160",
@@ -3200,7 +3425,8 @@
    "page": 4,
    "x": 1825.78,
    "y": 995.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-161",
@@ -3209,7 +3435,8 @@
    "page": 4,
    "x": 1834.13,
    "y": 1071.36,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-162",
@@ -3218,7 +3445,8 @@
    "page": 4,
    "x": 1830.96,
    "y": 1139.33,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-163",
@@ -3227,7 +3455,8 @@
    "page": 4,
    "x": 1830.96,
    "y": 1207.58,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-164",
@@ -3236,7 +3465,8 @@
    "page": 4,
    "x": 1861.49,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-165",
@@ -3245,7 +3475,8 @@
    "page": 4,
    "x": 1861.49,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-166",
@@ -3254,7 +3485,8 @@
    "page": 4,
    "x": 1896.34,
    "y": 904.9,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-167",
@@ -3263,7 +3495,8 @@
    "page": 4,
    "x": 1896.34,
    "y": 963.65,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-168",
@@ -3272,7 +3505,8 @@
    "page": 4,
    "x": 1896.62,
    "y": 1022.69,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-169",
@@ -3281,7 +3515,8 @@
    "page": 4,
    "x": 1896.34,
    "y": 1081.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-170",
@@ -3290,7 +3525,8 @@
    "page": 4,
    "x": 1895.47,
    "y": 1140.19,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-171",
@@ -3299,7 +3535,8 @@
    "page": 4,
    "x": 1895.47,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-172",
@@ -3308,7 +3545,8 @@
    "page": 4,
    "x": 1937.52,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-173",
@@ -3317,7 +3555,8 @@
    "page": 4,
    "x": 1937.23,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-174",
@@ -3326,7 +3565,8 @@
    "page": 4,
    "x": 1942.99,
    "y": 1034.78,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-175",
@@ -3335,7 +3575,8 @@
    "page": 4,
    "x": 1942.99,
    "y": 1084.61,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-176",
@@ -3344,7 +3585,8 @@
    "page": 4,
    "x": 1951.63,
    "y": 979.2,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-177",
@@ -3353,7 +3595,8 @@
    "page": 4,
    "x": 1961.71,
    "y": 1140.19,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-178",
@@ -3362,7 +3605,8 @@
    "page": 4,
    "x": 1961.71,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-179",
@@ -3371,7 +3615,8 @@
    "page": 4,
    "x": 1965.74,
    "y": 910.37,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-180",
@@ -3380,7 +3625,8 @@
    "page": 4,
    "x": 2017.01,
    "y": 910.37,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-181",
@@ -3389,7 +3635,8 @@
    "page": 4,
    "x": 2016.72,
    "y": 979.2,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-182",
@@ -3398,7 +3645,8 @@
    "page": 4,
    "x": 2024.78,
    "y": 793.73,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-183",
@@ -3407,7 +3655,8 @@
    "page": 4,
    "x": 2024.78,
    "y": 848.45,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-184",
@@ -3416,7 +3665,8 @@
    "page": 4,
    "x": 2024.78,
    "y": 1034.78,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-185",
@@ -3425,7 +3675,8 @@
    "page": 4,
    "x": 2024.78,
    "y": 1084.61,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-186",
@@ -3434,7 +3685,8 @@
    "page": 4,
    "x": 2032.56,
    "y": 1140.19,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-187",
@@ -3443,7 +3695,8 @@
    "page": 4,
    "x": 2032.56,
    "y": 1207.87,
-   "source": "Polygon#ff0000"
+   "source": "Polygon#ff0000",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-001",
@@ -3452,7 +3705,8 @@
    "page": 4,
    "x": 481.39,
    "y": 922.61,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-002",
@@ -3461,7 +3715,8 @@
    "page": 4,
    "x": 539.86,
    "y": 798.48,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-003",
@@ -3470,7 +3725,8 @@
    "page": 4,
    "x": 539.86,
    "y": 864.72,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-004",
@@ -3479,7 +3735,8 @@
    "page": 4,
    "x": 540.14,
    "y": 931.82,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-005",
@@ -3488,7 +3745,8 @@
    "page": 4,
    "x": 540.14,
    "y": 1000.08,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-006",
@@ -3497,7 +3755,8 @@
    "page": 4,
    "x": 561.74,
    "y": 913.39,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-007",
@@ -3506,7 +3765,8 @@
    "page": 4,
    "x": 621.65,
    "y": 999.79,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-008",
@@ -3515,7 +3775,8 @@
    "page": 4,
    "x": 642.38,
    "y": 913.39,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-009",
@@ -3524,7 +3785,8 @@
    "page": 4,
    "x": 703.44,
    "y": 1000.08,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-010",
@@ -3533,7 +3795,8 @@
    "page": 4,
    "x": 722.74,
    "y": 913.39,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-011",
@@ -3542,7 +3805,8 @@
    "page": 4,
    "x": 803.38,
    "y": 913.39,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-012",
@@ -3551,7 +3815,8 @@
    "page": 4,
    "x": 883.73,
    "y": 913.39,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-013",
@@ -3560,7 +3825,8 @@
    "page": 4,
    "x": 1643.18,
    "y": 1099.44,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-014",
@@ -3569,7 +3835,8 @@
    "page": 4,
    "x": 1689.84,
    "y": 1122.48,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-015",
@@ -3578,7 +3845,8 @@
    "page": 4,
    "x": 1768.18,
    "y": 907.34,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-016",
@@ -3587,7 +3855,8 @@
    "page": 4,
    "x": 1768.18,
    "y": 988.85,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-017",
@@ -3596,7 +3865,8 @@
    "page": 4,
    "x": 1768.18,
    "y": 1070.64,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-018",
@@ -3605,7 +3875,8 @@
    "page": 4,
    "x": 1772.5,
    "y": 1122.48,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-019",
@@ -3614,7 +3885,8 @@
    "page": 4,
    "x": 1855.44,
    "y": 1122.48,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-020",
@@ -3623,7 +3895,8 @@
    "page": 4,
    "x": 1938.1,
    "y": 1122.48,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-021",
@@ -3632,7 +3905,8 @@
    "page": 4,
    "x": 2020.75,
    "y": 986.26,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-022",
@@ -3641,7 +3915,8 @@
    "page": 4,
    "x": 2020.75,
    "y": 918.29,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-023",
@@ -3650,7 +3925,8 @@
    "page": 4,
    "x": 2020.75,
    "y": 1054.22,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-024",
@@ -3659,7 +3935,8 @@
    "page": 4,
    "x": 2020.75,
    "y": 1122.48,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   },
   {
    "id": "sprinkler-4-025",
@@ -3668,7 +3945,8 @@
    "page": 4,
    "x": 964.66,
    "y": 913.68,
-   "source": "Polygon#ffb680"
+   "source": "Polygon#ffb680",
+   "typeLevel": "family"
   }
  ],
  "networks": [],

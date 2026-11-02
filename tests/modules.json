@@ -1,27 +1,214 @@
 {
  "about": "FireTake 3.0 module registry: what exists, which stage it belongs to, and the acceptance metric that closes it. npm run status reads this with the latest test results.",
- "gates": { "deviceRecognitionF1": 95, "loopDetection": 90, "roomDetection": 90, "cableAccuracy": 95, "unitLineCoverage": 80,
-  "time": { "geometry_s": 30, "legend_s": 10, "network_s": 10, "total_s": 60 } },
+ "gates": {
+  "deviceRecognitionF1": 95,
+  "loopDetection": 90,
+  "roomDetection": 90,
+  "cableAccuracy": 95,
+  "unitLineCoverage": 80,
+  "time": {
+   "geometry_s": 30,
+   "legend_s": 10,
+   "network_s": 10,
+   "total_s": 60
+  }
+ },
  "stages": [
-  { "id": 1, "name": "Vector Engine", "modules": [
-   { "id": "pdf-objects", "name": "PDF objects (line / polyline / polygon / rect / circle / arc, colour, weight, dash)", "implemented": true, "file": "app/fve.js", "accept": "unit tests" },
-   { "id": "spatial-index", "name": "Spatial index (packed R-tree)", "implemented": true, "file": "app/fve.js", "accept": "unit tests (matches full scan)" },
-   { "id": "text-layer", "name": "Text layer, lines, drawing scale", "implemented": true, "file": "app/fve.js", "accept": "unit + integration" },
-   { "id": "sheet-type", "name": "Sheet classification (cover / legend / notes / plan / schematic / detail / site)", "implemented": true, "file": "app/fve.js", "accept": "integration" },
-   { "id": "markups", "name": "PDF markups kept out of geometry, read for verification", "implemented": true, "file": "app/fve.js", "accept": "unit" } ] },
-  { "id": 2, "name": "Legend Intelligence", "modules": [
-   { "id": "legend-text", "name": "Legend analysis — text-layer legends (sections, symbols, line types, abbreviations)", "implemented": true, "file": "app/fve.js", "accept": "validation F1 ≥ 95" },
-   { "id": "legend-geometric", "name": "Legend analysis — CAD-lettered legends (no text layer)", "implemented": false, "note": "exists in the app UI flow (lgRows), not yet inside FVE" },
-   { "id": "rule-engine", "name": "Rule engine (tag + shape + context rules, evidence, confidence)", "implemented": true, "file": "app/fve.js", "accept": "validation F1 ≥ 95" },
-   { "id": "verification", "name": "Verification (level outliers, unused legend rows, unknown tags, markups)", "implemented": true, "file": "app/fve.js", "accept": "unit" },
-   { "id": "line-lengths", "name": "Pipe / cable lengths from legend line types", "implemented": true, "file": "app/fve.js", "accept": "cable accuracy ≥ 95 %" } ] },
-  { "id": 3, "name": "Room Intelligence", "modules": [
-   { "id": "room-detection", "name": "Room detection (walls + room names → closed spaces)", "implemented": false },
-   { "id": "room-area", "name": "Room area", "implemented": false },
-   { "id": "as1670", "name": "AS 1670 compliance checks per room", "implemented": false } ] },
-  { "id": 4, "name": "AI Estimator", "modules": [
-   { "id": "network-graph", "name": "Device / cable graph", "implemented": false },
-   { "id": "loop-detection", "name": "Loop detection and loop cable length", "implemented": false },
-   { "id": "fve-ui", "name": "FVE results into the app (marks, runs, BOQ, quote)", "implemented": false, "note": "BOQ / quote already exist in the app; FVE output is not wired into them yet" } ] }
+  {
+   "id": 1,
+   "name": "Vector Engine",
+   "modules": [
+    {
+     "id": "pdf-objects",
+     "name": "PDF objects (line / polyline / polygon / rect / circle / arc, colour, weight, dash)",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "unit tests"
+    },
+    {
+     "id": "spatial-index",
+     "name": "Spatial index (packed R-tree)",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "unit tests (matches full scan)"
+    },
+    {
+     "id": "text-layer",
+     "name": "Text layer, lines, drawing scale",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "unit + integration"
+    },
+    {
+     "id": "sheet-type",
+     "name": "Sheet classification (cover / legend / notes / plan / schematic / detail / site)",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "integration"
+    },
+    {
+     "id": "markups",
+     "name": "PDF markups kept out of geometry, read for verification",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "unit"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "name": "Legend Intelligence",
+   "modules": [
+    {
+     "id": "legend-text",
+     "name": "Legend analysis — text-layer legends (sections, symbols, line types, abbreviations)",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "validation F1 ≥ 95"
+    },
+    {
+     "id": "legend-geometric",
+     "name": "Legend analysis — CAD-lettered legends (no text layer)",
+     "implemented": false,
+     "note": "exists in the app UI flow (lgRows), not yet inside FVE"
+    },
+    {
+     "id": "rule-engine",
+     "name": "Rule engine (tag + shape + context rules, evidence, confidence)",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "validation F1 ≥ 95"
+    },
+    {
+     "id": "verification",
+     "name": "Verification (level outliers, unused legend rows, unknown tags, markups)",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "unit"
+    },
+    {
+     "id": "line-lengths",
+     "name": "Pipe / cable lengths from legend line types",
+     "implemented": true,
+     "file": "app/fve.js",
+     "accept": "cable accuracy ≥ 95 %"
+    }
+   ]
+  },
+  {
+   "id": 2.5,
+   "name": "Symbol Matching Engine (MSME)",
+   "modules": [
+    {
+     "id": "msme-geometry",
+     "name": "Layer 1 geometry match (scale-invariant descriptor, geoHash, exact vector hits)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/geometry-matcher.js",
+     "accept": "unit + validation"
+    },
+    {
+     "id": "msme-text",
+     "name": "Layer 2 text match (exact 95 / phrase 90 / numbered 80, distance)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/text-matcher.js",
+     "accept": "unit"
+    },
+    {
+     "id": "msme-legend",
+     "name": "Layer 3 legend match (exact, fingerprint, label, abbreviation, library)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/legend-matcher.js",
+     "accept": "unit + validation"
+    },
+    {
+     "id": "msme-context",
+     "name": "Layer 4 context match (neighbours, same geometry)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/context-matcher.js",
+     "accept": "unit"
+    },
+    {
+     "id": "msme-network",
+     "name": "Layer 5 network match (legend cable circuits, member vote, family prior)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/network-matcher.js",
+     "accept": "unit"
+    },
+    {
+     "id": "msme-fusion",
+     "name": "Confidence fusion (20 / 25 / 30 / 10 / 15)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/confidence-fusion.js",
+     "accept": "unit"
+    },
+    {
+     "id": "msme-fingerprint",
+     "name": "Symbol fingerprint (geoHash, SD_FP_xxxxx)",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/symbol-fingerprint.js",
+     "accept": "unit"
+    },
+    {
+     "id": "consultant-library",
+     "name": "Consultant learning: library evidence at scoring + learn list",
+     "implemented": true,
+     "file": "src/fve/symbol-engine/legend-matcher.js",
+     "accept": "unit"
+    },
+    {
+     "id": "consultant-library-candidates",
+     "name": "Consultant learning: candidates proposed from the library (projects without a legend)",
+     "implemented": false
+    },
+    {
+     "id": "consultant-library-store",
+     "name": "Consultant library persisted in the app per consultant",
+     "implemented": false
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "name": "Room Intelligence",
+   "modules": [
+    {
+     "id": "room-detection",
+     "name": "Room detection (walls + room names → closed spaces)",
+     "implemented": false
+    },
+    {
+     "id": "room-area",
+     "name": "Room area",
+     "implemented": false
+    },
+    {
+     "id": "as1670",
+     "name": "AS 1670 compliance checks per room",
+     "implemented": false
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "name": "AI Estimator",
+   "modules": [
+    {
+     "id": "network-graph",
+     "name": "Device / cable graph",
+     "implemented": false
+    },
+    {
+     "id": "loop-detection",
+     "name": "Loop detection and loop cable length",
+     "implemented": false
+    },
+    {
+     "id": "fve-ui",
+     "name": "FVE results into the app (marks, runs, BOQ, quote)",
+     "implemented": false,
+     "note": "BOQ / quote already exist in the app; FVE output is not wired into them yet"
+    }
+   ]
+  }
  ]
 }

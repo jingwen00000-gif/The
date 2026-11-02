@@ -725,6 +725,14 @@ kbd{font-family:var(--f-mono)}
 <script src="builtin.js"></script>
 <script src="pdf.js"></script>
 <script src="fve.js"></script>
+<script src="../src/fve/symbol-engine/symbol-fingerprint.js"></script>
+<script src="../src/fve/symbol-engine/confidence-fusion.js"></script>
+<script src="../src/fve/symbol-engine/geometry-matcher.js"></script>
+<script src="../src/fve/symbol-engine/text-matcher.js"></script>
+<script src="../src/fve/symbol-engine/legend-matcher.js"></script>
+<script src="../src/fve/symbol-engine/context-matcher.js"></script>
+<script src="../src/fve/symbol-engine/network-matcher.js"></script>
+<script src="../src/fve/symbol-engine/index.js"></script>
 <!--PDFWORKER-->
 <script>/* desktop: parse PDFs in a real worker thread (the single-file builds inline the worker instead) */ if(window.pdfjsLib&&!globalThis.pdfjsWorker) pdfjsLib.GlobalWorkerOptions.workerSrc="pdf.worker.js";</script>
 <script>

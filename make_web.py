@@ -14,10 +14,13 @@ args = sys.argv[1:]
 fragment = '--fragment' in args
 args = [a for a in args if a != '--fragment']
 s = (root / 'app/index.html').read_text(encoding='utf-8')
-for f, tag in [('builtin.js', '<script src="builtin.js"></script>'), ('pdf.js', '<script src="pdf.js"></script>'), ('fve.js', '<script src="fve.js"></script>'), ('pdf.worker.js', '<!--PDFWORKER-->')]:
-    js = (root / 'app' / f).read_text(encoding='utf-8').replace('</script', '<\\/script')
-    assert s.count(tag) == 1, f
-    s = s.replace(tag, '<script>' + js + '</script>')
+# every local script (app/*.js and ../src/**) is inlined; the pdf.js worker goes where <!--PDFWORKER--> marks it
+def inline(m):
+    js = (root / 'app' / m.group(1)).resolve().read_text(encoding='utf-8').replace('</script', '<\\/script')
+    return '<script>' + js + '</script>'
+s = re.sub(r'<script src="((?!https?:)[^"]+)"></script>', inline, s)
+assert s.count('<!--PDFWORKER-->') == 1
+s = s.replace('<!--PDFWORKER-->', '<script>' + (root / 'app/pdf.worker.js').read_text(encoding='utf-8').replace('</script', '<\\/script') + '</script>')
 if fragment:
     s = re.sub(r'<!doctype html>\s*', '', s, flags=re.I)
     s = re.sub(r'<html[^>]*>\s*', '', s, count=1)

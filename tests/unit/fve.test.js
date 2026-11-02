@@ -186,6 +186,11 @@ test('layer 5: verification flags misses, unused legend rows, unknown tags and m
   assert.ok(FVE.verify(fake, { symbols: [], abbrev: {}, tagType: {} }, many).some(w => w.code === 'low-count' && w.page === 'd'));
 });
 
+test('title block: only a black / grey near-full-height border counts, not a coloured riser', async () => {
+  const p = frame(new FakePage(), 'LEVEL 1 FIRE SERVICES LAYOUT', '1:100'); p.color('00ffff').line(900, 60, 900, 700);
+  const m = await model(p); const tb = FVE.titleBlock(m); assert.equal(tb.length, 1); assert.ok(Math.abs(tb[0][0] - (p.w - 150)) < .01, JSON.stringify(tb));
+});
+
 test('layer 5: AI only suggests names for what the rules could not map', async () => {
   assert.deepEqual(await FVE.suggest([], ['smoke'], null), {});
   const s = await FVE.suggest(['PHD - PHOTO DETECTOR'], ['smoke = Smoke detector'], async () => 'x {"items":[{"i":0,"key":"smoke","why":"photoelectric"}]} y');

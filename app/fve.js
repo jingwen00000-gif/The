@@ -186,8 +186,10 @@ const shapeSize=o=>o.k==='circle'?o.r:Math.max(o.bb[2]-o.bb[0],o.bb[3]-o.bb[1]);
 const median=a=>{const b=a.slice().sort((x,y)=>x-y); return b.length?b[b.length>>1]:0};
 // the title block: the sheet border's inner frame on the right or along the bottom (long straight lines near the edge)
 FVE.titleBlock=function(m){const W=m.page.w, H=m.page.h; let tbx=W, tby=H;
-  for(const o of m.objects){if(o.k!=='line'&&o.k!=='polyline'&&o.k!=='rect') continue; const b=o.bb, bw=b[2]-b[0], bh=b[3]-b[1];
-    if(bw<1.5&&bh>H*.55&&b[0]>W*.72&&b[0]<tbx) tbx=b[0]; if(bh<1.5&&bw>W*.55&&b[1]>H*.78&&b[1]<tby) tby=b[1]}
+  // a border is black / grey and runs (nearly) the full sheet: a long coloured riser or main near the edge is drawing, not frame
+  const grey=c=>{if(!c) return false; const r=parseInt(c.slice(0,2),16), g=parseInt(c.slice(2,4),16), bl=parseInt(c.slice(4,6),16); return Math.max(r,g,bl)-Math.min(r,g,bl)<40};
+  for(const o of m.objects){if((o.k!=='line'&&o.k!=='polyline'&&o.k!=='rect')||!grey(o.stroke)) continue; const b=o.bb, bw=b[2]-b[0], bh=b[3]-b[1];
+    if(bw<1.5&&bh>H*.8&&b[0]>W*.72&&b[0]<tbx) tbx=b[0]; if(bh<1.5&&bw>W*.8&&b[1]>H*.78&&b[1]<tby) tby=b[1]}
   const z=[]; if(tbx<W*.995) z.push([tbx,0,W,H]); if(tby<H*.995) z.push([0,tby,W,H]); return z};
 FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, out={sections:[],symbols:[],lineTypes:[],abbrev:{},zones:[]};
   const heads=L.filter(l=>HEAD_RE.test(l.s.toUpperCase())&&l.s.length<70&&!/^\d/.test(l.s)&&!ABBR_RE.test(l.s));
@@ -210,7 +212,8 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
       const prev=rows[i-1], next=rows[i+1]; const half=Math.min(Math.max(((next?next.cy:r.cy+r.h*3)-(prev?prev.cy:r.cy-r.h*3))/4,r.h*.8),r.h*3);
       const zone=[Math.max(h.x-bodyH*3,r.x-bodyH*40),r.cy-half,r.x-bodyH*.3,r.cy+half];
       // white fills are masks laid under a symbol (they hide the background), not part of it
-      const objs=m.index.search(...zone).filter(o=>o.bb[0]>=zone[0]-1&&o.bb[2]<=zone[2]+1&&o.bb[1]>=zone[1]-1&&o.bb[3]<=zone[3]+1&&!(!o.stroke&&o.fill==='ffffff')&&o.stroke!=='ffffff');
+      // a symbol nearly as tall as the row spacing pokes a little past the row: centre inside the row, box within half a row more
+      const tol=half*.5, objs=m.index.search(...zone).filter(o=>{const cx=(o.bb[0]+o.bb[2])/2, cy=(o.bb[1]+o.bb[3])/2; return cx>=zone[0]&&cx<=zone[2]&&cy>=zone[1]&&cy<=zone[3]&&o.bb[0]>=zone[0]-1&&o.bb[2]<=zone[2]+1&&o.bb[1]>=zone[1]-tol&&o.bb[3]<=zone[3]+tol&&!(!o.stroke&&o.fill==='ffffff')&&o.stroke!=='ffffff'});
       const tags=m.texts.filter(t=>t.cx>zone[0]&&t.cx<zone[2]&&t.cy>zone[1]&&t.cy<zone[3]&&!r.items.includes(t)&&t.s.length<=12).map(t=>t.s);
       sec.rows.push(r); sec.bb=bbUnion(sec.bb,zone);
       const desc=r.s.trim(); if(!objs.length&&!tags.length) return;
@@ -228,7 +231,8 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
       const cols={}; objs.forEach(o=>{const k=o.stroke||o.fill; if(k) cols[k]=(cols[k]||0)+o.len}); const color=Object.keys(cols).sort((a,b)=>cols[b]-cols[a])[0]||null;
       const circles=objs.filter(o=>o.k==='circle'&&o.stroke).map(o=>({col:o.stroke,r:o.r}));
       const key=objs.filter(o=>o.closed&&o.stroke&&(o.k==='circle'||o.k==='rect'||o.k==='polygon')).map(o=>({k:o.k,col:o.stroke,size:shapeSize(o)})).sort((a,b)=>b.size-a.size)[0]||null;
-      out.symbols.push({id:'sy'+out.symbols.length,page:m.page.id,desc,type:ct.type,status:ct.status,tags,bb:ob,c,segs,color,key,cols:[...new Set(objs.map(o=>o.stroke||o.fill).filter(Boolean))],circles,shapes:[...new Set(objs.map(o=>o.k))]})})}
+      const lite=objs.map(o=>({k:o.k,bb:o.bb,c:o.c,r:o.r,pts:o.pts,stroke:o.stroke,fill:o.fill,closed:o.closed,synthetic:o.synthetic,len:o.len,w:o.w}));
+      out.symbols.push({id:'sy'+out.symbols.length,page:m.page.id,desc,type:ct.type,status:ct.status,tags,bb:ob,c,segs,objs:lite,color,key,cols:[...new Set(objs.map(o=>o.stroke||o.fill).filter(Boolean))],circles,shapes:[...new Set(objs.map(o=>o.k))]})})}
   if(heads.length) for(const r of L){if(inTB(r.bb)) continue; const am=r.s.match(ABBR_RE); if(am&&am[2].length<60){const k=am[1].toUpperCase(); if(!out.abbrev[k]) out.abbrev[k]=am[2].trim()}
     else if(/^[-–]\s*[A-Z]/.test(r.s)){const t=L.find(o=>o!==r&&Math.abs(o.cy-r.cy)<r.h*.5&&o.x1<=r.x+r.h&&r.x-o.x1<r.h*12&&/^[A-Z][A-Z0-9\/&.]{0,7}$/.test(o.s)); if(t&&!out.abbrev[t.s.toUpperCase()]) out.abbrev[t.s.toUpperCase()]=r.s.replace(/^[-–]\s*/,'').trim()}}
   out.zones=out.sections.filter(s=>s.rows.length||s.kind==='abbrev').map(s=>s.bb);
@@ -286,7 +290,10 @@ FVE.templateRatios=function(e,m){if(!e.key) return []; if(!m.shapeHist){const H=
   const H=m.shapeHist[e.key.k+'|'+e.key.col]; if(!H) return []; const c=Object.entries(H).map(([z,n])=>({q:+z/e.key.size,n})).filter(x=>x.n>=2&&x.q>=.25&&x.q<=4).sort((a,b)=>b.n-a.n);
   const out=[]; for(const x of c){if(out.length<2&&!out.some(o=>Math.abs(o.q-x.q)<.08*o.q)&&(!out.length||x.n>=out[0].n*.25)) out.push(x)} return out};
 // hooks.match(entry, model, ratio) → [{x,y,w,h,score}] for a legend symbol on a sheet (the app's vector matcher)
-FVE.detect=async function(models,D,hooks){hooks=hooks||{}; const out=[];
+FVE.detect=async function(models,D,hooks){hooks=hooks||{};
+  // the multi-layer symbol matching engine (src/fve/symbol-engine) supersedes the single-pass rules below when present
+  if(root.FVE_MSME&&root.FVE_MSME.run&&!hooks.legacy) return root.FVE_MSME.run(models,D,hooks,{FVE});
+  const out=[];
   for(const m of models){const ctx={sheet:m.sheet,zones:D.zones[m.page.id]||[],tb:FVE.titleBlock(m)}; if(m.sheet.kind!=='plan') continue; let C=[];
     // 1) the project's own legend symbols
     const ratios=FVE.pageRatios(D,m); m.ratios=ratios; const pcols=new Set(m.objects.map(o=>o.stroke||o.fill));

@@ -1,6 +1,6 @@
 {
  "project": "44-mandarin",
- "accepted": "2026-11-02T00:40:38.623Z",
+ "accepted": "2026-11-02T01:01:31.330Z",
  "sheets": [
   "cover",
   "legend",
@@ -22,25 +22,29 @@
   null
  ],
  "dictionary": {
-  "symbols": 75,
-  "typed": 43,
+  "symbols": 78,
+  "typed": 44,
   "lineTypes": 9,
   "abbrev": 36
  },
  "detections": {
+  "3:cs_smoke": 1,
   "3:fip": 1,
-  "3:relay": 3,
-  "3:smoke": 23,
-  "3:spk_surf": 65,
-  "4:ext_afff": 4,
+  "3:heat": 83,
+  "3:relay": 2,
+  "3:smoke": 22,
+  "3:sounder": 12,
+  "3:spk_surf": 67,
   "4:flowsw": 1,
-  "4:spk_pend": 25,
-  "4:spk_space": 189,
-  "5:hydrant": 11,
+  "4:spk_pend": 18,
+  "4:spk_space": 199,
+  "4:spk_up": 8,
+  "5:ext_co2": 15,
+  "5:hydrant": 7,
   "6:ext_abe": 17,
   "6:hosereel": 4
  },
- "total": 343,
+ "total": 457,
  "lines": {
   "FIRE SPRINKLER MAIN PIPEWORK": 203,
   "FIRE SPRINKLER RANGE PIPEWORK": 478.6,

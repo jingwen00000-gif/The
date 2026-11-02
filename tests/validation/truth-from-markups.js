@@ -20,7 +20,7 @@ const { openApp } = require('../lib/harness');
     const m = marks[+pi] || {};
     for (const [kind, type] of Object.entries(cfg)) {
       if (kind === 'level' || !m[kind]) continue;
-      m[kind].at.forEach(([x, y], i) => devices.push({ id: `${type}-${pi}-${String(i + 1).padStart(3, '0')}`, type, level: cfg.level, page: +pi, x: +x.toFixed(2), y: +y.toFixed(2), source: kind }));
+      m[kind].at.forEach(([x, y], i) => devices.push({ id: `${type}-${pi}-${String(i + 1).padStart(3, '0')}`, type, level: cfg.level, page: +pi, x: +x.toFixed(2), y: +y.toFixed(2), source: kind, ...((map.familyOnly || []).includes(type) ? { typeLevel: 'family' } : {}) }));
       summary[`${cfg.level}:${type}`] = (summary[`${cfg.level}:${type}`] || 0) + m[kind].at.length;
     }
   }
