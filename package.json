@@ -2,9 +2,27 @@
   "name": "firetake",
   "productName": "FireTake",
   "version": "2.12.0",
-  "description": "FireTake 消防算量报价 - Fire services takeoff and quoting",
+  "description": "FireTake \u6d88\u9632\u7b97\u91cf\u62a5\u4ef7 - Fire services takeoff and quoting",
   "main": "main.js",
   "author": "FireTake",
   "license": "UNLICENSED",
-  "scripts": { "start": "electron ." }
+  "scripts": {
+    "start": "electron .",
+    "test:all": "node tests/run.js all",
+    "test:unit": "node tests/run.js unit",
+    "test:integration": "node tests/run.js integration",
+    "test:validation": "node tests/validation/run.js",
+    "test:regression": "node tests/run.js regression",
+    "test:performance": "node tests/performance/run.js",
+    "benchmark": "node tests/benchmark.js",
+    "generate:testdata": "node tests/datasets/generate.js",
+    "debug:legend": "node tests/debug.js legend",
+    "debug:network": "node tests/debug.js network",
+    "debug:rooms": "node tests/debug.js rooms",
+    "debug:compliance": "node tests/debug.js compliance",
+    "status": "node tests/status.js"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
 }

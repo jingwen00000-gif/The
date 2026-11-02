@@ -1,0 +1,704 @@
+{
+ "project": "synthetic-basic",
+ "generated": true,
+ "units": "PDF points, top-left origin; page = sheet index (0-based)",
+ "devices": [
+  {
+   "id": "SMOKE-1-001",
+   "type": "smoke",
+   "level": "L01",
+   "x": 129.82,
+   "y": 151.7,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-1-002",
+   "type": "speaker",
+   "level": "L01",
+   "x": 280.75,
+   "y": 82,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "HEAT-1-003",
+   "type": "heat",
+   "level": "L01",
+   "x": 129.82,
+   "y": 377.07,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "HEAT-1-004",
+   "type": "heat",
+   "level": "L01",
+   "x": 222.92,
+   "y": 374.7,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "MCP-1-005",
+   "type": "mcp",
+   "level": "L01",
+   "x": 68,
+   "y": 502,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-006",
+   "type": "smoke",
+   "level": "L01",
+   "x": 129.82,
+   "y": 600.22,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-007",
+   "type": "smoke",
+   "level": "L01",
+   "x": 222.92,
+   "y": 598.73,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-008",
+   "type": "smoke",
+   "level": "L01",
+   "x": 362.57,
+   "y": 152.92,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-1-009",
+   "type": "speaker",
+   "level": "L01",
+   "x": 513.5,
+   "y": 82,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-010",
+   "type": "smoke",
+   "level": "L01",
+   "x": 362.57,
+   "y": 377.15,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-011",
+   "type": "smoke",
+   "level": "L01",
+   "x": 362.57,
+   "y": 600.84,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-012",
+   "type": "smoke",
+   "level": "L01",
+   "x": 455.67,
+   "y": 600.55,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-013",
+   "type": "smoke",
+   "level": "L01",
+   "x": 595.33,
+   "y": 149.4,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-014",
+   "type": "smoke",
+   "level": "L01",
+   "x": 688.42,
+   "y": 150.54,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-1-015",
+   "type": "speaker",
+   "level": "L01",
+   "x": 746.25,
+   "y": 82,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "MCP-1-016",
+   "type": "mcp",
+   "level": "L01",
+   "x": 533.5,
+   "y": 278,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-017",
+   "type": "smoke",
+   "level": "L01",
+   "x": 595.33,
+   "y": 374.23,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-018",
+   "type": "smoke",
+   "level": "L01",
+   "x": 595.33,
+   "y": 597.78,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-019",
+   "type": "smoke",
+   "level": "L01",
+   "x": 688.42,
+   "y": 598.87,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "HEAT-1-020",
+   "type": "heat",
+   "level": "L01",
+   "x": 828.08,
+   "y": 150.59,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SPEAKER-1-021",
+   "type": "speaker",
+   "level": "L01",
+   "x": 979,
+   "y": 82,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-022",
+   "type": "smoke",
+   "level": "L01",
+   "x": 828.08,
+   "y": 377.09,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-023",
+   "type": "smoke",
+   "level": "L01",
+   "x": 921.17,
+   "y": 377.88,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "HEAT-1-024",
+   "type": "heat",
+   "level": "L01",
+   "x": 828.08,
+   "y": 602.31,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "HEAT-1-025",
+   "type": "heat",
+   "level": "L01",
+   "x": 921.17,
+   "y": 597.04,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "MCP-1-026",
+   "type": "mcp",
+   "level": "L01",
+   "x": 766.25,
+   "y": 726,
+   "how": "legend",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-027",
+   "type": "smoke",
+   "level": "L01",
+   "x": 427.13,
+   "y": 231.28,
+   "how": "tag",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-028",
+   "type": "smoke",
+   "level": "L01",
+   "x": 659.88,
+   "y": 455.28,
+   "how": "tag",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-1-029",
+   "type": "smoke",
+   "level": "L01",
+   "x": 892.63,
+   "y": 679.28,
+   "how": "tag",
+   "page": 2
+  },
+  {
+   "id": "WIP-1-030",
+   "type": "wip",
+   "level": "L01",
+   "x": 80,
+   "y": 314,
+   "how": "abbrev",
+   "page": 2
+  },
+  {
+   "id": "SMOKE-2-001",
+   "type": "smoke",
+   "level": "L02",
+   "x": 129.82,
+   "y": 153.88,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SPEAKER-2-002",
+   "type": "speaker",
+   "level": "L02",
+   "x": 280.75,
+   "y": 82,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-003",
+   "type": "smoke",
+   "level": "L02",
+   "x": 129.82,
+   "y": 377.96,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-004",
+   "type": "smoke",
+   "level": "L02",
+   "x": 222.92,
+   "y": 372.7,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "MCP-2-005",
+   "type": "mcp",
+   "level": "L02",
+   "x": 68,
+   "y": 502,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-006",
+   "type": "smoke",
+   "level": "L02",
+   "x": 129.82,
+   "y": 598.57,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-007",
+   "type": "smoke",
+   "level": "L02",
+   "x": 222.92,
+   "y": 596.72,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-008",
+   "type": "smoke",
+   "level": "L02",
+   "x": 362.57,
+   "y": 154.3,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SPEAKER-2-009",
+   "type": "speaker",
+   "level": "L02",
+   "x": 513.5,
+   "y": 82,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-010",
+   "type": "smoke",
+   "level": "L02",
+   "x": 362.57,
+   "y": 375.59,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-011",
+   "type": "smoke",
+   "level": "L02",
+   "x": 455.67,
+   "y": 375.11,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "HEAT-2-012",
+   "type": "heat",
+   "level": "L02",
+   "x": 362.57,
+   "y": 600.03,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "HEAT-2-013",
+   "type": "heat",
+   "level": "L02",
+   "x": 455.67,
+   "y": 601.06,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-014",
+   "type": "smoke",
+   "level": "L02",
+   "x": 595.33,
+   "y": 150.91,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-015",
+   "type": "smoke",
+   "level": "L02",
+   "x": 688.42,
+   "y": 151.24,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SPEAKER-2-016",
+   "type": "speaker",
+   "level": "L02",
+   "x": 746.25,
+   "y": 82,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "MCP-2-017",
+   "type": "mcp",
+   "level": "L02",
+   "x": 533.5,
+   "y": 278,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "HEAT-2-018",
+   "type": "heat",
+   "level": "L02",
+   "x": 595.33,
+   "y": 374.57,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "HEAT-2-019",
+   "type": "heat",
+   "level": "L02",
+   "x": 688.42,
+   "y": 375.29,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-020",
+   "type": "smoke",
+   "level": "L02",
+   "x": 595.33,
+   "y": 600.89,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-021",
+   "type": "smoke",
+   "level": "L02",
+   "x": 828.08,
+   "y": 150.55,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-022",
+   "type": "smoke",
+   "level": "L02",
+   "x": 921.17,
+   "y": 149.47,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SPEAKER-2-023",
+   "type": "speaker",
+   "level": "L02",
+   "x": 979,
+   "y": 82,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-024",
+   "type": "smoke",
+   "level": "L02",
+   "x": 828.08,
+   "y": 373.13,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-025",
+   "type": "smoke",
+   "level": "L02",
+   "x": 921.17,
+   "y": 375.13,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-026",
+   "type": "smoke",
+   "level": "L02",
+   "x": 828.08,
+   "y": 597.05,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "MCP-2-027",
+   "type": "mcp",
+   "level": "L02",
+   "x": 766.25,
+   "y": 726,
+   "how": "legend",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-028",
+   "type": "smoke",
+   "level": "L02",
+   "x": 659.88,
+   "y": 455.28,
+   "how": "tag",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-029",
+   "type": "smoke",
+   "level": "L02",
+   "x": 892.63,
+   "y": 679.28,
+   "how": "tag",
+   "page": 3
+  },
+  {
+   "id": "SMOKE-2-030",
+   "type": "smoke",
+   "level": "L02",
+   "x": 427.13,
+   "y": 231.28,
+   "how": "tag",
+   "page": 3
+  },
+  {
+   "id": "WIP-2-031",
+   "type": "wip",
+   "level": "L02",
+   "x": 80,
+   "y": 314,
+   "how": "abbrev",
+   "page": 3
+  }
+ ],
+ "networks": [
+  {
+   "id": "LOOP-L1",
+   "type": "FIRE_LOOP",
+   "devices": 19,
+   "length_m": 170.09
+  },
+  {
+   "id": "LOOP-L2",
+   "type": "FIRE_LOOP",
+   "devices": 20,
+   "length_m": 173.43
+  }
+ ],
+ "rooms": [
+  {
+   "name": "STORE",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "KITCHEN",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "OFFICE",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "CORRIDOR",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "LOBBY",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "COMMS",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "OFFICE",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "OFFICE",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "MEETING",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "PLANT ROOM",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "STORE",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "KITCHEN",
+   "level": "L01",
+   "area": 64.88
+  },
+  {
+   "name": "LOBBY",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "COMMS",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "OFFICE",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "OFFICE",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "MEETING",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "PLANT ROOM",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "STORE",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "KITCHEN",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "OFFICE",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "CORRIDOR",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "LOBBY",
+   "level": "L02",
+   "area": 64.88
+  },
+  {
+   "name": "COMMS",
+   "level": "L02",
+   "area": 64.88
+  }
+ ],
+ "lines": {
+  "FIRE SPRINKLER MAIN PIPEWORK": 64.28,
+  "FIRE SPRINKLER RANGE PIPEWORK": 182.32,
+  "FIRE DETECTION LOOP CABLE": 343.52
+ },
+ "summary": {
+  "smoke": 36,
+  "speaker": 8,
+  "heat": 9,
+  "mcp": 6,
+  "wip": 2
+ }
+}

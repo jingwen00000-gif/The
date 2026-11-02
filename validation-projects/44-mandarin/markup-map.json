@@ -1,0 +1,8 @@
+{
+ "source": "Estimator's Bluebeam count markups on the tender drawings (one polygon per device). Colour → device type read by inspecting the symbol under a sample of each colour.",
+ "pages": {
+  "3": {"level": "GF-DRY", "Polygon#ffff00": "heat", "Polygon#ff0000": "smoke", "Polygon#008040": "speaker", "Polygon#ffff80": "sounder", "Polygon#0000ff": "relay"},
+  "4": {"level": "GF-WET", "Polygon#ff0000": "sprinkler", "Polygon#ffb680": "sprinkler"}
+ },
+ "notes": "Sprinkler sub-type not confirmed (red ticks and orange ticks are two head types) – scored at family level only."
+}

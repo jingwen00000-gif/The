@@ -1,0 +1,9 @@
+{
+ "project": "383-kent",
+ "status": "needs-verification",
+ "files": ["F-000-001.pdf", "F-L09-101.pdf", "F-L10-101.pdf"],
+ "devices": [],
+ "networks": [],
+ "rooms": [],
+ "notes": "Refurbishment set (legend in CAD line lettering). No independent count exists yet: the device list must be confirmed by an estimator before this project is scored. Until then it runs as a regression project (tests/regression/baselines/383-kent.json)."
+}

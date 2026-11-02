@@ -5,3 +5,8 @@ latest.json
 tests/symbol-search/*.pdf
 tests/symbol-search/*_truth.json
 tests/symbol-search/*.html
+# test outputs and client drawings (validation PDFs stay on the machine; ground-truth.json is committed)
+tests/.cache/
+tests/results/
+debug/
+validation-projects/**/*.pdf

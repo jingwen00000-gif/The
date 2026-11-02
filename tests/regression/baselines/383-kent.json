@@ -1,0 +1,23 @@
+{
+ "project": "383-kent",
+ "accepted": "2026-11-02T00:39:41.076Z",
+ "sheets": [
+  "plan",
+  "plan",
+  "plan"
+ ],
+ "scales": [
+  null,
+  100,
+  100
+ ],
+ "dictionary": {
+  "symbols": 0,
+  "typed": 0,
+  "lineTypes": 0,
+  "abbrev": 0
+ },
+ "detections": {},
+ "total": 0,
+ "lines": {}
+}

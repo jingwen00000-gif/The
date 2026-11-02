@@ -9,7 +9,7 @@ import base64, hashlib, json, sys, pathlib
 root = pathlib.Path(__file__).parent
 ver = json.load(open(root / 'package.json'))['version']
 files = {}
-for rel in ['main.js', 'preload.js', 'package.json', 'icon.png', 'app/index.html', 'app/builtin.js', 'app/pdf.js', 'app/pdf.worker.js']:
+for rel in ['main.js', 'preload.js', 'package.json', 'icon.png', 'app/index.html', 'app/builtin.js', 'app/fve.js', 'app/pdf.js', 'app/pdf.worker.js']:
     files[rel] = base64.b64encode((root / rel).read_bytes()).decode()
 bundle = json.dumps({'app': 'FireTake', 'version': ver, 'files': files}).encode()
 name = f'FireTake-update-{ver}.ftupd'

@@ -1,0 +1,9 @@
+{
+ "project": "khartoum",
+ "status": "awaiting-data",
+ "files": ["project.pdf"],
+ "devices": [],
+ "networks": [],
+ "rooms": [],
+ "notes": "Drawings and ground truth not provided yet. Put the PDF here as project.pdf and fill devices / networks / rooms (see validation-projects/README.md)."
+}

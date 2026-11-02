@@ -724,6 +724,7 @@ kbd{font-family:var(--f-mono)}
 
 <script src="builtin.js"></script>
 <script src="pdf.js"></script>
+<script src="fve.js"></script>
 <!--PDFWORKER-->
 <script>/* desktop: parse PDFs in a real worker thread (the single-file builds inline the worker instead) */ if(window.pdfjsLib&&!globalThis.pdfjsWorker) pdfjsLib.GlobalWorkerOptions.workerSrc="pdf.worker.js";</script>
 <script>
@@ -3511,7 +3512,7 @@ async function pdfTextItems(p){
 }
 async function pdfVectors(p){
   if(vecCache.has(p.id)) return vecCache.get(p.id); if(p.kind!=='pdf') return [];
-  const pg=await pdfPageObj(p); if(!pg) return []; const vp=pg.getViewport({scale:1}); const ol=await pg.getOperatorList(); const O=pdfjsLib.OPS;
+  const pg=await pdfPageObj(p); if(!pg) return []; const vp=pg.getViewport({scale:1}); const ol=await pg.getOperatorList({annotationMode:pdfjsLib.AnnotationMode.DISABLE}); const O=pdfjsLib.OPS; // markups (review ticks, highlight boxes) are not drawing
   const mul=(A,B)=>[A[0]*B[0]+A[2]*B[1],A[1]*B[0]+A[3]*B[1],A[0]*B[2]+A[2]*B[3],A[1]*B[2]+A[3]*B[3],A[0]*B[4]+A[2]*B[5]+A[4],A[1]*B[4]+A[3]*B[5]+A[5]];
   let st={m:[1,0,0,1,0,0],col:'000000',fcol:'000000',lw:1}; const stack=[]; const segs=[], fills=[]; let path=[], start=null, curP=null, curRaw=null, startRaw=null;
   const T=(x,y)=>{const m=st.m; return vp.convertToViewportPoint(m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5])};
@@ -3854,7 +3855,7 @@ async function vsmTemplate(sp,box,ink){if(sp.kind!=='pdf') return null; const V=
   const [x0,y0,x1,y1]=box, cx=(x0+x1)/2, cy=(y0+y1)/2, pad=(x1-x0)*.02; const inB=q=>q[0]>=x0-pad&&q[0]<=x1+pad&&q[1]>=y0-pad&&q[1]<=y1+pad;
   const seen=new Set(); let sg=[];
   for(const s of [...V,...(V.fills||[])]){if(!inB(s.a)||!inB(s.b)) continue; const a=[s.a[0]-cx,s.a[1]-cy], b=[s.b[0]-cx,s.b[1]-cy];
-    const key=[a,b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(key)) continue; seen.add(key); sg.push({a,b,L:s.L,c:s.col,col:ink?'':(s.f?'':s.col)})}
+    const key=[a,b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(key)) continue; seen.add(key); sg.push({a,b,L:s.L,c:s.col,col:ink?'':(s.f?'':s.col),f:s.f?1:0})}
   if(sg.length<3||sg.length>600) return null;
   // keep the symbol, not the label or background that shares its box: of the groups of joined line work, the largest one around the centre
   // (an outline with a letter or dot inside it), else the one nearest the centre; plus anything inside its outline
@@ -3871,7 +3872,9 @@ async function vsmTemplate(sp,box,ink){if(sp.kind!=='pdf') return null; const V=
 function vsmBuild(sg,bw,bh){if(sg.length<3) return null; const ps=sg.flatMap(s=>[s.a,s.b]); const bx0=Math.min(...ps.map(p=>p[0])), by0=Math.min(...ps.map(p=>p[1])), bx1=Math.max(...ps.map(p=>p[0])), by1=Math.max(...ps.map(p=>p[1]));
   // hatching: ≥ 6 parallel segments of one colour, each shorter than the symbol
   const D=Math.max(bx1-bx0,by1-by0), byDir={}; for(const s of sg){if(s.L>D*.9) continue; const k=s.c+'|'+Math.round(((Math.atan2(s.b[1]-s.a[1],s.b[0]-s.a[0])*180/Math.PI)%180+180)%180); (byDir[k]=byDir[k]||[]).push(s)}
-  const hatch={}; for(const k in byDir) if(byDir[k].length>=6){const c=k.split('|')[0]; byDir[k].forEach(s=>s.h=1); hatch[c]=(hatch[c]||0)+byDir[k].length}
+  const hatch={}; for(const k in byDir) if(byDir[k].length>=6){const c=k.split('|')[0]; byDir[k].forEach(s=>{if(!s.f){s.h=1; hatch[c]=(hatch[c]||0)+1}})}
+  // solid fills (a dot drawn as a fan of triangles, cut differently in every copy): checked for presence, never edge by edge
+  for(const s of sg) if(s.f){s.h=1; hatch['F'+s.c]=(hatch['F'+s.c]||0)+1}
   // a fill detail: small strokes inside the outline in another colour than the outline (the grey dot or star of a sprinkler head) — drawn
   // slightly differently in every copy, so it is checked for presence like hatching, not stroke by stroke
   const pe=sg.flatMap(s=>[[s.a,s],[s.b,s]]), oc=new Set([q=>q[0],q=>-q[0],q=>q[1],q=>-q[1]].map(f=>pe.reduce((m,x)=>f(x[0])<f(m[0])?x:m)[1].c));
@@ -3920,7 +3923,7 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
     // strokes lying on the symbol's own outline (more or fewer dashes than the sample) are not extra either
     const segD=(q,A,B)=>{const dx=B[0]-A[0],dy=B[1]-A[1],L2=dx*dx+dy*dy||1; const k=Math.max(0,Math.min(1,((q[0]-A[0])*dx+(q[1]-A[1])*dy)/L2)); return Math.hypot(q[0]-A[0]-k*dx,q[1]-A[1]-k*dy)};
     const MS=T.segs.map(u=>[map(u.a),map(u.b),u]), onLine=w=>{const M=[(w.a[0]+w.b[0])/2,(w.a[1]+w.b[1])/2], r=Math.max(tol,T.D*sg*.06); return MS.some(([A,B,u])=>colOk(u,w)&&segD(M,A,B)<r)};
-    const hc={}; let extra=0; for(const w of near){if(used.has(w)||!inside(w)) continue; if(T.hatch[w.col]!=null){hc[w.col]=(hc[w.col]||0)+1; continue} if(bg.has(w.col)||onLine(w)) continue; extra+=w.L/sg}
+    const hc={}; let extra=0; for(const w of near){if(used.has(w)||!inside(w)) continue; const wk=w.f?'F'+w.col:w.col; if(T.hatch[wk]!=null){hc[wk]=(hc[wk]||0)+1; continue} if(bg.has(w.col)||onLine(w)) continue; extra+=w.L/sg}
     let fillOk=true; for(const k in T.hatch) if((hc[k]||0)<Math.max(2,T.hatch[k]*.3)){fr*=.6; fillOk=false}
     fr*=1-.5*Math.min(1,extra/T.tot);
     const cs=Math.abs(Math.cos(th)), sn=Math.abs(Math.sin(th)), w=(T.bw*cs+T.bh*sn)*sg, h=(T.bw*sn+T.bh*cs)*sg;

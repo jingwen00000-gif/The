@@ -14,7 +14,7 @@ args = sys.argv[1:]
 fragment = '--fragment' in args
 args = [a for a in args if a != '--fragment']
 s = (root / 'app/index.html').read_text(encoding='utf-8')
-for f, tag in [('builtin.js', '<script src="builtin.js"></script>'), ('pdf.js', '<script src="pdf.js"></script>'), ('pdf.worker.js', '<!--PDFWORKER-->')]:
+for f, tag in [('builtin.js', '<script src="builtin.js"></script>'), ('pdf.js', '<script src="pdf.js"></script>'), ('fve.js', '<script src="fve.js"></script>'), ('pdf.worker.js', '<!--PDFWORKER-->')]:
     js = (root / 'app' / f).read_text(encoding='utf-8').replace('</script', '<\\/script')
     assert s.count(tag) == 1, f
     s = s.replace(tag, '<script>' + js + '</script>')
