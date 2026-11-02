@@ -67,3 +67,9 @@ test('combined: standards in order, most severe first, verified flags, per-stand
   assert.ok(r.findings.some(f => f.standard === 'AS 1670.1' && f.verified === false && f.clause === null));
   assert.ok(r.byStandard['AS 2444'].fail === 1 && r.byStandard['AS 1670.1'].fail === 1);
 });
+
+test('AS 1670.4: rooms without a speaker are one question per sheet, listing the rooms', () => {
+  const rooms = [room('STORE 1', 'STORE', 4, 4, 0, 0), room('STORE 2', 'STORE', 4, 4, 5, 0), room('WC', 'BATHROOM', 2, 2, 10, 0), room('OFFICE', 'OFFICE', 4, 4, 20, 0)];
+  const f = C.check([model()], [dev('speaker', 22, 2), dev('wip', 23, 2)], rooms, [], { only: ['AS 1670.4'] }).findings;
+  assert.deepEqual(f.map(x => [x.rule, x.value, x.rooms]), [['room-speaker', 2, ['STORE 1', 'STORE 2']]], 'WC exempt, office has one');
+});

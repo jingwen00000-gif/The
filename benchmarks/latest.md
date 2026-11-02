@@ -1,6 +1,6 @@
 # FireTake benchmark
 
-Generated 2026-11-02T03:56:14.043Z · engine app/fve.js 1.0.0
+Generated 2026-11-02T03:59:35.145Z · engine app/fve.js 1.0.0
 
 ## Test suites
 
@@ -16,8 +16,8 @@ Generated 2026-11-02T03:56:14.043Z · engine app/fve.js 1.0.0
 |---|---|---|---|---|
 | synthetic-basic | 4 | 191 | 0.1 | 0 |
 | synthetic-large | 8 | 1263 | 0.1 | 0 |
-| 383-kent | 3 | 215326 | 5.2 | 0.1 |
-| 44-mandarin | 8 | 122685 | 8 | 0 |
+| 383-kent | 3 | 215326 | 5 | 0.1 |
+| 44-mandarin | 8 | 122685 | 7.6 | 0 |
 | 443-willoughby | 8 | 118539 | 1.7000000000000002 | 0 |
 
 ## Device recognition
@@ -94,8 +94,8 @@ AS 1670.1 (limits not verified — standard not supplied), AS 1670.4, AS 2444, A
 | Project | Fail | Warn | Advisory | Info | Isolators needed | Expected found |
 |---|---|---|---|---|---|---|
 | 44-mandarin | 0 | 1 | 0 | 2 | 3 | – |
-| synthetic-basic | 3 | 0 | 28 | 1 | 0 | – |
-| synthetic-large | 0 | 0 | 233 | 7 | 12 | – |
+| synthetic-basic | 3 | 0 | 14 | 1 | 0 | – |
+| synthetic-large | 0 | 0 | 101 | 7 | 12 | – |
 
 ## Processing time
 
@@ -103,6 +103,6 @@ AS 1670.1 (limits not verified — standard not supplied), AS 1670.4, AS 2444, A
 |---|---|---|---|---|---|---|
 | synthetic-basic | 0.1 | 0 | 0.1 | n/a | 0.2 | PASS |
 | synthetic-large | 0.1 | 0 | 0.2 | n/a | 0.3 | PASS |
-| 383-kent | 5.2 | 0.1 | 42.4 | n/a | 47.7 | PASS |
-| 44-mandarin | 8 | 0 | 47.2 | n/a | 55.4 | PASS |
-| 443-willoughby | 1.7000000000000002 | 0 | 12 | n/a | 13.9 | PASS |
+| 383-kent | 5 | 0.1 | 40.7 | n/a | 45.8 | PASS |
+| 44-mandarin | 7.6 | 0 | 47.6 | n/a | 55.3 | PASS |
+| 443-willoughby | 1.7000000000000002 | 0 | 12.1 | n/a | 13.9 | PASS |
