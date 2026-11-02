@@ -87,6 +87,13 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
   const dims=new Map(models.map(m=>[m.page.id,m.page]));
   const onSheet=d=>{const pg=dims.get(d.page); return !pg||(d.x>=0&&d.y>=0&&d.x<=pg.w&&d.y<=pg.h)};
   dets.length=0; dets.push(...keep.filter(d=>!gone.has(d)&&onSheet(d)));
+  // status written beside the symbol: legends that tell new / existing / relocated apart by a letter next to the same symbol (N, R …)
+  // give each such row its letter; a detection with exactly that letter beside it takes the row's status
+  const fam2=family; const tagRows={}; for(const e of D.symbols||[]) if(e.type&&e.status&&!e.hist) for(const t of e.tags||[]){const k=String(t).trim().toUpperCase(); if(/^[A-Z]{1,2}$/.test(k)){(tagRows[fam2(e.type)]=tagRows[fam2(e.type)]||{})[k]=e.status}}
+  if(Object.keys(tagRows).length) for(const m of models){const T=m.texts.filter(t=>/^[A-Z]{1,2}$/.test(String(t.s).trim().toUpperCase())); if(!T.length) continue;
+    for(const d of dets){if(d.page!==m.page.id) continue; const rows=tagRows[fam2(d.type)]; if(!rows) continue; const r=Math.max(d.w,d.h)*1.1;
+      const t=T.filter(t=>hyp(t.cx-d.x,t.cy-d.y)<r).sort((a,b)=>hyp(a.cx-d.x,a.cy-d.y)-hyp(b.cx-d.x,b.cy-d.y))[0]; const st=t&&rows[String(t.s).trim().toUpperCase()];
+      if(st&&st!==d.status){d.statusFrom='tag '+String(t.s).trim(); d.status=st}}}
   for(const c of all){delete c.m; delete c._l}
   dets.learn=[...learn.values()]; dets.rejected=rejected; dets.candidates=all.length; Object.defineProperty(dets,"pool",{value:all,enumerable:false}); return dets}
 

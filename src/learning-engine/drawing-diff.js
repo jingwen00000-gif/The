@@ -62,6 +62,9 @@ function diff(O,T,annT,annO,opts){opts=opts||{}; const FVE=opts.FVE||root.FVE; c
         if(tok) out.labels.push({page:oi,src:'text',text:t.s,token:tok,x:t.cx,y:t.cy}); else out.annotations.push({page:oi,src:'text',kind:'note',text:t.s,x:t.cx,y:t.cy})}}}
   return out}
 
-NS.diff={diff,normAnnot,pairPages};
+// line work on the takeoff sheet with no twin on the original (markups drawn in, count-table icons)
+function addedObjects(mo,mt){if(!mo||!mt||mo===mt) return []; const cnt=new Map(); for(const o of mo.objects){const k=okey(o); cnt.set(k,(cnt.get(k)||0)+1)}
+  const out=[]; for(const o of mt.objects){const k=okey(o), n=cnt.get(k)||0; if(n>0) cnt.set(k,n-1); else if(!o.synthetic) out.push(o)} return out}
+NS.diff={diff,normAnnot,pairPages,addedObjects};
 if(typeof module!=='undefined'&&module.exports) module.exports=NS.diff;
 })(typeof window!=='undefined'?window:globalThis);

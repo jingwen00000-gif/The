@@ -1,14 +1,14 @@
 # FireTake benchmark
 
-Generated 2026-11-02T05:13:47.414Z · engine app/fve.js 1.0.0
+Generated 2026-11-02T05:46:23.726Z · engine app/fve.js 1.0.0
 
 ## Test suites
 
 | Suite | Result | Detail |
 |---|---|---|
-| Unit | PASS | 60/60 passed, coverage 97 % lines / 77.9 % branches |
+| Unit | FAIL | 61/62 passed, coverage 95.4 % lines / 77.7 % branches |
 | Integration | PASS | 15/15 passed |
-| Regression | PASS | 6/9 passed |
+| Regression | PASS | 7/9 passed |
 
 ## Geometry extraction and legend detection
 
@@ -16,10 +16,11 @@ Generated 2026-11-02T05:13:47.414Z · engine app/fve.js 1.0.0
 |---|---|---|---|---|
 | synthetic-basic | 4 | 191 | 0.1 | 0 |
 | synthetic-large | 8 | 1263 | 0.1 | 0 |
-| 383-kent | 3 | 215326 | 5.300000000000001 | 0.1 |
-| 44-mandarin | 8 | 122685 | 7.8 | 0 |
-| 44-market | 10 | 94399 | 2.3 | 0 |
-| 443-willoughby | 8 | 118539 | 2.5 | 0 |
+| 383-kent | 3 | 215326 | 5.2 | 0.1 |
+| 44-mandarin | 8 | 122685 | 5.3 | 0 |
+| 44-market | 10 | 94399 | 2.1 | 0 |
+| 443-willoughby | 8 | 118539 | 1.7 | 0 |
+| khartoum | 9 | 954074 | 15.5 | 0.1 |
 
 ## Device recognition
 
@@ -30,7 +31,7 @@ Generated 2026-11-02T05:13:47.414Z · engine app/fve.js 1.0.0
 | 44-market | verified-markups | 100 | 88.8 | 94.1 | 0 | 18 | 100 | FAIL |
 | 443-willoughby | needs-verification | – | – | – | – | – | – | NOT SCORED (no verified ground truth — runs in regression) |
 | giffnock | awaiting-data | – | – | – | – | – | – | AWAITING DATA |
-| khartoum | awaiting-data | – | – | – | – | – | – | AWAITING DATA |
+| khartoum | verified-count-tables | 70.7 | 52.6 | 60.3 | 79 | 172 | 59.2 | FAIL |
 | unsw-m15 | awaiting-data | – | – | – | – | – | – | AWAITING DATA |
 | synthetic-basic | generated | 100 | 100 | 100 | 0 | 0 | 100 | PASS |
 | synthetic-large | generated | 100 | 100 | 100 | 0 | 0 | 100 | PASS |
@@ -49,6 +50,9 @@ Generated 2026-11-02T05:13:47.414Z · engine app/fve.js 1.0.0
 | 44-market | speaker | 23 | 21 | 0 |
 | 44-market | heat | 3 | 3 | 0 |
 | 44-market | sprinkler | 92 | 76 | 0 |
+| khartoum | sprinkler | 195 | 45 | 60 |
+| khartoum | smoke | 89 | 67 | 3 |
+| khartoum | speaker | 79 | 79 | 16 |
 | synthetic-basic | smoke | 36 | 36 | 0 |
 | synthetic-basic | speaker | 8 | 8 | 0 |
 | synthetic-basic | heat | 9 | 9 | 0 |
@@ -101,6 +105,7 @@ AS 1670.1:2018, AS 1670.4:2015, AS 2118.1:2017, AS 2444—2001 and AS 2441—200
 |---|---|---|---|---|---|---|
 | 44-mandarin | 0 | 1 | 0 | 2 | 3 | – |
 | 44-market | 25 | 25 | 4 | 2 | 0 | – |
+| khartoum | 0 | 2 | 0 | 3 | 4 | – |
 | synthetic-basic | 3 | 0 | 14 | 1 | 0 | – |
 | synthetic-large | 0 | 0 | 101 | 7 | 12 | – |
 
@@ -109,8 +114,9 @@ AS 1670.1:2018, AS 1670.4:2015, AS 2118.1:2017, AS 2444—2001 and AS 2441—200
 | Project | Geometry s | Legend s | Detection s | Network s | Total s | Target ≤ 60 s |
 |---|---|---|---|---|---|---|
 | synthetic-basic | 0.1 | 0 | 0.1 | n/a | 0.2 | PASS |
-| synthetic-large | 0.1 | 0 | 0.2 | n/a | 0.3 | PASS |
-| 383-kent | 5.300000000000001 | 0.1 | 37.3 | n/a | 42.6 | PASS |
-| 44-mandarin | 7.8 | 0 | 47 | n/a | 55 | PASS |
-| 44-market | 2.3 | 0 | 14.9 | n/a | 17.5 | PASS |
-| 443-willoughby | 2.5 | 0 | 11.8 | n/a | 14.4 | PASS |
+| synthetic-large | 0.1 | 0 | 0.2 | n/a | 0.4 | PASS |
+| 383-kent | 5.2 | 0.1 | 38.2 | n/a | 43.5 | PASS |
+| 44-mandarin | 5.3 | 0 | 47.6 | n/a | 53.1 | PASS |
+| 44-market | 2.1 | 0 | 14.4 | n/a | 16.8 | PASS |
+| 443-willoughby | 1.7 | 0 | 12.1 | n/a | 13.9 | PASS |
+| khartoum | 15.5 | 0.1 | 55 | n/a | 70.9 | FAIL |

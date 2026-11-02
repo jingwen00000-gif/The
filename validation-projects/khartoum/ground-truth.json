@@ -1,9 +1,3904 @@
 {
  "project": "khartoum",
- "status": "awaiting-data",
- "files": ["project.pdf"],
- "devices": [],
+ "status": "verified-count-tables",
+ "files": [
+  "project.pdf"
+ ],
+ "source": "Estimator's Bluebeam count tables on the takeoff (one row per markup group, totals checked against the markups); positions are the markup centres",
+ "generatedBy": "tests/validation/truth-from-count-tables.js",
+ "tolerance": 20,
+ "summary": {
+  "5:spk_semi@relocate": 45,
+  "5:spk_semi@new": 60,
+  "6:spk_semi@new": 24,
+  "6:spk_semi@relocate": 27,
+  "7:smoke@new": 44,
+  "7:smoke@relocate": 14,
+  "8:smoke@new": 25,
+  "8:smoke@relocate": 6,
+  "5:spk_conc@relocate": 18,
+  "5:spk_conc@new": 21,
+  "7:speaker@new": 41,
+  "7:speaker@relocate": 10,
+  "8:speaker@relocate": 3,
+  "8:speaker@new": 25
+ },
+ "countTables": [
+  {
+   "page": 5,
+   "rows": [
+    {
+     "description": "100mm",
+     "status": "new",
+     "qty": 29.07,
+     "unit": "m",
+     "type": null,
+     "groups": [
+      "PolyLine#ff0000|29.07 m"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "Concealed head",
+     "status": "new",
+     "qty": 21,
+     "unit": "Count",
+     "type": "spk_conc",
+     "groups": [
+      "Polygon#000000|21"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "FH",
+     "status": "new",
+     "qty": 1,
+     "unit": "Count",
+     "type": "hydrant",
+     "groups": [
+      "Polygon#ff0000|1"
+     ],
+     "ambiguous": true
+    },
+    {
+     "description": "MOTORISED ISOLATION VALVE",
+     "status": "new",
+     "qty": 1,
+     "unit": "Count",
+     "type": "isov",
+     "groups": [
+      "Polygon#ff0000|1"
+     ],
+     "ambiguous": true
+    },
+    {
+     "description": "SEMI-RECESSED CEILING PENDANT",
+     "status": "new",
+     "qty": 60,
+     "unit": "Count",
+     "type": "spk_semi",
+     "groups": [
+      "Polygon#ff0000|60"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "Concealed head R",
+     "status": "relocate",
+     "qty": 18,
+     "unit": "Count",
+     "type": "spk_conc",
+     "groups": [
+      "Polygon#000000|18"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "SEMI-RECESSED CEILING PENDANT R",
+     "status": "relocate",
+     "qty": 45,
+     "unit": "Count",
+     "type": "spk_semi",
+     "groups": [
+      "Polygon#ff0000|45"
+     ],
+     "ambiguous": false
+    }
+   ]
+  },
+  {
+   "page": 6,
+   "rows": [
+    {
+     "description": "100mm",
+     "status": "new",
+     "qty": 29.08,
+     "unit": "m",
+     "type": null,
+     "groups": [
+      "PolyLine#ff0000|29.08 m"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "FH",
+     "status": "new",
+     "qty": 1,
+     "unit": "Count",
+     "type": "hydrant",
+     "groups": [
+      "Polygon#ff0080|1"
+     ],
+     "ambiguous": true
+    },
+    {
+     "description": "MOTORISED ISOLATION VALVE",
+     "status": "new",
+     "qty": 1,
+     "unit": "Count",
+     "type": "isov",
+     "groups": [
+      "Polygon#ff0080|1"
+     ],
+     "ambiguous": true
+    },
+    {
+     "description": "SEMI-RECESSED CEILING PENDANT",
+     "status": "new",
+     "qty": 24,
+     "unit": "Count",
+     "type": "spk_semi",
+     "groups": [
+      "Polygon#ff0000|7",
+      "Polygon#ff0000|17"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "SEMI-RECESSED CEILING PENDANT R",
+     "status": "relocate",
+     "qty": 27,
+     "unit": "Count",
+     "type": "spk_semi",
+     "groups": [
+      "Polygon#ff0000|27"
+     ],
+     "ambiguous": false
+    }
+   ]
+  },
+  {
+   "page": 7,
+   "rows": [
+    {
+     "description": "RECESSED CEILING SPEAKER",
+     "status": "new",
+     "qty": 41,
+     "unit": "Count",
+     "type": "speaker",
+     "groups": [
+      "Polygon#008040|41"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "SMOKE DETECTOR",
+     "status": "new",
+     "qty": 44,
+     "unit": "Count",
+     "type": "smoke",
+     "groups": [
+      "Polygon#ff0000|44"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "RECESSED CEILING SPEAKER R",
+     "status": "relocate",
+     "qty": 10,
+     "unit": "Count",
+     "type": "speaker",
+     "groups": [
+      "Polygon#008040|10"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "SMOKE DETECTOR R",
+     "status": "relocate",
+     "qty": 14,
+     "unit": "Count",
+     "type": "smoke",
+     "groups": [
+      "Polygon#ff0000|14"
+     ],
+     "ambiguous": false
+    }
+   ]
+  },
+  {
+   "page": 8,
+   "rows": [
+    {
+     "description": "RECESSED CEILING SPEAKER",
+     "status": "new",
+     "qty": 25,
+     "unit": "Count",
+     "type": "speaker",
+     "groups": [
+      "Polygon#008040|25"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "SMOKE DETECTOR",
+     "status": "new",
+     "qty": 25,
+     "unit": "Count",
+     "type": "smoke",
+     "groups": [
+      "Polygon#ff0000|25"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "RECESSED CEILING SPEAKER R",
+     "status": "relocate",
+     "qty": 3,
+     "unit": "Count",
+     "type": "speaker",
+     "groups": [
+      "Polygon#008040|3"
+     ],
+     "ambiguous": false
+    },
+    {
+     "description": "SMOKE DETECTOR R",
+     "status": "relocate",
+     "qty": 6,
+     "unit": "Count",
+     "type": "smoke",
+     "groups": [
+      "Polygon#ff0000|6"
+     ],
+     "ambiguous": false
+    }
+   ]
+  }
+ ],
+ "devices": [
+  {
+   "id": "spk_semi-5-001",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 608.76,
+   "y": 828.87,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-002",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 759.7,
+   "y": 828.87,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-003",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 831.83,
+   "y": 817.71,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-004",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 947.07,
+   "y": 725.51,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-005",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 944.1,
+   "y": 615.47,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-006",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 886.1,
+   "y": 624.39,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-007",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 697.24,
+   "y": 599.11,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-008",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1120.32,
+   "y": 631.08,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-009",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1144.86,
+   "y": 752.28,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-010",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1275.72,
+   "y": 747.08,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-011",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1390.23,
+   "y": 757.49,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-012",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 845.95,
+   "y": 991.7,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-013",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 990.94,
+   "y": 987.99,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-014",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 695.76,
+   "y": 964.19,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-015",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 690.55,
+   "y": 1077.21,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-016",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 567.87,
+   "y": 1098.77,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-017",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 331.6,
+   "y": 1098.63,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-018",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 684.04,
+   "y": 1267.26,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-019",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 851.78,
+   "y": 1111.12,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-020",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 974.91,
+   "y": 1110.22,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-021",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1000.79,
+   "y": 1173.57,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-022",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 950.82,
+   "y": 1176.25,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-023",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 333.78,
+   "y": 670.9,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-024",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 330.06,
+   "y": 519.96,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-025",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 470.59,
+   "y": 521.44,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-026",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 589.55,
+   "y": 518.47,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-027",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 999.25,
+   "y": 515.5,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-028",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1462.71,
+   "y": 746.81,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-029",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1580.94,
+   "y": 744.58,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-030",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1711.06,
+   "y": 884.37,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-031",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1708.83,
+   "y": 957.98,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-032",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1795.68,
+   "y": 889.64,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-033",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1798.16,
+   "y": 959.65,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-034",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1784.49,
+   "y": 1161.21,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-035",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1781.51,
+   "y": 1085.37,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-036",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1812.83,
+   "y": 504.16,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-037",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1716.1,
+   "y": 389.64,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-038",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1627.05,
+   "y": 418.86,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-039",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1468.42,
+   "y": 395.32,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-040",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1329.01,
+   "y": 395.94,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-041",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 329.03,
+   "y": 725.23,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-042",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 996.44,
+   "y": 1303.02,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-043",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 845.13,
+   "y": 1250.78,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-044",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1766.48,
+   "y": 488.9,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-045",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 5,
+   "x": 1641.14,
+   "y": 514.67,
+   "source": "Polygon#ff0000|45",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-5-046",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1276.15,
+   "y": 810.91,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-047",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1149.75,
+   "y": 812.4,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-048",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1050.12,
+   "y": 814.63,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-049",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1048.63,
+   "y": 762.58,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-050",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1046.4,
+   "y": 684.51,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-051",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1123.73,
+   "y": 697.89,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-052",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1244.18,
+   "y": 697.89,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-053",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1343.82,
+   "y": 703.1,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-054",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1467.25,
+   "y": 810.91,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-055",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1498.79,
+   "y": 702.51,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-056",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1592.9,
+   "y": 702.35,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-057",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1575.8,
+   "y": 809.42,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-058",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1641.23,
+   "y": 832.47,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-059",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1643.47,
+   "y": 754.4,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-060",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1659.82,
+   "y": 924.67,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-061",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1699.97,
+   "y": 991.59,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-062",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1791.81,
+   "y": 986.06,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-063",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 846.44,
+   "y": 1297.97,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-064",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 763.31,
+   "y": 1279.38,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-065",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 907.89,
+   "y": 1240.14,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-066",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 908.92,
+   "y": 1305.2,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-067",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1000.83,
+   "y": 1239.1,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-068",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 773.12,
+   "y": 1142.03,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-069",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 691.54,
+   "y": 1144.61,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-070",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 496.9,
+   "y": 1036.12,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-071",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 496.9,
+   "y": 963.99,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-072",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 507.31,
+   "y": 921.61,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-073",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 613.63,
+   "y": 925.33,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-074",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 708.81,
+   "y": 923.84,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-075",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 638.91,
+   "y": 1001.17,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-076",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 635.94,
+   "y": 1105.27,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-077",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 782.42,
+   "y": 1033.89,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-078",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 697.65,
+   "y": 1034.63,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-079",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 777.96,
+   "y": 963.99,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-080",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 830,
+   "y": 906.74,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-081",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 896.18,
+   "y": 804.13,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-082",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 890.23,
+   "y": 934.99,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-083",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 701.37,
+   "y": 833.13,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-084",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 511.02,
+   "y": 832.38,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-085",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 421.73,
+   "y": 1142.79,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-086",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 418.86,
+   "y": 1227.42,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-087",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 407.69,
+   "y": 732.22,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-088",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 399.51,
+   "y": 663.07,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-089",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 397.28,
+   "y": 563.43,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-090",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 334.08,
+   "y": 563.43,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-091",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 474.61,
+   "y": 555.26,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-092",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 588.37,
+   "y": 560.46,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-093",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 708.83,
+   "y": 671.99,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-094",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 780.51,
+   "y": 691.12,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-095",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 780.51,
+   "y": 625.54,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-096",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 881.2,
+   "y": 694.73,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-097",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1055.27,
+   "y": 624.65,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-098",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1392.43,
+   "y": 830.47,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-099",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1695.48,
+   "y": 830.86,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-100",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 515.03,
+   "y": 1102.4,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-101",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 588.15,
+   "y": 1024.94,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-102",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 899.2,
+   "y": 866.94,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-103",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 779.61,
+   "y": 1073.89,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-104",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1550.95,
+   "y": 395.77,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-5-105",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 5,
+   "x": 1590.23,
+   "y": 1188.37,
+   "source": "Polygon#ff0000|60",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-106",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1121.14,
+   "y": 564.1,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-107",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1184.62,
+   "y": 562.57,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-108",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1163.97,
+   "y": 652.05,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-109",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1111.2,
+   "y": 793.53,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-110",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1217.5,
+   "y": 804.24,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-111",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1290.92,
+   "y": 805,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-112",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1326.87,
+   "y": 734.64,
+   "source": "Polygon#ff0000|7",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-113",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1262.62,
+   "y": 685.7,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-114",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1629.04,
+   "y": 499.06,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-115",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1562.87,
+   "y": 445.53,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-116",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1613.43,
+   "y": 394.97,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-117",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 1218.35,
+   "y": 890.64,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-118",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 983.47,
+   "y": 779.67,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-119",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 862.13,
+   "y": 787.93,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-120",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 691.77,
+   "y": 804.24,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-121",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 670.6,
+   "y": 903.37,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-122",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 706.74,
+   "y": 988.06,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-123",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 825.5,
+   "y": 926.61,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-124",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 918.13,
+   "y": 1021.99,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-125",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 917.1,
+   "y": 933.7,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-126",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 910.91,
+   "y": 1068.98,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-127",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 910.07,
+   "y": 1141.88,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-128",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 748.15,
+   "y": 1085.6,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-129",
+   "type": "spk_semi",
+   "status": "new",
+   "page": 6,
+   "x": 730.7,
+   "y": 729.3,
+   "source": "Polygon#ff0000|17",
+   "row": "SEMI-RECESSED CEILING PENDANT"
+  },
+  {
+   "id": "spk_semi-6-130",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 757.16,
+   "y": 797.85,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-131",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 757.16,
+   "y": 904.74,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-132",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 780.4,
+   "y": 990.97,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-133",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 828.42,
+   "y": 990.97,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-134",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 867.66,
+   "y": 869.63,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-135",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 840.81,
+   "y": 740.02,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-136",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 985.91,
+   "y": 735.37,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-137",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1126.35,
+   "y": 731.76,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-138",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1119.13,
+   "y": 873.76,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-139",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1235.82,
+   "y": 735.89,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-140",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1287.4,
+   "y": 887.9,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-141",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1286.23,
+   "y": 580.79,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-142",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1101,
+   "y": 475.86,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-143",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 348.3,
+   "y": 622.55,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-144",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 348.3,
+   "y": 754.24,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-145",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 330.77,
+   "y": 1059.29,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-146",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1780.32,
+   "y": 686.13,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-147",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1697.91,
+   "y": 684.27,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-148",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1631.61,
+   "y": 679.93,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-149",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1712.97,
+   "y": 395.43,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-150",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1577.9,
+   "y": 380.56,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-151",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1471.32,
+   "y": 394.81,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-152",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1697.48,
+   "y": 495.81,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-153",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1787.33,
+   "y": 498.91,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-154",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1773.7,
+   "y": 562.73,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-155",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1688.19,
+   "y": 559.63,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "spk_semi-6-156",
+   "type": "spk_semi",
+   "status": "relocate",
+   "page": 6,
+   "x": 1627.47,
+   "y": 563.35,
+   "source": "Polygon#ff0000|27",
+   "row": "SEMI-RECESSED CEILING PENDANT R"
+  },
+  {
+   "id": "smoke-7-157",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 413.15,
+   "y": 594.28,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-158",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 384.85,
+   "y": 815.3,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-159",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 555.4,
+   "y": 645.52,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-160",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 517.92,
+   "y": 797.71,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-161",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 547.75,
+   "y": 785.47,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-162",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 690,
+   "y": 803.06,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-163",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 757.3,
+   "y": 801.53,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-164",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 826.9,
+   "y": 797.71,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-165",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 809.31,
+   "y": 901.72,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-166",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 659.41,
+   "y": 918.55,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-167",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 673.94,
+   "y": 598.1,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-168",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 709.12,
+   "y": 677.64,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-169",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 843.72,
+   "y": 698.29,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-170",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 780.25,
+   "y": 595.04,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-171",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 611.23,
+   "y": 441.32,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-172",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1044.86,
+   "y": 645.52,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-173",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1063.22,
+   "y": 747.23,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-174",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 943.91,
+   "y": 825.24,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-175",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1065.51,
+   "y": 799.24,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-176",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1093.81,
+   "y": 795.41,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-177",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 739.37,
+   "y": 1106.53,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-178",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 586.41,
+   "y": 1005.83,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-179",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 576.22,
+   "y": 1090.59,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-180",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 520.77,
+   "y": 1098.88,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-181",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 469.18,
+   "y": 1212.39,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-182",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 705.05,
+   "y": 1267.45,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-183",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 730.74,
+   "y": 1227.99,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-184",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 876.66,
+   "y": 1294.99,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-185",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1009.74,
+   "y": 1270.21,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-186",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1594.23,
+   "y": 1148.73,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-187",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1574.96,
+   "y": 1224.91,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-188",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1594.23,
+   "y": 900.94,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-189",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1765.85,
+   "y": 1018.41,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-190",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1645.63,
+   "y": 918.38,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-191",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1449.23,
+   "y": 779.8,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-192",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1393.25,
+   "y": 778.88,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-193",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1329,
+   "y": 795.4,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-194",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1592.4,
+   "y": 783.47,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-195",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1584.14,
+   "y": 690.78,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-196",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1574.8,
+   "y": 383.61,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-197",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1657.01,
+   "y": 511.07,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-198",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1820.17,
+   "y": 507.89,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-199",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1707.36,
+   "y": 381.06,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-200",
+   "type": "smoke",
+   "status": "new",
+   "page": 7,
+   "x": 1232.04,
+   "y": 443.52,
+   "source": "Polygon#ff0000|44",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-7-201",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 723.32,
+   "y": 445.42,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-202",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1098.84,
+   "y": 424.01,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-203",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1490.41,
+   "y": 442.37,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-204",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1166.9,
+   "y": 700.1,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-205",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 945.11,
+   "y": 729.16,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-206",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 706.5,
+   "y": 732.99,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-207",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1442.07,
+   "y": 697.96,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-208",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1693.96,
+   "y": 760.98,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-209",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1692.13,
+   "y": 928.01,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-210",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 352.14,
+   "y": 1134.68,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-211",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 658.06,
+   "y": 1173.56,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-212",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 895.14,
+   "y": 1174.84,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-213",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 922.54,
+   "y": 1052.47,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-7-214",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 7,
+   "x": 1762.85,
+   "y": 1232.6,
+   "source": "Polygon#ff0000|14",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-8-215",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 605.1,
+   "y": 782.06,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-216",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 404.11,
+   "y": 778.39,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-217",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 436.23,
+   "y": 713.23,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-218",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 695.95,
+   "y": 783.9,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-219",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 751.94,
+   "y": 783.9,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-220",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 707.88,
+   "y": 851.81,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-221",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 807,
+   "y": 854.57,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-222",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 845.55,
+   "y": 904.13,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-223",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 823.52,
+   "y": 1039.95,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-224",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 930.9,
+   "y": 938.08,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-225",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 774.88,
+   "y": 1117.96,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-226",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 695.04,
+   "y": 1105.11,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-227",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 605.1,
+   "y": 984.89,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-228",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 895.1,
+   "y": 1120.71,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-229",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1235.59,
+   "y": 850.9,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-230",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1268.63,
+   "y": 733.42,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-231",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1116.28,
+   "y": 615.95,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-232",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1109.82,
+   "y": 545.8,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-233",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1199.46,
+   "y": 545.52,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-234",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1270.84,
+   "y": 553.16,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-235",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1237.7,
+   "y": 677.44,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-236",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1560.43,
+   "y": 431.78,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-237",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1575.84,
+   "y": 565.44,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-238",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1721.79,
+   "y": 632.99,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-239",
+   "type": "smoke",
+   "status": "new",
+   "page": 8,
+   "x": 1002.9,
+   "y": 1082.13,
+   "source": "Polygon#ff0000|25",
+   "row": "SMOKE DETECTOR"
+  },
+  {
+   "id": "smoke-8-240",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 8,
+   "x": 1006.67,
+   "y": 845.78,
+   "source": "Polygon#ff0000|6",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-8-241",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 8,
+   "x": 1099.97,
+   "y": 853.43,
+   "source": "Polygon#ff0000|6",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-8-242",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 8,
+   "x": 1694.79,
+   "y": 1075.31,
+   "source": "Polygon#ff0000|6",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-8-243",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 8,
+   "x": 1692.59,
+   "y": 934.35,
+   "source": "Polygon#ff0000|6",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-8-244",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 8,
+   "x": 706.05,
+   "y": 977.54,
+   "source": "Polygon#ff0000|6",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "smoke-8-245",
+   "type": "smoke",
+   "status": "relocate",
+   "page": 8,
+   "x": 1007.2,
+   "y": 1063.82,
+   "source": "Polygon#ff0000|6",
+   "row": "SMOKE DETECTOR R"
+  },
+  {
+   "id": "spk_conc-5-246",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 542.85,
+   "y": 1008.19,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-247",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 667.76,
+   "y": 1001.95,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-248",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 662.41,
+   "y": 1113.48,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-249",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 678.47,
+   "y": 602.22,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-250",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 524.11,
+   "y": 529.05,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-251",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 581.21,
+   "y": 463.03,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-252",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 720.64,
+   "y": 764.06,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-253",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 695.18,
+   "y": 1253.88,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-254",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 845.13,
+   "y": 1261.93,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-255",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 957.9,
+   "y": 1269.37,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-256",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1577.34,
+   "y": 781.43,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-257",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1455.17,
+   "y": 779.99,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-258",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1392.28,
+   "y": 796.61,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-259",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1323.6,
+   "y": 748.18,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-260",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1799.24,
+   "y": 1002.98,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-261",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1687.77,
+   "y": 1003.13,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-262",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1709.67,
+   "y": 422.32,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-263",
+   "type": "spk_conc",
+   "status": "relocate",
+   "page": 5,
+   "x": 1632.06,
+   "y": 432.09,
+   "source": "Polygon#000000|18",
+   "row": "Concealed head R"
+  },
+  {
+   "id": "spk_conc-5-264",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 1327.87,
+   "y": 822.78,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-265",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 1777.71,
+   "y": 930.6,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-266",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 1687.87,
+   "y": 929.36,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-267",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 1108.35,
+   "y": 835.14,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-268",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 1228.56,
+   "y": 838.24,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-269",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 880.33,
+   "y": 867.36,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-270",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 819.77,
+   "y": 905.41,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-271",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 784.39,
+   "y": 997.56,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-272",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 787.96,
+   "y": 1115.48,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-273",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 542.81,
+   "y": 1088.99,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-274",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 601.26,
+   "y": 915.08,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-275",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 693.58,
+   "y": 922.52,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-276",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 493.44,
+   "y": 920.04,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-277",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 764.42,
+   "y": 1268.17,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-278",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 324.75,
+   "y": 795.91,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-279",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 296.2,
+   "y": 686.16,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-280",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 404.16,
+   "y": 687.94,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-281",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 680.88,
+   "y": 668.97,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-282",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 774.56,
+   "y": 659.3,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-283",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 730.3,
+   "y": 825.77,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "spk_conc-5-284",
+   "type": "spk_conc",
+   "status": "new",
+   "page": 5,
+   "x": 1556.62,
+   "y": 403.59,
+   "source": "Polygon#000000|21",
+   "row": "Concealed head"
+  },
+  {
+   "id": "speaker-7-285",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 381.41,
+   "y": 834.85,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-286",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 501.64,
+   "y": 799.97,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-287",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 553.03,
+   "y": 665.07,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-288",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 417.2,
+   "y": 615.51,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-289",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 709.05,
+   "y": 631.11,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-290",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 706.29,
+   "y": 690.76,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-291",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 794.4,
+   "y": 665.07,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-292",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 861.39,
+   "y": 662.31,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-293",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1049.53,
+   "y": 663.23,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-294",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1066.05,
+   "y": 764.18,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-295",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1063.3,
+   "y": 816.49,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-296",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 943.07,
+   "y": 843.11,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-297",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 676.01,
+   "y": 801.81,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-298",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 745.76,
+   "y": 801.81,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-299",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 804.49,
+   "y": 798.14,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-300",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 787.06,
+   "y": 900.93,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-301",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 639.3,
+   "y": 918.36,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-302",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 606.26,
+   "y": 866.97,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-303",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 742.09,
+   "y": 1085.39,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-304",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 533.76,
+   "y": 985.36,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-305",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 573.22,
+   "y": 1068.87,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-306",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 519.99,
+   "y": 1068.87,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-307",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 574.18,
+   "y": 461.65,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-308",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1239.32,
+   "y": 461.71,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-309",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1645.1,
+   "y": 428.14,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-310",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1749.11,
+   "y": 392.96,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-311",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1661.16,
+   "y": 526.04,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-312",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1802.65,
+   "y": 506.92,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-313",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1644.33,
+   "y": 939.28,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-314",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1596.14,
+   "y": 918.63,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-315",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1529.61,
+   "y": 786.32,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-316",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1388.12,
+   "y": 800.85,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-317",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1221.23,
+   "y": 785.62,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-318",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 944.26,
+   "y": 1261.87,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-319",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 773.4,
+   "y": 1260.04,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-320",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 833.82,
+   "y": 1261.57,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-321",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 671.69,
+   "y": 1243.21,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-322",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 469.78,
+   "y": 1191.05,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-323",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1596.77,
+   "y": 1167.19,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-324",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1572,
+   "y": 1244.28,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-325",
+   "type": "speaker",
+   "status": "new",
+   "page": 7,
+   "x": 1763.8,
+   "y": 1036.87,
+   "source": "Polygon#008040|41",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-7-326",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 1742.67,
+   "y": 1233.66,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-327",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 1442.95,
+   "y": 678.34,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-328",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 1490.59,
+   "y": 461.81,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-329",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 1166.03,
+   "y": 678.95,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-330",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 945.77,
+   "y": 750.54,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-331",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 706.79,
+   "y": 754.94,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-332",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 903.37,
+   "y": 1049.07,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-333",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 874.73,
+   "y": 1174.61,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-334",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 640.16,
+   "y": 1174.61,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-7-335",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 7,
+   "x": 350.51,
+   "y": 1209.86,
+   "source": "Polygon#008040|10",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-8-336",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 8,
+   "x": 1130.28,
+   "y": 831.44,
+   "source": "Polygon#008040|3",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-8-337",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 8,
+   "x": 1693.72,
+   "y": 1055.46,
+   "source": "Polygon#008040|3",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-8-338",
+   "type": "speaker",
+   "status": "relocate",
+   "page": 8,
+   "x": 1695.55,
+   "y": 952.62,
+   "source": "Polygon#008040|3",
+   "row": "RECESSED CEILING SPEAKER R"
+  },
+  {
+   "id": "speaker-8-339",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 400.49,
+   "y": 801.3,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-340",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 432.43,
+   "y": 731.92,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-341",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 608.64,
+   "y": 801.3,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-342",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 676.92,
+   "y": 815.62,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-343",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 745.2,
+   "y": 815.62,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-344",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 743,
+   "y": 851.96,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-345",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 825.59,
+   "y": 818.92,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-346",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 824.49,
+   "y": 905.92,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-347",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 894.98,
+   "y": 919.14,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-348",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 833.3,
+   "y": 1019.36,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-349",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 759.52,
+   "y": 1070.02,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-350",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 687.93,
+   "y": 1070.02,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-351",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 602.03,
+   "y": 1003.94,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-352",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 897.18,
+   "y": 1139.4,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-353",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1282.63,
+   "y": 945.57,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-354",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1251.8,
+   "y": 835.44,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-355",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1152.68,
+   "y": 683.46,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-356",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1127.35,
+   "y": 587.65,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-357",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1251.8,
+   "y": 616.28,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-358",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1184.62,
+   "y": 564.52,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-359",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1303.56,
+   "y": 733.02,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-360",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1300.03,
+   "y": 682.85,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-361",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1573.16,
+   "y": 546.17,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-362",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1726.42,
+   "y": 612.25,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  },
+  {
+   "id": "speaker-8-363",
+   "type": "speaker",
+   "status": "new",
+   "page": 8,
+   "x": 1556.45,
+   "y": 407.85,
+   "source": "Polygon#008040|25",
+   "row": "RECESSED CEILING SPEAKER"
+  }
+ ],
  "networks": [],
  "rooms": [],
- "notes": "Drawings and ground truth not provided yet. Put the PDF here as project.pdf and fill devices / networks / rooms (see validation-projects/README.md)."
+ "name": "L4 & L5 tenancy fitout, 17 Khartoum Rd Macquarie Park NSW"
 }

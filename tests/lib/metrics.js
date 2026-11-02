@@ -12,7 +12,11 @@ const r1 = v => Math.round(v * 10) / 10;
 
 function scoreDevices(truth, dets, opts = {}) {
   const tol = opts.tol || 12;
-  const T = truth.filter(d => d.verified !== false && d.x != null), D = dets.slice();
+  const T = truth.filter(d => d.verified !== false && d.x != null);
+  // a takeoff that counts work items only (every truth device has a status, none 'retain'): devices recognised as existing-to-remain are
+  // not the estimator's to count, so they are neither matches nor false alarms
+  const workOnly = T.length && T.every(t => t.status) && !T.some(t => t.status === 'retain');
+  const D = workOnly ? dets.filter(d => d.status !== 'retain') : dets.slice();
   const pairs = [];
   T.forEach((t, i) => D.forEach((d, j) => { if (d.page !== t.page) return; const dist = Math.hypot(d.x - t.x, d.y - t.y); if (dist <= tol) pairs.push([dist, i, j]); }));
   pairs.sort((a, b) => a[0] - b[0]);

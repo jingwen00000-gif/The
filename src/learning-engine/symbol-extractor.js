@@ -19,8 +19,12 @@ const ckey=c=>String(c||'').replace(/^#/,'').toLowerCase();
 
 function classOf(a){return a.src+':'+a.kind+'#'+(a.colour||'none')}
 // markup-map.json: {"classes": {"annotation:Circle#ff00ff": "smoke"}} or the per-page form {"pages": {"3": {"Square#ff0000": "smoke"}}}
-function mapType(map,a){if(!map) return null; if(map.classes){const t=map.classes[classOf(a)]||map.classes[a.kind+'#'+a.colour]; if(t) return t}
-  const pg=map.pages&&map.pages[String(a.page)]; return pg&&pg[a.kind+'#'+a.colour]||null}
+// an entry is a device type, or {type, status} (count tables: the same colour can be 'Concealed head' and 'Concealed head R', told apart
+// by the group total Bluebeam writes into each markup: key kind#colour|contents)
+function mapEntry(map,a){if(!map) return null; if(map.classes){const t=map.classes[classOf(a)]||map.classes[a.kind+'#'+a.colour]; if(t) return t}
+  const pg=map.pages&&map.pages[String(a.page)]; if(!pg) return null; return pg[a.kind+'#'+a.colour+'|'+String(a.contents||'').trim()]||pg[a.kind+'#'+a.colour]||null}
+function mapType(map,a){const e=mapEntry(map,a); return e&&typeof e==='object'?e.type:e}
+function mapStatus(map,a){const e=mapEntry(map,a); return e&&typeof e==='object'?e.status||null:null}
 function wordType(s,FVE,D){const u=String(s||'').trim(); if(!u||/^[\d\s.,#xX×]+$/.test(u)) return null; /* a number is a count, not a name */ const ct=FVE.classifyDesc(u); if(ct.type) return ct.type;
   const tok=FVE.tagToken(u); if(tok){if(D&&D.tagType&&D.tagType[tok]) return D.tagType[tok]; const r=FVE.TAG_RULES.find(r=>r.tag.test(tok)); if(r) return r.type} return null}
 
@@ -33,7 +37,7 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
   for(const c of classes.values()){
     // the estimator's key decides markup by markup (one colour can mean smoke on the dry sheet and sprinkler on the wet one);
     // markups the key does not cover are not counts
-    if(ctx.markupMap){c.items.forEach(a=>a.mtype=mapType(ctx.markupMap,a)); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length){c.type=mode(mt); c.how='markup-map'; c.confidence=1; c.perItem=true} else {c.type=null; c.how='not in markup-map'} continue}
+    if(ctx.markupMap){c.items.forEach(a=>{a.mtype=mapType(ctx.markupMap,a); a.mstatus=mapStatus(ctx.markupMap,a)}); const mt=c.items.map(a=>a.mtype).filter(Boolean); if(mt.length){c.type=mode(mt); c.how='markup-map'; c.confidence=1; c.perItem=true} else {c.type=null; c.how='not in markup-map'} continue}
     const ws=Object.entries(c.words).sort((a,b)=>b[1]-a[1]); const wt=ws.map(([w])=>wordType(w,FVE,D)).find(Boolean); if(wt){c.type=wt; c.how='markup text'; c.confidence=.95; continue}
     const under=c.items.map(detAt).filter(Boolean).map(d=>d.type); if(under.length){const t=mode(under), share=under.filter(x=>x===t).length/c.items.length; if(share>=.6){c.type=t; c.how='legend under markups'; c.confidence=Math.round(share*100)/100; continue}}
     // one colour can count different devices on different sheets (red: smoke detectors on the dry sheet, sprinklers on the wet one):
@@ -50,7 +54,7 @@ function extract(models,diff,ctx){const FVE=ctx.FVE||root.FVE, FP=(ctx.MSME||roo
     const ok=d&&(d.type===t||family(d.type)===t); if(ok) t=d.type;
     const x=ok?d.x:a.c[0], y=ok?d.y:a.c[1];
     if(devices.some(o=>o.page===a.page&&family(o.type)===family(t)&&hyp(o.x-x,o.y-y)<3)) continue;
-    devices.push({page:a.page,type:t,x:Math.round(x*100)/100,y:Math.round(y*100)/100,status:ok?d.status||null:null,cls:c.key,box:ok?[d.x-d.w/2,d.y-d.h/2,d.x+d.w/2,d.y+d.h/2]:a.bb})}
+    devices.push({page:a.page,type:t,x:Math.round(x*100)/100,y:Math.round(y*100)/100,status:a.mstatus||(ok?d.status||null:null),cls:c.key,grp:a.kind+'#'+(a.colour||'none')+'|'+String(a.contents||'').trim(),mx:Math.round(a.c[0]*100)/100,my:Math.round(a.c[1]*100)/100,box:ok?[d.x-d.w/2,d.y-d.h/2,d.x+d.w/2,d.y+d.h/2]:a.bb})}
   // labels the estimator wrote next to devices (SD-01): device IDs, and a vote for what a tag means to this estimator / consultant
   const abbrev={}; for(const l of diff.labels){const near=devices.filter(d=>d.page===l.page).sort((p,q)=>hyp(p.x-l.x,p.y-l.y)-hyp(q.x-l.x,q.y-l.y))[0]; if(near&&hyp(near.x-l.x,near.y-l.y)<40&&l.token&&l.token.length<=6){near.label=l.text; (abbrev[l.token]=abbrev[l.token]||{})[near.type]=(abbrev[l.token][near.type]||0)+1}}
   // symbols: the geometry under each device, kept where it recurs across the class

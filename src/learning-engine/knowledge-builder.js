@@ -19,6 +19,9 @@ function build(input,ex,pricing){const at=new Date().toISOString(); pricing=pric
     sheets:ex.sheets,devices:ex.devices,rooms:ex.rooms,networks:ex.networks,measurements:ex.measurements,
     symbols:ex.symbols.map(s=>({fingerprint:s.fingerprint,geoHash:s.geoHash,deviceType:s.deviceType,n:s.n,text:s.text})),
     markupClasses:ex.classes,labels:ex.labels,notes:ex.notes,pricing:{items,totals,boqCheck},
+    // the estimator's own totals against what extraction found for each row's markup group
+    countTables:(ex.countTables||[]).map(t=>({page:t.page,rows:t.rows.map(r=>({description:r.description,status:r.status,qty:r.qty,unit:r.unit,type:r.type,group:r.group,ambiguous:r.ambiguous,
+      found:r.groups&&r.groups.length&&!/^(PolyLine|Line)/.test(r.groups[0])?ex.devices.filter(d=>d.page===t.page&&r.groups.includes(d.grp)).length:null}))})),
     summary:{devices:ex.devices.length,byType:counts,symbols:ex.symbols.length,networks:ex.networks.length,rooms:ex.rooms.length,pricingItems:items.length,unknownMarkupClasses:ex.unknownClasses.length},
     provenance:{diff:ex.diffStats,legend:ex.legend,generatedBy:'src/learning-engine'}};
   const contributions={projectId:input.projectId,at,consultant:ex.consultant&&ex.consultant.consultant||null,

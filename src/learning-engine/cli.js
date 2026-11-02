@@ -18,7 +18,10 @@ async function learn(folders, out, log = console.log) {
       const P = L.ingest.loadFolder(dir); if (!P.originalDrawing.length) { log(`skip ${dir}: no PDF`); continue; }
       const t0 = Date.now(); const K = L.db.load(out);
       const b64 = f => [path.basename(f), fs.readFileSync(f).toString('base64')];
-      const ex = await app.page.evaluate(input => FT_LEARN.ingest.ingestInApp(input), {
+      // the takeoff's markup text (count tables live in markup appearances): poppler's pdftotext when installed
+      let takeoffWords = null;
+      try { const cp = require('child_process'); takeoffWords = P.takeoffDrawing.flatMap(f => L.ingest.bboxWords(cp.execFileSync('pdftotext', ['-bbox', f, '-'], { encoding: 'utf8', maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'ignore'] }))); } catch (e) { takeoffWords = null; }
+      const ex = await app.page.evaluate(input => FT_LEARN.ingest.ingestInApp(input), { takeoffWords,
         projectId: P.projectId, original: P.originalDrawing.map(b64), takeoff: P.sameFile ? null : P.takeoffDrawing.map(b64), metadata: P.metadata, markupMap: P.markupMap, knowledge: K });
       const pricing = {};
       for (const k of ['boq', 'quote']) if (P[k]) { const sh = await L.pricing.readXlsx(fs.readFileSync(P[k]), b => zlib.inflateRawSync(b)); pricing[k] = L.pricing.extract(sh, { FVE, source: k }); }

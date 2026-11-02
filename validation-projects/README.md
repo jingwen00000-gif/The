@@ -9,7 +9,8 @@ stay on the machine; `.gitignore` keeps `*.pdf` here out of git).
 | 44-mandarin | 8-sheet tender set (dry + wet) | 406 devices from the estimator's Bluebeam count markups (`markup-map.json` → `truth-from-markups.js`) | scored |
 | 44-market | 10-sheet D&C tender, Lobby & EOT refurbishment (Nutbrook): dry, wet, hydrant / hose reel, demolition | 161 devices from the estimator's Bluebeam ticks (`markup-map.json`, read by inspecting symbols under each colour; demolition sheet not scored; tolerance 20 pt — ticks sit beside the symbol) | scored |
 | 443-willoughby | 8-sheet wet fire set | none yet (no count markups) | regression only |
-| unsw-m15 · giffnock · khartoum | not provided | — | awaiting data |
+| khartoum | 9-sheet L4 & L5 tenancy fit-out, 17 Khartoum Rd Macquarie Park (LCI / Intermain): dry, wet, hydrant coverage | 363 devices with status (new / relocate) from the estimator's own Bluebeam count tables (`truth-from-count-tables.js`: every table row tied to its markup group by total; FH / isolation valve left out — the tables cannot tell those two single counts apart); work items only, so recognised existing devices are not false alarms | scored |
+| unsw-m15 · giffnock | not provided | — | awaiting data |
 
 Adding a project: create the folder, put the PDF(s) in, write `ground-truth.json` (see `tests/README.md`). If the drawings carry count
 markups, describe colour → device in `markup-map.json` and run `node tests/validation/truth-from-markups.js validation-projects/<name>`.

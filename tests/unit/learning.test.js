@@ -161,3 +161,38 @@ test('recognition: historical symbols join the dictionary only where the legend 
   const f = M.fusion.fuse({ geometry: { smoke: .9 }, historical: { smoke: .95 }, consultant: { smoke: .95 } }); assert.deepEqual(f.sources, ['Geometry', 'Historical', 'Consultant']);
   assert.equal(M.fusion.fuse({ geometry: { smoke: .9 }, legend: { smoke: .9 } }).sources.length, 2);
 });
+
+test('count tables: rows read, tied to markup groups by total (split groups, colour preference), uncoloured text boxes ignored', () => {
+  const CT = require('../../src/learning-engine/count-table.js');
+  const w = (s, x, y) => ({ s, x, x1: x + s.length * 5, cx: x + s.length * 2.5, cy: y, h: 8 });
+  const words = [w('NEW', 100, 90), w('Description', 60, 110), w('Quantity', 200, 110), w('Unit', 260, 110),
+    w('Concealed', 50, 125), w('head', 100, 125), w('21', 210, 125), w('Count', 258, 125),
+    w('SEMI-RECESSED', 40, 140), w('CEILING', 110, 140), w('PENDANT', 150, 140), w('24', 210, 140), w('Count', 258, 140),
+    w('100mm', 60, 155), w('29.07', 205, 155), w('m', 262, 155),
+    w('Relocate', 420, 90), w('Description', 380, 110), w('Quantity', 520, 110), w('Unit', 580, 110),
+    w('Count', 330, 125), w('Concealed', 370, 125), w('head', 420, 125), w('R', 445, 125), w('18', 530, 125), w('Count', 578, 125)];
+  const tabs = CT.read({ texts: [] }, [], words);
+  assert.deepEqual(tabs.map(t => [t.status, t.rows.map(r => [r.description, r.qty, r.unit, r.status])]),
+    [['new', [['Concealed head', 21, 'Count', 'new'], ['SEMI-RECESSED CEILING PENDANT', 24, 'Count', 'new'], ['100mm', 29.07, 'm', 'new']]], ['relocate', [['Concealed head R', 18, 'Count', 'relocate']]]]);
+  const ann = (subtype, colour, contents, n) => Array.from({ length: n }, () => ({ subtype, colour, contents, bb: [0, 0, 1, 1] }));
+  const annots = [...ann('Polygon', '000000', '21', 21), ...ann('Polygon', '000000', '18', 18), ...ann('Polygon', 'ff0000', '7', 7), ...ann('Polygon', 'ff0000', '17', 17),
+    ...ann('PolyLine', 'ff0000', '29.07 m', 1), ...ann('Square', null, '4.01', 1)];
+  const m = CT.match(tabs, annots, null);
+  assert.deepEqual(m.rows.map(r => [r.description, r.group, r.type]), [['Concealed head', 'Polygon#000000|21', 'spk_conc'], ['SEMI-RECESSED CEILING PENDANT', 'Polygon#ff0000|7 + Polygon#ff0000|17', 'spk_semi'],
+    ['100mm', 'PolyLine#ff0000|29.07 m', null], ['Concealed head R', 'Polygon#000000|18', 'spk_conc']]);
+  assert.deepEqual(m.map['Polygon#000000|18'], { type: 'spk_conc', status: 'relocate', description: 'Concealed head R', qty: 18 });
+  // two rows of the same total: the colour each description had elsewhere settles it; unsettled stays unmapped
+  const two = [{ status: 'new', rows: [{ description: 'RECESSED CEILING SPEAKER', qty: 25, unit: 'Count', status: 'new' }, { description: 'SMOKE DETECTOR', qty: 25, unit: 'Count', status: 'new' }] }];
+  const an2 = [...ann('Polygon', 'ff0000', '25', 25), ...ann('Polygon', '008040', '25', 25)];
+  assert.deepEqual(Object.entries(CT.match(two, an2, null, { 'RECESSED CEILING SPEAKER': '008040', 'SMOKE DETECTOR': 'ff0000' }).map).map(([k, v]) => [k, v.type]), [['Polygon#008040|25', 'speaker'], ['Polygon#ff0000|25', 'smoke']]);
+  assert.ok(CT.match(two, an2, null).rows.every(r => r.ambiguous) && !Object.keys(CT.match(two, an2, null).map).length);
+  assert.equal(CT.statusOf('Relocate'), 'relocate'); assert.equal(CT.typeOf('FH'), 'hydrant');
+});
+
+test('metrics: a takeoff counting work items only does not hold existing-to-remain detections against recognition', () => {
+  const { scoreDevices } = require('../lib/metrics');
+  const truth = [{ page: 0, x: 0, y: 0, type: 'smoke', status: 'new' }, { page: 0, x: 100, y: 0, type: 'smoke', status: 'relocate' }];
+  const dets = [{ page: 0, x: 1, y: 0, type: 'smoke', status: 'new', conf: 1 }, { page: 0, x: 101, y: 0, type: 'smoke', status: 'relocate', conf: 1 }, { page: 0, x: 300, y: 0, type: 'smoke', status: 'retain', conf: 1 }];
+  assert.equal(scoreDevices(truth, dets).falsePositive, 0);
+  assert.equal(scoreDevices(truth.map(({ status, ...t }) => t), dets).falsePositive, 1, 'truth without statuses: every detection counts');
+});
