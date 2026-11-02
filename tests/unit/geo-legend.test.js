@@ -100,3 +100,32 @@ test('legend: an ABBREVIATIONS section in two columns with no dash ("R    RELOCA
   const m = await model(p, 'ab'); const lg = FVE.analyzeLegend(m);
   assert.deepEqual(lg.abbrev, { E: 'EXISTING', R: 'RELOCATED', FH: 'FIRE HYDRANT' });
 });
+
+test('legend: a numbered general note under the legend is not a legend row; a heading over the descriptions finds symbols to its left', async () => {
+  const p = frame(new FakePage(), 'LEGEND');
+  p.text(160, 60, 'LEGEND OF SYMBOLS', 9);
+  p.color('000000', .3); p.rect(100, 76, 10, 10); p.text(160, 84, 'SMOKE DETECTOR.', 6);
+  p.circle(105, 106, 5); p.line(100, 111, 110, 101); p.text(160, 109, 'EXPOSED UPRIGHT SPRINKLER HEAD.', 6);
+  p.circle(105, 131, 4); p.text(160, 134, 'SPEAKER.', 6);
+  p.rect(100, 151, 10, 6); p.text(160, 157, '1. EXISTING FIRE SPRINKLER SYSTEM IN GROUND FLOOR TO BE RETAINED', 6);
+  const m = await model(p, 'lg'); const lg = FVE.analyzeLegend(m);
+  assert.deepEqual(lg.symbols.map(s => s.type), ['smoke', 'spk_up', 'speaker'], 'symbols 60 pt left of the heading are found; the note is not a row');
+  const D = FVE.projectDictionary([m], {}); assert.ok(D.symbols.filter(s => s.type).every(s => s.anyColour), 'an all-black legend with no colour code: copies in any one system colour');
+});
+
+test('MSME legend layer: of two rows within 0.03 on one spot, the one explaining 1.3x more ink wins (recessed speaker vs its surface subset)', () => {
+  const graph = { D: { symbols: [{ id: 'a', type: 'speaker', segs: [1, 2, 3] }, { id: 'b', type: 'spk_surf', segs: [1, 2, 3] }] } };
+  const L = require('../../src/fve/symbol-engine/legend-matcher.js');
+  const r = L.score({ hits: [{ type: 'spk_surf', entry: 'b', score: 1, got: 38.7, status: 'retain' }, { type: 'speaker', entry: 'a', score: 1, got: 75.6, status: 'retain' }] }, graph);
+  assert.ok(r.scores.speaker > r.scores.spk_surf, JSON.stringify(r.scores)); assert.equal(r.statusBy.speaker, 'retain');
+  const r2 = L.score({ hits: [{ type: 'spk_surf', entry: 'b', score: 1, got: 38.7 }, { type: 'speaker', entry: 'a', score: .9, got: 75.6 }] }, graph);
+  assert.ok(r2.scores.spk_surf > r2.scores.speaker, 'a clearly better match of the smaller symbol still wins');
+});
+
+test('MSME status on a demolition sheet: a copy recoloured from the black legend (or dashed) is removed, the rest existing', () => {
+  const graph = { D: { symbols: [] }, demo: new Set(['p2']) };
+  assert.equal(M.statusFor('smoke', { page: 'p2', hits: [{ type: 'smoke', score: .92, recol: 'ff0000' }] }, {}, graph), 'remove');
+  assert.equal(M.statusFor('smoke', { page: 'p2', hits: [{ type: 'smoke', score: .95, dashed: .5 }] }, {}, graph), 'remove');
+  assert.equal(M.statusFor('smoke', { page: 'p2', hits: [{ type: 'smoke', score: .95 }] }, {}, graph), 'retain');
+  assert.equal(M.statusFor('smoke', { page: 'p4', hits: [{ type: 'smoke', score: .95, recol: 'ff0000' }] }, {}, graph), null, 'not a demolition sheet');
+});

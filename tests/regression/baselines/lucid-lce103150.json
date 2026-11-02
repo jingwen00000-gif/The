@@ -1,6 +1,6 @@
 {
  "project": "lucid-lce103150",
- "accepted": "2026-11-02T08:40:32.004Z",
+ "accepted": "2026-11-02T11:21:09.026Z",
  "sheets": [
   "notes",
   "legend",
@@ -47,7 +47,7 @@
   "2:ext_abe": 2,
   "2:flowsw": 1,
   "2:hydrant": 2,
-  "2:sounder": 4,
+  "2:sounder": 3,
   "2:spk_semi": 1,
   "3:blanket": 1,
   "3:fip": 2,
@@ -60,6 +60,7 @@
   "3:spk_up": 117,
   "4:hydrant": 1,
   "4:smoke": 19,
+  "4:sounder": 1,
   "4:speaker": 15,
   "4:spk_surf": 4,
   "4:spk_up": 170,

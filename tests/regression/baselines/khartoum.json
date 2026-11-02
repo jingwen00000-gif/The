@@ -1,6 +1,6 @@
 {
  "project": "khartoum",
- "accepted": "2026-11-02T08:40:06.517Z",
+ "accepted": "2026-11-02T11:20:41.956Z",
  "sheets": [
   "cover",
   "notes",
@@ -50,8 +50,8 @@
   "6:spk_pend@new": 25,
   "6:spk_pend@relocate": 26,
   "6:spk_pend@retain": 120,
-  "6:spk_space@retain": 41,
-  "6:spk_up@retain": 15,
+  "6:spk_space@retain": 43,
+  "6:spk_up@retain": 14,
   "7:smoke@new": 44,
   "7:smoke@relocate": 14,
   "7:smoke@retain": 35,
@@ -70,7 +70,7 @@
   "8:spk_surf@retain": 2,
   "8:wip": 1
  },
- "total": 844,
+ "total": 845,
  "lines": {
   "PIPEWORK (EXISTING TO BE RETAINED)": 184.1,
   "PIPEWORK (NEW)": 407.5

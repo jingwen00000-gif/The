@@ -1,6 +1,6 @@
 {
  "project": "44-mandarin",
- "accepted": "2026-11-02T08:38:07.082Z",
+ "accepted": "2026-11-02T11:19:05.626Z",
  "sheets": [
   "cover",
   "legend",
@@ -37,8 +37,8 @@
   "3:spk_surf": 67,
   "4:ext_wc": 4,
   "4:flowsw": 1,
-  "4:spk_pend": 206,
-  "4:spk_up": 12,
+  "4:spk_pend": 207,
+  "4:spk_up": 11,
   "5:ext_co2": 13,
   "5:hydrant": 7,
   "6:ext_abe": 17,

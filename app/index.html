@@ -3930,7 +3930,21 @@ function vsmBuild(sg,bw,bh){if(sg.length<3) return null; const ps=sg.flatMap(s=>
   return {segs:geo,hatch,fillLen:sg.filter(s=>s.h).reduce((a,s)=>a+s.L,0),tot:geo.reduce((a,s)=>a+s.L,0),R,D,ib:[bx0,by0,bx1,by1],bw,bh,cols:new Set(geo.map(s=>s.c))}}
 // the same stroke plotted two or three times over (heavy pens) counts once, or the copies would read as extra line work
 function vsmIndex(V){if(V._vsm) return V._vsm; const seen=new Set(), all=[]; for(const s of [...V,...(V.fills||[])]){const k=s.col+'|'+[s.a,s.b].map(q=>Math.round(q[0]*20)+','+Math.round(q[1]*20)).sort().join('|'); if(seen.has(k)) continue; seen.add(k); all.push(s)}
-  const byL=all.slice().sort((a,b)=>a.L-b.L); return V._vsm={all,byL}}
+  // dashed line work (a removed device drawn dashed): collinear short strokes of one colour with small gaps are joined into virtual
+  // strokes — anchors only (a dashed square has no side long enough to anchor on); coverage is still measured on the real dashes
+  const sh=all.filter(s=>!s.f&&s.L<8&&s.L>.3), cs=4, G=new Map(), key=(x,y)=>Math.floor(x/cs)+','+Math.floor(y/cs);
+  sh.forEach((s,i)=>{s._u=[(s.b[0]-s.a[0])/s.L,(s.b[1]-s.a[1])/s.L]; for(const q of [s.a,s.b]){const k=key(q[0],q[1]); let a=G.get(k); if(!a) G.set(k,a=[]); a.push(i)}});
+  const par=sh.map((_,i)=>i), find=i=>{while(par[i]!==i){par[i]=par[par[i]]; i=par[i]} return i};
+  sh.forEach((s,i)=>{for(const q of [s.a,s.b]){const gx=Math.floor(q[0]/cs), gy=Math.floor(q[1]/cs);
+    for(let dx=-1;dx<=1;dx++) for(let dy=-1;dy<=1;dy++) for(const j of G.get((gx+dx)+','+(gy+dy))||[]){if(j<=i) continue; const t=sh[j]; if(t.col!==s.col) continue;
+      if(Math.abs(s._u[0]*t._u[1]-s._u[1]*t._u[0])>.06) continue; const off=p=>Math.abs((p[0]-s.a[0])*s._u[1]-(p[1]-s.a[1])*s._u[0]); if(off(t.a)>.25||off(t.b)>.25) continue;
+      const gap=Math.min(...[t.a,t.b].map(p=>Math.min(Math.hypot(p[0]-s.a[0],p[1]-s.a[1]),Math.hypot(p[0]-s.b[0],p[1]-s.b[1])))); if(gap>Math.min(4,Math.max(1.5,Math.max(s.L,t.L)*1.5))) continue;
+      par[find(j)]=find(i)}}});
+  const grp=new Map(); sh.forEach((s,i)=>{const r=find(i); let g=grp.get(r); if(!g) grp.set(r,g=[]); g.push(s)});
+  const virt=[]; for(const g of grp.values()){if(g.length<3) continue; const u=g[0]._u, o=g[0].a, pr=p=>(p[0]-o[0])*u[0]+(p[1]-o[1])*u[1]; let lo=Infinity, hi=-Infinity, mx=0;
+    for(const s of g){for(const p of [s.a,s.b]){const v=pr(p); if(v<lo) lo=v; if(v>hi) hi=v} mx=Math.max(mx,s.L)} const L=hi-lo; if(L<mx*2.5) continue;
+    virt.push({a:[o[0]+u[0]*lo,o[1]+u[1]*lo],b:[o[0]+u[0]*hi,o[1]+u[1]*hi],L,col:g[0].col,w:g[0].w,v:1})}
+  const byL=all.concat(virt).sort((a,b)=>a.L-b.L); return V._vsm={all,byL,virt:virt.length}}
 // the vector template of an FVE legend entry. A geometric (CAD-lettered) legend row is cut from the legend page's own segments: the same
 // curve flattening as the plans it is searched on, each stroke once however often the pen went over it. Text-legend entries keep their FVE
 // segments (measured: on 44-mandarin the page cut lost 2 points of recall).
@@ -3952,6 +3966,9 @@ async function fveTemplate(e){if(e._T!==undefined) return e._T; const bw=e.bb[2]
   if(T) for(const k in T.hatch){const F=k.startsWith('F'), c=F?k.slice(1):k, ids=new Set();
     for(const q of sg) if(q.h&&q.c===c&&(!F||q.f)) ids.add([q.a,q.b].map(p=>Math.round(p[0]*20)+','+Math.round(p[1]*20)).sort().join('|'));
     if(ids.size&&ids.size<T.hatch[k]) T.hatch[k]=ids.size}
+  /* longest strokes first in the scoring loop: a placement that cannot reach the score is given up sooner (anchors still come from the
+     template's own order, so the result is the same) */
+  if(T){T.byL=T.segs.slice().sort((a,b)=>b.L-a.L); T.sumL=T.segs.reduce((a,u)=>a+u.L,0); T._cnone=T.segs.some(u=>!u.col)}
   if(T&&e.anyColour&&new Set(sg.filter(s=>s.col!=='ffffff').map(s=>s.col)).size===1) T.anyCol=sg.find(s=>s.col!=='ffffff').col; /* monochrome legend: any one colour */
   return e._T=T}
 // one legend entry on one sheet: the app's vector matcher with the entry's template, hits at or above minScore
@@ -3989,10 +4006,12 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
     const ctr=map([0,0]); if(hits.some(h=>h.score>=.999&&Math.hypot(h.x-ctr[0],h.y-ctr[1])<T.R*sg*.3)) continue;
     // a monochrome legend's symbol is matched in the colour of the stroke it is anchored on (the template's colour stands for that one)
     const ac=T.anyCol?s.col:null, ok=ac?(u,w)=>w.col===(u.col===T.anyCol?ac:u.col):colOk, tcol=c=>ac&&c===ac?T.anyCol:c;
-    const near=around(ctr[0],ctr[1],T.R*sg*2+tol), used=new Set(); let got=0, left=T.tot, viaDash=0;
-    for(const u of T.segs){const A=map(u.a), B=map(u.b); left-=u.L; let cv=cover(A,B,u,near,ok);
+    const near=around(ctr[0],ctr[1],T.R*sg*2+tol), used=new Set(); let got=0, left=T.sumL!=null?Math.max(T.sumL,T.tot):T.tot, viaDash=0; /* the strokes still to come, so giving up early never drops a copy that would pass */
+    // strokes of the template's colours only, for the stroke-by-stroke check (the full neighbourhood is used for background / extra ink)
+    const cset=T._cnone?null:new Set(T.segs.map(u=>ac&&u.col===T.anyCol?ac:u.col)), nearC=cset?near.filter(w=>cset.has(w.col)):near;
+    for(const u of T.byL||T.segs){const A=map(u.a), B=map(u.b); left-=u.L; let cv=cover(A,B,u,nearC,ok);
       // a dash of a dashed outline: copies start their dash pattern at different points, so any same-colour stroke right beside it will do
-      if(cv.f<.45&&u.L<T.D*.15){const M=[(A[0]+B[0])/2,(A[1]+B[1])/2], r=Math.max(tol,u.L*sg*1.6); const ws=near.filter(w=>ok(u,w)&&w.L<T.D*sg*.3&&Math.hypot((w.a[0]+w.b[0])/2-M[0],(w.a[1]+w.b[1])/2-M[1])<r); if(ws.length){cv={f:1,ws}; viaDash+=u.L}}
+      if(cv.f<.45&&u.L<T.D*.15){const M=[(A[0]+B[0])/2,(A[1]+B[1])/2], r=Math.max(tol,u.L*sg*1.6); const ws=nearC.filter(w=>ok(u,w)&&w.L<T.D*sg*.3&&Math.hypot((w.a[0]+w.b[0])/2-M[0],(w.a[1]+w.b[1])/2-M[1])<r); if(ws.length){cv={f:1,ws}; viaDash+=u.L}}
       if(cv.f>=.45){got+=u.L*Math.min(1,cv.f/.75); cv.ws.forEach(w=>used.add(w))} if((got+left)/T.tot<.6) break}
     let fr=got/T.tot; if(fr<.6) continue;
     const inv=q=>{const dx=q[0]-ps[0], dy=q[1]-ps[1], d=sg*sg; const x=(c*dx+n*dy)/d, y=(-n*dx+c*dy)/d; return [x*mi+t.a[0], y+t.a[1]]}, e=tol/sg;
@@ -4009,7 +4028,7 @@ async function vsmSearch(p,T,rs){const V=await pdfVectors(p); if(!V||!V.length) 
     fr*=1-.5*Math.min(1,extra/T.tot);
     const cs=Math.abs(Math.cos(th)), sn=Math.abs(Math.sin(th)), w=(T.bw*cs+T.bh*sn)*sg, h=(T.bw*sn+T.bh*cs)*sg;
     const o=hits.find(h0=>Math.hypot(h0.x-ctr[0],h0.y-ctr[1])<Math.min(h0.w,h0.h)*.5);
-    const hit={x:ctr[0],y:ctr[1],score:fr,dashed:Math.round(100*viaDash/T.tot)/100,got:fr*T.tot+(fillOk?T.fillLen||0:0),rot:Math.round(((th*180/Math.PI)%360+360)%360),mir:mi<0,w,h,on:null,vec:true};
+    const hit={x:ctr[0],y:ctr[1],score:fr,dashed:Math.round(100*viaDash/T.tot)/100,recol:ac&&ac!==T.anyCol?ac:null,got:fr*T.tot+(fillOk?T.fillLen||0:0),rot:Math.round(((th*180/Math.PI)%360+360)%360),mir:mi<0,w,h,on:null,vec:true};
     if(!o) hits.push(hit); else if(fr>o.score) Object.assign(o,hit)}
   return hits}
 // text lines: pieces of text on one baseline joined left to right

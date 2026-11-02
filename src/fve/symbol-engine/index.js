@@ -24,7 +24,11 @@ function layersFor(cand,graph){const ctx=graph;
 function statusFor(device,cand,L,graph){if(L.statusBy&&L.statusBy[device]) return L.statusBy[device];
   const h=(cand.hits||[]).filter(x=>x.type===device&&x.status).sort((a,b)=>b.score-a.score)[0]; if(h) return h.status;
   const cs=graph.D&&graph.D.colStatus, col=cand.desc&&cand.desc.col; if(cs&&col&&cs[col]) return cs[col];
-  return L.status||null}
+  const st=L.status||null;
+  // a demolition sheet (DEMOLITION PLAN, STRIP OUT …): a device drawn in another colour than its black legend symbol, or dashed, is to be
+  // removed; the rest is existing to remain
+  if((!st||st==='new')&&graph.demo&&graph.demo.has(cand.page)){const hb=(cand.hits||[]).filter(x=>x.type===device).sort((a,b)=>b.score-a.score)[0]; return hb&&(hb.recol||hb.dashed>=.3)?'remove':'retain'}
+  return st}
 function matchSymbol(cand,graph){const {G,T,L,K}=layersFor(cand,graph); const C=graph.contextIndex?NS.context.score(cand,graph):{scores:{},ev:[]}, N=graph.networks?NS.network.score(cand,graph):{scores:{},ev:[]};
   const layers={geometry:G.scores,text:T.scores,legend:L.scores,context:C.scores,network:N.scores,historical:K.historical.scores,consultant:K.consultant.scores};
   const f=NS.fusion.fuse(layers,{weights:graph.weights,hasShape:cand.hasShape!==false}); if(!f) return null;
@@ -34,6 +38,7 @@ function matchSymbol(cand,graph){const {G,T,L,K}=layersFor(cand,graph); const C=
 
 async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; const minConf=opts.minConf!=null?opts.minConf:.6;
   const graph={D,FVE,library:hooks.library||null,consultant:hooks.consultant||null,knowledge:hooks.knowledge||null,weights:opts.weights,networks:null,netMembers:null,contextIndex:null};
+  graph.demo=new Set(models.filter(m=>m.sheet&&/DEMOLITION|DEMOLISH|STRIP[\s-]*OUT|REMOVAL\s+PLAN/i.test(m.sheet.title||'')).map(m=>m.page.id));
   const typed=NS.geometry.legendIndex(D).typed; const all=[]; let ref=0;
   for(const m of models){if(m.sheet.kind!=='plan') continue; const zones=(D.zones[m.page.id]||[]).concat(FVE.titleBlock(m)); const inZ=c=>zones.some(z=>c[0]>=z[0]&&c[0]<=z[2]&&c[1]>=z[1]&&c[1]<=z[3]);
     const list=[];
@@ -43,10 +48,10 @@ async function run(models,D,hooks={},opts={}){const FVE=opts.FVE||root.FVE; cons
       // by look-alike shapes of its colour (a blue square of another size), while the sheet's plotting scale is the same for all blocks
       const trs=new Map(typed.map(e=>[e,FVE.templateRatios(e,m)])), qv={}; for(const tr of trs.values()) for(const x of tr){const k=(Math.round(x.q*25)/25).toFixed(2); qv[k]=(qv[k]||0)+1}
       const qTop=Object.entries(qv).sort((a,b)=>b[1]-a[1])[0], qStar=qTop&&qTop[1]>=3?+qTop[0]:null;
-      for(const e of typed){if(!e.segs||e.segs.length<3) continue; if(e.cols&&e.cols.length&&!e.cols.some(c=>pcols.has(c))) continue;
+      for(const e of typed){if(!e.segs||e.segs.length<3) continue; if(!e.anyColour&&e.cols&&e.cols.length&&!e.cols.some(c=>pcols.has(c))) continue;
         const tr=trs.get(e), qs=(tr.length?tr:pr.slice(0,1)).map(x=>x.q); if(!qs.some(q=>Math.abs(q-1)<.08)&&!tr.length) qs.push(1);
         if(qStar&&(e.geo||e.hist)&&!qs.some(q=>Math.abs(q-qStar)<.06*qStar)) qs.push(qStar); // geometric rows only: on text legends it cost 12 s on 44-mandarin for no gain
-        for(const q of qs) for(const h of (await hooks.match(e,m,q))||[]){const s=Math.max(h.w,h.h)/1.6; list.push({page:m.page.id,bb:[h.x-s/2,h.y-s/2,h.x+s/2,h.y+s/2],c:[h.x,h.y],size:s,hits:[{type:e.type,status:e.status,entry:e.id,score:h.score,dashed:h.dashed||0}],src:{exact:e.id}})}}}
+        for(const q of qs) for(const h of (await hooks.match(e,m,q))||[]){const s=Math.max(h.w,h.h)/1.6; list.push({page:m.page.id,bb:[h.x-s/2,h.y-s/2,h.x+s/2,h.y+s/2],c:[h.x,h.y],size:s,hits:[{type:e.type,status:e.status,entry:e.id,score:h.score,dashed:h.dashed||0,recol:h.recol||null,got:h.got||0}],src:{exact:e.id}})}}}
     list.push(...NS.geometry.candidates(m,D,FVE), ...NS.text.candidates(m,D,FVE));
     // one place, one candidate: merge what lands on the same spot (keeping every hit and source)
     const M=[]; for(const c of list){const o=M.find(q=>hyp(q.c[0]-c.c[0],q.c[1]-c.c[1])<Math.max(Math.min(q.size,c.size),2)*.5);

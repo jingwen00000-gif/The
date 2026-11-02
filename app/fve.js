@@ -267,6 +267,8 @@ FVE.analyzeLegend=function(m){const L=m.lines, bodyH=median(L.map(l=>l.h))||6, o
         while(grew){grew=false; for(const o of objs) if(!keep.has(o)&&[...keep].some(k=>gap(o,k)<=g)){keep.add(o); grew=true}}
         for(let i=objs.length-1;i>=0;i--) if(!keep.has(objs[i])) objs.splice(i,1)}
       const desc=r.s.trim(); if(!objs.length&&!tags.length) return;
+      if(/^\(?\d{1,2}[.)]\s+[A-Z]/.test(desc)&&!FVE.classifyDesc(desc.replace(/^\(?\d{1,2}[.)]\s+/,'')).type) return; /* '1. EXISTING FIRE SPRINKLER SYSTEM …' a numbered note, not a legend row */
+      if(/^\(?\d{1,2}[.)]\s+/.test(desc)&&desc.length>32) return;
       const ob=objs.length?objs.reduce((u,o)=>bbUnion(u,o.bb),objs[0].bb.slice()):null;
       // a line type: a long, low sample (pipework / cabling legend)
       const lineObj=objs.filter(o=>(o.k==='line'||o.k==='polyline')&&(o.bb[2]-o.bb[0])>Math.max(bodyH*4,(zone[2]-zone[0])*.35)&&(o.bb[3]-o.bb[1])<bodyH*1.2).sort((a,b)=>b.len-a.len)[0];
