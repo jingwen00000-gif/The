@@ -89,3 +89,19 @@ test('review bar 批量删除: this kind on this sheet, this kind on every sheet
   assert.deepEqual(r.opts.slice(0, 4), ['本页的「喷头 下垂型」（4）', '本页全部待确认（8）', '所有页面的「喷头 下垂型」（图标搜索结果）（8）', '所有页面全部待确认（16）']);
   assert.equal(r.a, 12); assert.equal(r.b, 8); assert.ok(r.kept); assert.equal(r.c, 12); assert.ok(r.panel, 'the side panel 清除本页 button opens the same menu');
 });
+
+test('tender docs: an FER is reviewed (no API key: built-in rules); ticked items become RFIs, Exclusions and Inclusions on the quote', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { if (!DB.ok || !curId) return { skip: true };
+    showTab('docs'); S.rfi = []; S.exclCustom = ''; S.inclCustom = '';
+    await addDocs([new File(['3.4 The existing hydrant system is to remain and is not part of the works.\n3.6 Occupant warning system (EWIS) to be provided where required, TBC.\n3.7 Portable fire extinguishers shall be provided in accordance with AS 2444-2001.'], 'Fire Engineering Report.txt', { type: 'text/plain' })], 'TENDER');
+    const d = S.docs[S.docs.length - 1]; document.querySelector(`[data-drev="${d.id}"]`).click();
+    for (let i = 0; i < 50 && !document.querySelector('#revCard [data-revi]'); i++) await new Promise(r => setTimeout(r, 100));
+    const tick = id => { const c = document.querySelector(`#revCard [data-revi="${id}"]`); c.checked = true; c.dispatchEvent(new Event('change')); };
+    const by = c => d.review.items.find(x => x.cat === c).id;
+    tick(by('rfi')); document.querySelector('[data-revdo="rfi"]').click(); tick(by('excl')); document.querySelector('[data-revdo="excl"]').click(); tick(by('incl')); document.querySelector('[data-revdo="incl"]').click();
+    return { cat: d.cat, n: d.review.items.length, rfi: S.rfi.length, excl: S.exclCustom, incl: S.inclCustom, q: quoteText() }; });
+  if (r.skip) return;
+  assert.equal(r.cat, 'FER'); assert.equal(r.n, 3); assert.equal(r.rfi, 1);
+  assert.match(r.excl, /existing hydrant system.*cl\. 3\.4/); assert.match(r.incl, /extinguishers.*cl\. 3\.7/); assert.match(r.q, /INCLUSIONS\n- Portable fire extinguishers/);
+});

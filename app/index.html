@@ -455,7 +455,7 @@ kbd{font-family:var(--f-mono)}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.3</small></div>
+  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.4</small></div>
   <select id="projSel" class="projsel" aria-label="切换项目"></select>
   <span class="ptlbl">类型</span><div class="seg ptseg" id="ptypeSeg" role="group" aria-label="项目类型"><button data-pt="NEW" title="新建 / 在建工程">新建工程</button><button data-pt="REFURB" title="既有建筑改造">翻新装修</button></div>
   <nav class="tabs" role="tablist">
@@ -693,6 +693,8 @@ kbd{font-family:var(--f-mono)}
         <textarea class="doc" id="assumText" style="min-height:140px" aria-label="Assumptions"></textarea>
       </div>
       <div class="card">
+        <h2>Inclusions <small>包含项目（来自 FER / 规范等，打印在 Scope of Work 后面）</small></h2>
+        <label class="field">包含项（每行一条）<textarea class="doc" id="inclCustom" style="min-height:70px"></textarea></label>
         <h2>Exclusions <small>不包含项目</small></h2>
         <div class="excl" id="exclList"></div>
         <label class="field">其他不包含项（每行一条）<textarea class="doc" id="exclCustom" style="min-height:90px"></textarea></label>
@@ -1603,16 +1605,19 @@ function renderQuote0(){
   $('#exclList').innerHTML=[...EXCL,...(isRef()?EXCL_REF:[])].map(e=>`<label><input type="checkbox" id="ex-${e[0]}" data-x="${e[0]}" ${S.excl.includes(e[0])?'checked':''}><span>${e[1]}<small>${e[2]}</small></span></label>`).join('');
   $$('#exclList input').forEach(el=>el.onchange=()=>{const k=el.dataset.x; S.excl=el.checked?[...new Set([...S.excl,k])]:S.excl.filter(x=>x!==k); save()});
   const ec=$('#exclCustom'); if(document.activeElement!==ec) ec.value=S.exclCustom||'';
+  const ic=$('#inclCustom'); if(ic&&document.activeElement!==ic) ic.value=S.inclCustom||'';
 }
 $('#sowText').oninput=e=>{S.sow=e.target.value; S.sowEdited=true; save()};
 $('#assumText').oninput=e=>{S.assum=e.target.value; S.assumEdited=true; save()};
 $('#exclCustom').oninput=e=>{S.exclCustom=e.target.value; save()};
+$('#inclCustom').oninput=e=>{S.inclCustom=e.target.value; save()};
+function inclLines(){return (S.inclCustom||'').split('\n').map(s=>s.trim()).filter(Boolean)}
 $('#regenSow').onclick=()=>{S.sowEdited=false; S.sow=genSow(compute()); $('#sowText').value=S.sow; save(); toast('Scope of Work 已按当前工程量重新生成')};
 function exclLines(){return [...[...EXCL,...(isRef()?EXCL_REF:[])].filter(e=>S.excl.includes(e[0])).map(e=>e[1]),...(S.exclCustom||'').split('\n').map(s=>s.trim()).filter(Boolean)]}
 function quoteText(){
   const C=compute(); const L=[...(co().name?[co().name+(co().abn?'  ABN '+co().abn:'')]:[]),`QUOTATION ${S.qno}  ·  ${S.date}`,`Project: ${S.name}`,`Client: ${S.client}`,`Site: ${S.site}`,`Drawings: ${S.dwg}`,'','PRICE SUMMARY'];
   for(const s of Object.keys(SYS)) if(C.bySys[s]) L.push(`  ${SYS[s].en}: ${money(C.sellBySys[s])}`);
-  L.push(`  Total ex GST: ${money(C.ex)}`,`  GST: ${money(C.gst)}`,`  Total inc GST: ${money(C.inc)}`,'','SCOPE OF WORK',S.sow,'','ASSUMPTIONS',S.assum,'','EXCLUSIONS',...exclLines().map(x=>'- '+x));
+  L.push(`  Total ex GST: ${money(C.ex)}`,`  GST: ${money(C.gst)}`,`  Total inc GST: ${money(C.inc)}`,'','SCOPE OF WORK',S.sow,...(inclLines().length?['','INCLUSIONS',...inclLines().map(x=>'- '+x)]:[]),'','ASSUMPTIONS',S.assum,'','EXCLUSIONS',...exclLines().map(x=>'- '+x));
   return L.join('\n');
 }
 function quoteHTML(){
@@ -1626,7 +1631,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
 pre{white-space:pre-wrap;font:13px/1.55 Arial,sans-serif}.meta td{border:0;padding:2px 8px 2px 0}</style>${coStyle()}</head><body>
 ${coLetter('fs',C)}${coHead()}<h1>${esc(co().tpl.fs.title)}</h1><table class="meta"><tr><td>Quote No.</td><td><b>${esc(S.qno)}</b></td><td>Date</td><td>${esc(S.date)}</td></tr><tr><td>Project</td><td>${esc(S.name)}</td><td>Client</td><td>${esc(S.client)}</td></tr>${S.contact?`<tr><td>Attention</td><td>${esc(S.contact)}</td><td>Contact</td><td>${esc([S.phone,S.email].filter(Boolean).join(' · '))}</td></tr>`:''}<tr><td>Site</td><td colspan="3">${esc(S.site)}</td></tr><tr><td>Drawings</td><td colspan="3">${esc(S.dwg)}</td></tr><tr><td>Project type</td><td colspan="3"><b>${isRef()?'Alterations to an existing building (refurbishment)':'New building & construction'}</b></td></tr></table>
 ${coIntroInline('fs',C)}<h2>Price Summary</h2><table>${rows}<tr class="tot"><td>Total excluding GST</td><td class="r">${money(C.ex)}</td></tr><tr><td>GST ${S.rates.gst}%</td><td class="r">${money(C.gst)}</td></tr><tr class="grand"><td>Total including GST</td><td class="r">${money(C.inc)}</td></tr></table>
-${co().tpl.fs.levels?levelTableQuoteHTML():''}${co().tpl.fs.plan?`<p><small>Estimated on-site duration: ${esc(planText())}</small></p>`:''}<h2>Scope of Work</h2><pre>${esc(S.sow)}</pre>${co().tpl.fs.boq?`<h2>Schedule of Quantities</h2><table><tr><th>System</th><th>Item</th><th class="r">Qty</th><th>Unit</th></tr>${boq}</table>`:''}
+${co().tpl.fs.levels?levelTableQuoteHTML():''}${co().tpl.fs.plan?`<p><small>Estimated on-site duration: ${esc(planText())}</small></p>`:''}<h2>Scope of Work</h2><pre>${esc(S.sow)}</pre>${inclLines().length?`<h2>Inclusions</h2><ul>${inclLines().map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}${co().tpl.fs.boq?`<h2>Schedule of Quantities</h2><table><tr><th>System</th><th>Item</th><th class="r">Qty</th><th>Unit</th></tr>${boq}</table>`:''}
 <h2>Assumptions</h2><pre>${esc(S.assum)}</pre><h2>Exclusions</h2><ul>${exclLines().map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
 <p><small>${co().name?'Prepared by '+esc(co().name)+'. ':''}Valid for ${esc(S.valid)} days. Quantities are measured from the drawings listed and are subject to site verification.</small></p>${coTail('fs',C)}</body></html>`;
 }
@@ -3263,14 +3268,14 @@ function renderLegend(){
 }
 
 /* ============ TENDER DOCUMENTS & RFI ============ */
-const DOCCAT={TENDER:'招标文件',SPEC:'规范书',DWG:'图纸 / 附件',EMAIL:'客户邮件',RFI:'RFI / 答疑',ADD:'补遗 Addenda',OTHER:'其他'};
+const DOCCAT={TENDER:'招标文件',SPEC:'规范书',FER:'FER 消防工程报告',DWG:'图纸 / 附件',EMAIL:'客户邮件',RFI:'RFI / 答疑',ADD:'补遗 Addenda',OTHER:'其他'};
 const RFISTAT={OPEN:'待回复',ANS:'已回复',CLOSED:'已关闭'};
 async function addDocs(files,cat){
   if(!DB.ok) return toast('当前环境不支持项目库，无法保存附件');
   S.docs=S.docs||[]; let n=0;
   for(const f of files){const id=uid(); try{await DB.put('files',{id:curId+'::doc::'+id,proj:curId,kind:'doc',key:'doc::'+id,name:f.name,type:f.type,size:f.size,blob:f});
     folderSaveFile(curId,{id:curId+'::doc::'+id,proj:curId,kind:'doc',key:'doc::'+id,name:f.name,type:f.type,size:f.size,blob:f});
-    S.docs.push({id,name:f.name,cat,size:f.size,type:f.type,date:todayISO(),note:''}); n++}catch(e){toast('保存失败：'+f.name)}}
+    S.docs.push({id,name:f.name,cat:(window.FT_DOCREVIEW&&FT_DOCREVIEW.guessCat(f.name))||cat,size:f.size,type:f.type,date:todayISO(),note:''}); n++}catch(e){toast('保存失败：'+f.name)}}
   await saveNow(); renderDocs(); if(n) toast(`已添加 ${n} 个文件`);
 }
 async function docBlob(d){const r=await DB.get('files',curId+'::doc::'+d.id).catch(()=>null); return r&&r.blob}
@@ -3292,8 +3297,9 @@ function renderDocs(){
     <div class="tablewrap"><table class="t"><thead><tr><th>文件</th><th>分类</th><th>日期</th><th class="r">大小</th><th>备注</th><th></th></tr></thead><tbody>
     ${list.map(d=>`<tr><td><button class="linkbtn" data-dopen="${d.id}">${esc(d.name)}</button></td><td><select data-dcat="${d.id}">${Object.keys(DOCCAT).map(k=>`<option value="${k}" ${k===d.cat?'selected':''}>${DOCCAT[k]}</option>`).join('')}</select></td>
       <td><input type="date" data-ddate="${d.id}" value="${esc(d.date||'')}"></td><td class="r num">${kb(d.size||0)}</td><td><input data-dnote="${d.id}" value="${esc(d.note||'')}" placeholder="备注" style="width:100%;min-width:140px"></td>
-      <td class="acts"><button class="btn sm ${d.ai?'ghost':''}" data-dai="${d.id}" title="提取文字并用 AI 找出与报价相关的内容">${d.ai?'✓ 重新提取':'AI 提取'}</button><button class="btn sm" data-dopen="${d.id}">打开</button><button class="btn sm ghost" data-dsave="${d.id}">另存</button><button class="btn sm ghost" data-ddel="${d.id}">${docDel===d.id?'确认删除？':'删除'}</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">还没有资料</td></tr>'}
+      <td class="acts"><button class="btn sm ${d.review?'ghost':'primary'}" data-drev="${d.id}" title="找出需要注意的要点、包含 / 不包含的内容和需要澄清的问题，可生成 RFI 或加到 Inclusions / Exclusions">${d.review?'✓ 要点':'提取要点'}</button><button class="btn sm ${d.ai?'ghost':''}" data-dai="${d.id}" title="提取文字并用 AI 找出与报价相关的内容">${d.ai?'✓ 重新提取':'AI 提取'}</button><button class="btn sm" data-dopen="${d.id}">打开</button><button class="btn sm ghost" data-dsave="${d.id}">另存</button><button class="btn sm ghost" data-ddel="${d.id}">${docDel===d.id?'确认删除？':'删除'}</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">还没有资料</td></tr>'}
     </tbody></table></div></div>
+  ${docReviewHTML()}
   ${docAiHTML()}
   <div class="card"><div class="toolbar" style="justify-content:space-between"><h2>RFI / 答疑记录 <small>${S.rfi.length} 条 · 待回复 ${open}</small></h2><div class="toolbar"><button class="btn sm primary" id="rfiAdd">＋ 新增 RFI</button><button class="btn sm" id="rfiXlsx">导出 RFI (Excel)</button></div></div>
     <div class="tablewrap"><table class="t rfi"><thead><tr><th>编号</th><th>提出日期</th><th>提交给</th><th>问题</th><th>回复</th><th>回复期限</th><th>状态</th><th></th></tr></thead><tbody>
@@ -3301,7 +3307,7 @@ function renderDocs(){
       <td><textarea data-rf="${r.id}" data-k="q" rows="2">${esc(r.q||'')}</textarea></td><td><textarea data-rf="${r.id}" data-k="a" rows="2">${esc(r.a||'')}</textarea></td><td><input type="date" data-rf="${r.id}" data-k="due" value="${esc(r.due||'')}"></td>
       <td><select data-rf="${r.id}" data-k="status">${Object.keys(RFISTAT).map(k=>`<option value="${k}" ${k===r.status?'selected':''}>${RFISTAT[k]}</option>`).join('')}</select></td><td><button class="btn sm ghost" data-rdel="${r.id}" aria-label="删除">✕</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">暂无 RFI</td></tr>'}
     </tbody></table></div><p class="note" style="margin:0">答复影响报价的，记得更新 Assumptions / Exclusions。RFI 也会出现在项目总览的提醒里。</p></div>`;
-  wireDocAI();
+  wireDocAI(); wireDocReview();
   const inp=$('#docIn'); inp.onchange=()=>{addDocs([...inp.files],$('#docCat').value); inp.value=''};
   const dz=$('#docDrop'); ['dragenter','dragover'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault(); dz.classList.add('on')})); ['dragleave','drop'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault(); dz.classList.remove('on')}));
   dz.addEventListener('drop',e=>{if(e.dataTransfer.files.length) addDocs([...e.dataTransfer.files],$('#docCat').value)});
@@ -3327,7 +3333,7 @@ async function buildBackup(){
   const fl=[]; for(const f of files){fl.push({...f,blob:undefined,b64:await blobToB64(f.blob)})}
   return JSON.stringify({app:'FireTake',type:'backup',version:APPVER,created:new Date().toISOString(),projects,meta,files:fl});
 }
-let APPVER='2.13.3';
+let APPVER='2.13.4';
 async function runBackup(force){
   if(!DB.ok) return; const today=todayISO(); let last=''; try{last=localStorage.getItem('firetake.lastBackup')||''}catch(e){}
   if(!force&&last===today) return;
@@ -3713,6 +3719,55 @@ ${chunks[i]}
   }
   res.at=todayISO()+' '+new Date().toTimeString().slice(0,5); res.chars=text.length; d.ai=res; await saveNow(); return res;
 }
+/* ---- FER / specification review: points to note, inclusions, exclusions, questions → RFI register / Inclusions / Exclusions / Assumptions ---- */
+const REVCAT={note:['需要注意','#b45309'],incl:['包含','#1d7546'],excl:['不包含','#6b3fb8'],rfi:['需澄清','#c8102e']};
+let revF='ALL', revDoc='', revBusy=false;
+async function reviewDoc(d,statusEl){const R=window.FT_DOCREVIEW; if(!R) return; const text=await extractDocText(d); const kind=d.cat==='FER'?'FER':'SPEC'; let items=null, src='rules', err=null;
+  if(CFG.apiKey||WEBAI()){try{const CH=90000, parts=[]; for(let i=0;i<text.length&&parts.length<4;i+=CH) parts.push(text.slice(i,i+CH)); items=[];
+      for(let i=0;i<parts.length;i++){if(statusEl) statusEl.textContent=`${T('正在用 AI 分析')} ${d.name}${parts.length>1?` (${i+1}/${parts.length})`:''}…`;
+        const out=parseJSON(await callClaude(R.aiPrompt(parts[i],{name:d.name,kind,project:S.name}),null,null)); if(!out) throw new Error(T('AI 返回内容无法解析')); items.push(...R.parseAI(out))}
+      src='ai'}catch(e){err=e.message||String(e); items=null}}
+  if(!items){if(statusEl) statusEl.textContent=`${T('正在分析')} ${d.name}…`; items=R.rules(text,{name:d.name.replace(/\.[a-z0-9]+$/i,''),kind})}
+  const old=d.review&&d.review.items||[]; items.forEach((x,i)=>{x.id=d.id+':'+i; const o=old.find(y=>y.text===x.text); x.done=o&&o.done||{}});
+  d.review={at:todayISO()+' '+new Date().toTimeString().slice(0,5),src,kind,items,err}; await saveNow(); return d.review}
+function revItems(){const out=[]; for(const d of S.docs||[]) if(d.review) for(const x of d.review.items) out.push({...x,doc:d}); return out}
+function docReviewHTML(){const all=revItems(); const docs=(S.docs||[]).filter(d=>d.review);
+  const can=(S.docs||[]).filter(d=>/^(FER|SPEC|TENDER|ADD)$/.test(d.cat));
+  if(!docs.length) return can.length?`<div class="card"><h2>${T('FER / 规范要点')}</h2><p class="note" style="margin:0">${T('点资料旁边的“提取要点”，软件会找出需要注意的要点、包含 / 不包含的内容和需要澄清的问题，你可以勾选后生成 RFI，或加到报价的 Inclusions / Exclusions。')}</p></div>`:'';
+  const L=all.filter(x=>(revF==='ALL'||x.cat===revF)&&(!revDoc||x.doc.id===revDoc)); const cnt=k=>all.filter(x=>x.cat===k&&(!revDoc||x.doc.id===revDoc)).length;
+  const badge=x=>Object.entries({rfi:'RFI',incl:'Inclusions',excl:'Exclusions',assum:'Assumptions'}).filter(([k])=>x.done&&x.done[k]).map(([,t])=>`<span class="pill ok" style="margin-left:4px">✓ ${t}</span>`).join('');
+  const srcs=[...new Set(docs.map(d=>d.review.src))];
+  return `<div class="card" id="revCard"><div class="toolbar" style="justify-content:space-between"><h2>${T('FER / 规范要点与问题')} <small>${all.length} ${T('条')} · ${srcs.includes('ai')?T('AI 分析'):''}${srcs.length>1?' + ':''}${srcs.includes('rules')?T('内置规则'):''}</small></h2>
+    <label class="lvsel">${T('资料')}<select id="revDoc"><option value="">${T('全部')}（${docs.length}）</option>${docs.map(d=>`<option value="${d.id}" ${revDoc===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></label></div>
+    ${docs.some(d=>d.review.err)?`<p class="note" style="color:#b45309;margin:0 0 6px">${T('AI 分析没有成功，已用内置规则：')}${esc(docs.find(d=>d.review.err).review.err)}</p>`:''}
+    <div class="seg" id="revF"><button data-rf2="ALL" aria-pressed="${revF==='ALL'}">${T('全部')} ${all.filter(x=>!revDoc||x.doc.id===revDoc).length}</button>${Object.keys(REVCAT).map(k=>`<button data-rf2="${k}" aria-pressed="${revF===k}">${T(REVCAT[k][0])} ${cnt(k)}</button>`).join('')}</div>
+    <div class="toolbar" style="margin:8px 0"><button class="btn sm primary" data-revdo="rfi">${T('生成 RFI')}</button><button class="btn sm" data-revdo="incl">${T('加到 Inclusions')}</button><button class="btn sm" data-revdo="excl">${T('加到 Exclusions')}</button><button class="btn sm" data-revdo="assum">${T('加到 Assumptions')}</button><span class="note" id="revSel">${T('先勾选下面的条目')}</span></div>
+    <div class="tablewrap" style="max-height:60vh;overflow:auto"><table class="t"><thead><tr><th><input type="checkbox" id="revAll" aria-label="${T('全选')}"></th><th>${T('类别')}</th><th>${T('内容')}</th><th>${T('出处')}</th></tr></thead><tbody>
+    ${L.map(x=>`<tr><td><input type="checkbox" data-revi="${esc(x.id)}"></td><td style="white-space:nowrap"><span class="pill" style="background:${REVCAT[x.cat][1]}1a;color:${REVCAT[x.cat][1]}">${T(REVCAT[x.cat][0])}</span><div class="note">${esc(x.topic||'')}</div></td>
+      <td>${x.title?`<b>${esc(x.title)}</b><br>`:''}${esc(x.text)}${badge(x)}</td><td class="note" style="white-space:nowrap">${esc(x.doc.name.replace(/\.[a-z0-9]+$/i,'').slice(0,28))}${x.clause?`<br>cl. ${esc(x.clause)}`:''}${x.page?`<br>p. ${x.page}`:''}</td></tr>`).join('')||`<tr><td colspan="4" class="empty">${T('这一类没有条目')}</td></tr>`}
+    </tbody></table></div><p class="note" style="margin:4px 0 0">${T('提取结果供参考，请对照原文核实。生成的 RFI 在下面的 RFI 登记表里，Inclusions / Exclusions 在“报价 · SOW”页。')}</p></div>`}
+function wireDocReview(){
+  $$('#docsRoot [data-drev]').forEach(b=>b.onclick=async()=>{if(revBusy) return; const d=S.docs.find(x=>x.id===b.dataset.drev); const st=$('#docAiMsg'); revBusy=true; b.disabled=true;
+    try{const r=await reviewDoc(d,st); revDoc=d.id; revF='ALL'; renderDocs(); toast(`${d.name}：${r.items.length} ${T('条要点')}`); const c=$('#revCard'); if(c) c.scrollIntoView({behavior:'smooth',block:'start'})}
+    catch(e){if(st) st.textContent=d.name+'：'+(e.message||e); toast(d.name+'：'+(e.message||e))} finally{revBusy=false; b.disabled=false}});
+  const ds=$('#revDoc'); if(ds) ds.onchange=e=>{revDoc=e.target.value; renderDocs()};
+  $$('#revF [data-rf2]').forEach(b=>b.onclick=()=>{revF=b.dataset.rf2; renderDocs()});
+  const sel=()=>$$('#revCard [data-revi]').filter(c=>c.checked).map(c=>c.dataset.revi), upd=()=>{const n=sel().length, e=$('#revSel'); if(e) e.textContent=n?`${T('已选')} ${n} ${T('条')}`:T('先勾选下面的条目')};
+  $$('#revCard [data-revi]').forEach(c=>c.onchange=upd); const all=$('#revAll'); if(all) all.onchange=()=>{$$('#revCard [data-revi]').forEach(c=>c.checked=all.checked); upd()};
+  $$('#revCard [data-revdo]').forEach(b=>b.onclick=()=>{const ids=new Set(sel()); if(!ids.size) return toast(T('先勾选下面的条目')); const k=b.dataset.revdo; let n=0;
+    for(const d of S.docs) if(d.review) for(const x of d.review.items){if(!ids.has(x.id)) continue; x.done=x.done||{}; n++;
+      if(k==='rfi'){S.rfi=S.rfi||[]; S.rfi.push({id:uid(),no:'RFI-'+String(S.rfi.length+1).padStart(3,'0'),date:todayISO(),to:S.contact||S.client||'',q:x.rfi,a:'',due:'',status:'OPEN',src:d.name+(x.clause?' cl. '+x.clause:'')})}
+      else if(k==='incl') S.inclCustom=[S.inclCustom,x.line].filter(Boolean).join('\n');
+      else if(k==='excl') S.exclCustom=[S.exclCustom,x.line].filter(Boolean).join('\n');
+      else if(k==='assum'){S.assum=(S.assum||defAssum())+'\n- '+x.line; S.assumEdited=true}
+      x.done[k]=true}
+    save(); renderDocs(); toast(`${T('已加入')} ${n} ${T('条')} → ${{rfi:'RFI',incl:'Inclusions',excl:'Exclusions',assum:'Assumptions'}[k]}`)})}
+Object.assign(I18N,{'FER / 规范要点':'FER / specification review','点资料旁边的“提取要点”，软件会找出需要注意的要点、包含 / 不包含的内容和需要澄清的问题，你可以勾选后生成 RFI，或加到报价的 Inclusions / Exclusions。':'Click “Review” beside a document: FireTake lists points to note, inclusions, exclusions and questions to clarify. Tick them to raise RFIs or add them to the quote’s Inclusions / Exclusions.',
+  'FER / 规范要点与问题':'FER / specification: points & questions','条':'items','AI 分析':'AI','内置规则':'built-in rules','资料':'Document','全部':'All','AI 分析没有成功，已用内置规则：':'AI analysis failed, built-in rules used: ','需要注意':'Note','包含':'Included','不包含':'Excluded','需澄清':'Clarify',
+  '生成 RFI':'Raise RFIs','加到 Inclusions':'Add to Inclusions','加到 Exclusions':'Add to Exclusions','加到 Assumptions':'Add to Assumptions','先勾选下面的条目':'Tick items below first','全选':'Select all','类别':'Type','内容':'Text','出处':'Source','这一类没有条目':'No items of this type',
+  '提取结果供参考，请对照原文核实。生成的 RFI 在下面的 RFI 登记表里，Inclusions / Exclusions 在“报价 · SOW”页。':'Extracted for reference: check against the document. RFIs go to the RFI register below; Inclusions / Exclusions are on the Quote · SOW page.',
+  '已选':'Selected','已加入':'Added','条要点':'items','正在用 AI 分析':'AI is reading','正在分析':'Reading','AI 返回内容无法解析':'AI response could not be read','提取要点':'Review','✓ 要点':'✓ Reviewed','FER 消防工程报告':'FER fire engineering report',
+  '包含项（每行一条）':'Inclusions (one per line)','包含项目（来自 FER / 规范等，打印在 Scope of Work 后面）':'inclusions (from the FER / specification, printed after the Scope of Work)'});
 let docAiSel=null;
 function docAiHTML(){
   const docs=(S.docs||[]).filter(d=>d.ai); if(!docs.length) return '';
@@ -5649,5 +5704,6 @@ window.FT29={rvStart,rvStop,rvBulk,rvRemove,qIssues,lgRows,lgCrop,legendAutoCoun
 <script src="../src/fve/ui.js"></script>
 <script src="../src/fve/rates-from-history.js"></script>
 <script src="../src/learning-engine/learn-app.js"></script>
+<script src="../src/docs/doc-review.js"></script>
 </body>
 </html>

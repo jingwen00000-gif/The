@@ -101,3 +101,11 @@ Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js`
 
 - 逐个核对时多了 **“批量删除 ▾”**（快捷键 Shift+Delete）：本页的这一种 / 本页全部待确认 / 所有页面的这一种（框选图标全图搜索的结果）/ 所有页面全部待确认，每项显示数量。只删还没确认的，已确认的不动；Ctrl+Z 可撤销。
 - 右侧“待确认”框多了 **“清除本页”**。
+
+## v2.13.4 FER / 规范书要点提取 → RFI、Inclusions、Exclusions
+
+- 招标资料多了分类 **“FER 消防工程报告”**；文件名含 FER / Fire Engineering Report 自动归类，含 Spec 归为规范书。
+- 每份资料旁边的 **“提取要点”**：读出 PDF / Word / 文本里和消防有关的条款，分成 **需要注意**（性能化方案、偏离 DtS、危险等级、调试 / 认证 / 保修等）、**包含**（要求承包商做的）、**不包含**（by others、现有保留、不在本合同）、**需澄清**（TBC、subject to、where required、or similar、矛盾）。每条带条款号、页码和系统类别。
+- 设置了 AI（API Key）时用 Claude 按 FER / 规范的要点来分析；没有 AI 时用内置规则，同样能用。
+- 勾选后可以 **生成 RFI**（问题已写好并注明出处，进入 RFI 登记表），或 **加到 Inclusions / Exclusions / Assumptions**；已处理的条目会显示 ✓。
+- 报价页新增 **Inclusions**（每行一条），打印在 Scope of Work 后面。
