@@ -124,6 +124,7 @@ function summarise(pages,name){const P=pages.map((t,i)=>({i,...discipline(t,page
   return {disc,label:LABEL[disc],pages:P.length,firePages,withFire,counts,fire,all}}
 
 /* ---- several tenders at once ---- */
+const NS_EXTRA={};
 // a folder that sorts one tender's files (Fire, Drawings, Specs, 01 Architectural …) rather than being a tender of its own
 const CAT_DIR=/^(?:fire(?:\s+(?:services?|protection|drawings?))?|fs|drawings?|dwgs?|plans?|pdfs?|cad|specs?|specifications?|documents?|docs?|tender(?:\s+(?:documents?|docs?|drawings?))?|itt|rft|rfq|architectur(?:al|e)|arch|hydraulics?|hyd|plumbing|electrical|elec|mechanical|mech|hvac|structural|struct|civil|services|consultants?|reports?|fer|bca|ncc|addend(?:a|um)(?:\s*\d+)?|rev(?:ision)?s?(?:\s*[a-z0-9]+)?|issued?(?:\s+for\s+\w+)?|for\s+tender|transmittals?|emails?|correspondence|scope|schedules?|bom|boq|photos?|images?|old|superseded|archive|misc|other|general|landscape|civil\s+&\s+structural|survey|geotech(?:nical)?|town\s+planning|da|cc|ifc)$/i;
 function isCategoryFolder(n){return CAT_DIR.test(String(n||'').replace(/^[\s\d._-]*(?=[a-z])/i,'').replace(/[_]+/g,' ').trim())}
@@ -131,7 +132,14 @@ function isCategoryFolder(n){return CAT_DIR.test(String(n||'').replace(/^[\s\d._
 function jobCode(name){const b=String(name||'').split('/').pop().replace(/\.[a-z0-9]+$/i,''); const m=b.match(/^([A-Z]{0,5}\d{4,7}[A-Z]?)(?=$|[\s_.-])/i);
   if(!m) return ''; const c=m[1].toUpperCase(); if(/^(19|20)\d{6}$/.test(c)||/^(19|20)\d{2}$/.test(c)&&/^\d{4}[-_.]\d{2}[-_.]\d{2}/.test(b)) return ''; return c}
 // loose files (no folder of their own): one group per job code; files without a code (the e-mail, the FER) join the only group, or a group of their own
-function groupLoose(items,label){const by=new Map(), none=[]; for(const it of items){const c=jobCode(it.name); if(c){if(!by.has(c)) by.set(c,[]); by.get(c).push(it)} else none.push(it)}
+// a downloaded tender zip's name as a tender name: '10-king-street-common-area-refurbishment (1).zip' → '10-king-street-common-area-refurbishment'
+const zipName=n=>String(n||'').split('/').pop().replace(/\.zip$/i,'').replace(/\s*\((\d+|copy)\)\s*$/i,'').trim();
+const isZip=it=>/\.zip$/i.test(it.name||it.path||'');
+function groupLoose(items,label){const zips=items.filter(isZip);
+  // several downloaded zips side by side: each zip is one tender (the platforms send one zip per job)
+  if(zips.length>1){const rest=items.filter(i=>!isZip(i)); const out=zips.map(z=>({folder:(label?label+'/':'')+zipName(z.name),items:[z]}));
+    return out.concat(rest.length?groupLoose(rest,label):[])}
+  const by=new Map(), none=[]; for(const it of items){const c=jobCode(it.name); if(c){if(!by.has(c)) by.set(c,[]); by.get(c).push(it)} else none.push(it)}
   const codes=[...by.keys()].filter(c=>by.get(c).length>1||!none.length||by.size===1);
   if(codes.length<=1) return items.length?[{folder:(codes[0]&&label?label+' · '+codes[0]:label||codes[0]||''),items}]:[];
   const out=codes.map(c=>({folder:label?label+' · '+c:c,items:by.get(c)})); const rest=none.concat([...by.keys()].filter(c=>!codes.includes(c)).flatMap(c=>by.get(c)));
@@ -141,13 +149,21 @@ function groupLoose(items,label){const by=new Map(), none=[]; for(const it of it
 // - two or more folders that are not sorting folders: one tender per folder; loose files beside them grouped by job code
 function splitTenders(folder,items){const subs=new Map(), loose=[];
   for(const it of items){const i=it.path.indexOf('/'); if(i<0){loose.push(it); continue} const s=it.path.slice(0,i); if(!subs.has(s)) subs.set(s,[]); subs.get(s).push(it)}
-  const proj=[...subs.keys()].filter(s=>!isCategoryFolder(s));
-  if(proj.length<2) return [{folder,items}];
+  let proj=[...subs.keys()].filter(s=>!isCategoryFolder(s));
+  // numbered batches of one download (docs0, docs1, docs10 …; Part 1, Part 2): one tender, not one each
+  const stem=x=>x.replace(/[\s_-]*\(?\d+\)?$/,'').toLowerCase();
+  if(proj.length>1&&proj.every(x=>/\d+\)?$/.test(x)&&stem(x)===stem(proj[0]))) proj=[];
+  const zips=loose.filter(isZip);
+  if(proj.length+(zips.length>1?zips.length:0)<2&&!(proj.length&&zips.length)) return [{folder,items}];
   const join=s=>folder?folder+'/'+s:s, out=proj.map(s=>({folder:join(s),items:subs.get(s).map(i=>({...i,path:i.path.slice(s.length+1)}))}));
   const rest=loose.concat([...subs.keys()].filter(s=>!proj.includes(s)).flatMap(s=>subs.get(s)));
   return out.concat(groupLoose(rest,folder||''))}
+NS_EXTRA.zipName=zipName;
 // the last part of a tender's folder key, as its name
-function tenderName(folder){return cleanFolder(String(folder||'').split('/').pop().split(' · ').pop())}
+function tenderName(folder){let n=cleanFolder(String(folder||'').split('/').pop().split(' · ').pop());
+  // a platform's file-style name: '21-ossary-st-mascot-new-build-self-storage' → '21 Ossary St Mascot New Build Self Storage'
+  if(!/\s/.test(n)&&/[a-z]-[a-z]/i.test(n)&&n===n.toLowerCase()) n=n.replace(/-+/g,' ').replace(/\b[a-z]/g,c=>c.toUpperCase());
+  return n}
 // an existing project that looks like this tender (same name or same site address)
 const norm=s=>String(s||'').toLowerCase().replace(/\b(the|project|proposed|new|development|fire services?|tender|stage \d+)\b/g,' ').replace(/[^a-z0-9]+/g,' ').trim();
 function sameProject(info,projects){const n=norm(info&&info.name), st=norm(info&&info.site);
@@ -155,6 +171,6 @@ function sameProject(info,projects){const n=norm(info&&info.name), st=norm(info&
     if(n&&pn&&(n===pn||(n.length>=8&&pn.length>=8&&(n.includes(pn)||pn.includes(n))))) return {p,why:'name'};
     if(st&&ps&&st.length>=8&&(st===ps||st.includes(ps)&&ps.length>=8||ps.includes(st))) return {p,why:'site'}}
   return null}
-const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL,isCategoryFolder,jobCode,groupLoose,splitTenders,tenderName,sameProject};
+const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL,isCategoryFolder,jobCode,groupLoose,splitTenders,tenderName,sameProject,...NS_EXTRA};
 root.FT_INBOX=NS; if(typeof module!=='undefined'&&module.exports) module.exports=NS;
 })(typeof window!=='undefined'?window:globalThis);

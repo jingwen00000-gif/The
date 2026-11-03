@@ -77,3 +77,11 @@ test('the same project again: matched by name or site address', () => {
   assert.equal(I.sameProject({ name: 'Other', site: '12 Smith Street Parramatta NSW 2150' }, P).why, 'site');
   assert.equal(I.sameProject({ name: 'Khartoum Road' }, P), null);
 });
+
+test('downloaded zips side by side are one tender each; numbered batches (docs0, docs1 …) are one tender', () => {
+  const it = p => ({ path: p, name: p.split('/').pop() });
+  const Q = I.splitTenders('Quote', ['10-king-street-common-area-refurbishment (1).zip', '21-ossary-st-mascot-new-build-self-storage.zip'].map(it));
+  assert.deepEqual(Q.map(t => I.tenderName(t.folder)), ['10 King Street Common Area Refurbishment', '21 Ossary St Mascot New Build Self Storage']);
+  assert.equal(I.splitTenders('afterSentDocuments', ['docs0/a.pdf', 'docs1/b.pdf', 'docs10/c.pdf'].map(it)).length, 1);
+  assert.equal(I.splitTenders('Job', ['tender.zip', 'FER.pdf'].map(it)).length, 1, 'one zip with its e-mail / FER stays one tender');
+});
