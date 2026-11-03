@@ -105,3 +105,15 @@ test('tender docs: an FER is reviewed (no API key: built-in rules); ticked items
   assert.equal(r.cat, 'FER'); assert.equal(r.n, 3); assert.equal(r.rfi, 1);
   assert.match(r.excl, /existing hydrant system.*cl\. 3\.4/); assert.match(r.incl, /extinguishers.*cl\. 3\.7/); assert.match(r.q, /INCLUSIONS\n- Portable fire extinguishers/);
 });
+
+test('quote e-mail drafts: boss / client tabs from the open quote, boss address remembered, .eml download', async () => {
+  const { page } = app;
+  await page.evaluate(() => { showTab('quote'); S.email = 'jane@acme.com.au'; S.contact = 'Jane Smith'; });
+  await page.evaluate(() => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); openMail('boss'); }); await page.waitForSelector('#mlBody');
+  const boss = await page.evaluate(() => mlBody.value); await page.fill('#mlTo', 'boss@firetake.com.au'); await page.locator('#mlTo').dispatchEvent('input');
+  await page.click('[data-mk="client"]'); const cl = await page.evaluate(() => ({ to: mlTo.value, body: mlBody.value }));
+  const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 20000 }), page.click('[data-mv="eml"]')]);
+  await page.click('[data-mk="boss"]'); const kept = await page.evaluate(() => mlTo.value); await page.keyboard.press('Escape');
+  assert.match(boss, /INTERNAL — not for the client/); assert.ok(!cl.body.includes('INTERNAL')); assert.equal(cl.to, 'jane@acme.com.au'); assert.match(cl.body, /^Dear Jane,/);
+  assert.match(dl.suggestedFilename(), /_email\.eml$/); assert.equal(kept, 'boss@firetake.com.au');
+});

@@ -109,3 +109,10 @@ Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js`
 - 设置了 AI（API Key）时用 Claude 按 FER / 规范的要点来分析；没有 AI 时用内置规则，同样能用。
 - 勾选后可以 **生成 RFI**（问题已写好并注明出处，进入 RFI 登记表），或 **加到 Inclusions / Exclusions / Assumptions**；已处理的条目会显示 ✓。
 - 报价页新增 **Inclusions**（每行一条），打印在 Scope of Work 后面。
+
+## v2.13.5 报价邮件草稿（发给老板审核 / 发给客户）
+
+- 报价页 **“✉ 邮件草稿”**：从当前报价生成两种邮件，可以直接编辑：
+  - **发给老板审核**：各系统价格、总价、GST；内部的直接成本 / 现场管理费 / 不可预见费 / 利润和利润率、工时和工期；还没确认的识别结果、没设比例的图纸；未回复的 RFI；Scope of Work、Inclusions、Assumptions、Exclusions。老板邮箱会记住。
+  - **发给客户**：报价信（总价、各系统价格、主要包含 / 不包含、有效期、签名），不含任何成本和利润。
+- 发送方式：**在 Outlook 打开草稿（自动附上 PDF 报价单，桌面版）**、Gmail、Outlook 网页版（Microsoft 365 / Outlook.com）、默认邮件程序、下载 .eml 草稿、复制正文。网页邮箱不能自动附件：先“保存 PDF 报价单”再拖进去。

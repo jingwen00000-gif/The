@@ -455,7 +455,7 @@ kbd{font-family:var(--f-mono)}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.4</small></div>
+  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.5</small></div>
   <select id="projSel" class="projsel" aria-label="切换项目"></select>
   <span class="ptlbl">类型</span><div class="seg ptseg" id="ptypeSeg" role="group" aria-label="项目类型"><button data-pt="NEW" title="新建 / 在建工程">新建工程</button><button data-pt="REFURB" title="既有建筑改造">翻新装修</button></div>
   <nav class="tabs" role="tablist">
@@ -658,6 +658,7 @@ kbd{font-family:var(--f-mono)}
       <div id="qTmb"></div>
       <div class="toolbar">
         <button class="btn primary" id="pdfQuote">导出 PDF 报价单</button>
+        <button class="btn" id="mailQuote" title="从报价生成邮件：发给老板审核，或发给客户（Outlook / Gmail / 默认邮件程序）">✉ 邮件草稿</button>
         <button class="btn" id="xlsxQuote">导出 Excel 报价单 (.xlsx)</button>
         <details class="ftmenu"><summary class="btn">更多导出 ▾</summary><div class="ftmenu-pop">
           <button class="btn" id="dlQuote">保存报价单 (HTML)</button>
@@ -1658,6 +1659,57 @@ async function copyText(t,msg){try{await navigator.clipboard.writeText(t); toast
 const fname=ext=>(S.qno||'quote').replace(/[^\w.-]+/g,'_')+ext;
 $('#dlQuote').onclick=()=>saveFile(fname('.html'),quoteHTML());
 $('#pdfQuote').onclick=()=>runPreflight('fs',exportPDF);
+/* ---- quote e-mails: review e-mail for the boss, quote e-mail for the client (src/mail/quote-mail.js builds them) ---- */
+function quoteData(){const C=compute(); let P=null; try{P=computePF()}catch(e){}
+  const systems=Object.keys(SYS).filter(k=>C.bySys[k]).map(k=>({name:SYS[k].en||k,sell:C.sellBySys[k]||0}));
+  let noScale=0; try{noScale=S.pages.filter(p=>!p.mPerUnit&&S.runs.some(r=>r.page===p.id)).length}catch(e){}
+  let programme=''; try{programme=planText()}catch(e){}
+  const c=co(); return {project:S.name,client:S.client,contact:S.contact,clientEmail:S.email,site:S.site,qno:S.qno,date:S.date,valid:S.valid||30,dwg:S.dwg,
+    systems,ex:C.ex,gst:C.gst,inc:C.inc,pf:P&&P.ex?{ex:P.ex}:null,cost:{direct:C.direct,prelim:C.prelim,cont:C.cont,margin:C.margin,hrs:C.hrs},programme,
+    sow:S.sow||genSow(C),incl:inclLines(),assum:S.assum||defAssum(),excl:exclLines(),rfiOpen:(S.rfi||[]).filter(r=>r.status==='OPEN'),pending:S.marks.filter(m=>m.pending).length+S.runs.filter(r=>r.pending).length,noScale,
+    company:c.name,sender:c.contact,phone:c.phone,email:c.email,bossEmail:CFG.bossEmail||'',bossName:CFG.bossName||''}}
+let mailKind='boss', mailEdit={};
+async function mailPdf(){const html=quoteHTML(); if(window.firetake&&window.firetake.pdfBytes){const b=await window.firetake.pdfBytes(html); return {name:fname('.pdf'),type:'application/pdf',bytes:new Uint8Array(b)}}
+  return {name:fname('.html'),type:'text/html',bytes:new TextEncoder().encode(html)}}   /* browser: the quote as an HTML attachment */
+function openMail(kind){mailKind=kind||mailKind; const M=window.FT_MAIL; if(!M) return; const d=quoteData();
+  const m=mailEdit[mailKind]||(mailKind==='boss'?M.bossMail(d):M.clientMail(d)); const desk=!!(window.firetake&&window.firetake.pdfBytes);
+  const dlg=ftModal(T('邮件草稿'),`<div class="seg" id="mlTabs"><button data-mk="boss" aria-pressed="${mailKind==='boss'}">${T('发给老板审核')}</button><button data-mk="client" aria-pressed="${mailKind==='client'}">${T('发给客户')}</button></div>
+    <p class="note" style="margin:6px 0">${mailKind==='boss'?T('包含价格明细、成本和利润（内部）、需要注意的问题、未回复的 RFI、Scope of Work、Inclusions / Assumptions / Exclusions。'):T('报价信：总价、各系统价格、主要包含 / 不包含项，附 PDF 报价单。')}${d.pending?` <b style="color:#b45309">${d.pending} ${T('项识别结果还没确认，没有计入报价')}</b>`:''}</p>
+    <div style="display:grid;grid-template-columns:70px 1fr;gap:6px;align-items:center"><label>${T('收件人')}</label><input id="mlTo" value="${esc(m.to)}" placeholder="${mailKind==='boss'?'boss@company.com.au':'client@builder.com.au'}">
+      <label>${T('抄送')}</label><input id="mlCc" value="${esc(m.cc||'')}"><label>${T('主题')}</label><input id="mlSub" value="${esc(m.subject)}"></div>
+    <textarea id="mlBody" class="doc" style="width:100%;min-height:42vh;margin-top:6px;font-family:ui-monospace,Consolas,monospace;font-size:12px">${esc(m.body)}</textarea>
+    <div class="toolbar" style="margin-top:6px;flex-wrap:wrap">
+      ${desk?`<button class="btn sm primary" data-mv="outlook">${T('在 Outlook 打开草稿（带 PDF）')}</button>`:''}
+      <button class="btn sm ${desk?'':'primary'}" data-mv="gmail">Gmail</button><button class="btn sm" data-mv="o365">Outlook ${T('网页版')}（Microsoft 365）</button><button class="btn sm" data-mv="ocom">Outlook.com</button>
+      <button class="btn sm" data-mv="mailto">${T('默认邮件程序')}</button><button class="btn sm ghost" data-mv="eml">${T('下载 .eml 草稿')}</button><button class="btn sm ghost" data-mv="copy">${T('复制正文')}</button><button class="btn sm ghost" data-mv="pdf">${T('保存 PDF 报价单')}</button>
+      <button class="btn sm ghost" data-mv="reset">${T('重新生成')}</button></div>
+    <p class="note" style="margin:4px 0 0">${desk?T('“在 Outlook 打开草稿”会打开一封已附上 PDF 报价单的新邮件（Outlook 桌面版或其他默认邮件程序）。'):''}${T('Gmail / Outlook 网页版不能自动附加文件：先点“保存 PDF 报价单”，再把 PDF 拖进邮件。')}</p>`,[{t:T('关闭')}]);
+  dlg.style.width='min(900px,96vw)'; dlg.addEventListener('close',()=>{dlg.style.width=''},{once:true});
+  const cur=()=>({to:dlg.querySelector('#mlTo').value.trim(),cc:dlg.querySelector('#mlCc').value.trim(),subject:dlg.querySelector('#mlSub').value,body:dlg.querySelector('#mlBody').value});
+  const keep=()=>{mailEdit[mailKind]=cur(); if(mailKind==='boss'){CFG.bossEmail=mailEdit.boss.to; saveCfg()}};
+  dlg.querySelectorAll('#mlTo,#mlCc,#mlSub,#mlBody').forEach(e=>e.oninput=keep);
+  dlg.querySelectorAll('[data-mk]').forEach(b=>b.onclick=()=>{keep(); openMail(b.dataset.mk)});
+  const go=url=>{if(window.firetake&&window.firetake.openExternal) window.firetake.openExternal(url); else window.open(url,'_blank')};
+  const log=via=>{S.mailLog=S.mailLog||[]; S.mailLog.push({kind:mailKind,via,to:cur().to,at:new Date().toISOString()}); save()};
+  dlg.querySelectorAll('[data-mv]').forEach(b=>b.onclick=async()=>{const v=b.dataset.mv, x=cur(), L=M.links(x);
+    if(v==='reset'){delete mailEdit[mailKind]; return openMail(mailKind)}
+    if(v==='copy') return copyText(`To: ${x.to}\nSubject: ${x.subject}\n\n${x.body}`,T('已复制邮件内容'));
+    if(v==='pdf') return exportPDF();
+    if(v==='gmail'){go(L.gmail); log('gmail'); return}
+    if(v==='o365'){go(L.outlook365); log('outlook365'); return}
+    if(v==='ocom'){go(L.outlookcom); log('outlook.com'); return}
+    if(v==='mailto'){if(L.mailto.length>1900) toast(T('正文较长，部分邮件程序可能会截断；可以改用“在 Outlook 打开草稿”或“复制正文”')); go(L.mailto); log('mailto'); return}
+    if(v==='outlook'||v==='eml'){b.disabled=true; try{toast(T('正在生成 PDF…')); const att=await mailPdf(); const text=M.eml(x,[att]), name=fname(mailKind==='boss'?'_review.eml':'_email.eml');
+        if(v==='outlook'&&window.firetake&&window.firetake.openFile){const r=await window.firetake.openFile(name,new TextEncoder().encode(text)); if(r&&r.error) toast(T('无法打开：')+r.error); else toast(T('已在邮件程序中打开草稿'))}
+        else await saveFile(name,text); log(v)}catch(e){toast((e&&e.message)||String(e))} finally{b.disabled=false}}})}
+$('#mailQuote').onclick=()=>openMail(mailKind);
+setTimeout(()=>Object.assign(I18N,{'✉ 邮件草稿':'✉ E-mail drafts','邮件草稿':'E-mail drafts','发给老板审核':'For the boss to review','发给客户':'To the client','收件人':'To','抄送':'Cc','主题':'Subject','网页版':'web',
+  '包含价格明细、成本和利润（内部）、需要注意的问题、未回复的 RFI、Scope of Work、Inclusions / Assumptions / Exclusions。':'Price breakdown, cost and margin (internal), things to check, open RFIs, Scope of Work, Inclusions / Assumptions / Exclusions.',
+  '报价信：总价、各系统价格、主要包含 / 不包含项，附 PDF 报价单。':'Cover e-mail: total, price by system, main inclusions / exclusions, quote PDF attached.','项识别结果还没确认，没有计入报价':'take-off items are unconfirmed and not priced',
+  '在 Outlook 打开草稿（带 PDF）':'Open draft in Outlook (PDF attached)','默认邮件程序':'Default mail app','下载 .eml 草稿':'Download .eml draft','复制正文':'Copy text','保存 PDF 报价单':'Save quote PDF','重新生成':'Regenerate',
+  '“在 Outlook 打开草稿”会打开一封已附上 PDF 报价单的新邮件（Outlook 桌面版或其他默认邮件程序）。':'“Open draft in Outlook” opens a new e-mail with the quote PDF attached (Outlook desktop or your default mail app). ',
+  'Gmail / Outlook 网页版不能自动附加文件：先点“保存 PDF 报价单”，再把 PDF 拖进邮件。':'Gmail / Outlook web cannot attach files automatically: save the quote PDF first, then drag it into the e-mail.','已复制邮件内容':'E-mail copied',
+  '正文较长，部分邮件程序可能会截断；可以改用“在 Outlook 打开草稿”或“复制正文”':'Long text: some mail apps cut it short; use “Open draft in Outlook” or “Copy text”','正在生成 PDF…':'Generating PDF…','已在邮件程序中打开草稿':'Draft opened in your mail app','无法打开：':'Cannot open: '}),0);   /* I18N is declared further down this script */
 $('#dlCsv').onclick=()=>saveFile(fname('_BOQ.csv'),csv());
 $('#copyQuote').onclick=()=>copyText(quoteText(),'报价文本已复制');
 $('#dlJson').onclick=()=>saveFile((S.name||'project').replace(/[^\w一-龥.-]+/g,'_')+'.json',JSON.stringify(S,null,1));
@@ -3333,7 +3385,7 @@ async function buildBackup(){
   const fl=[]; for(const f of files){fl.push({...f,blob:undefined,b64:await blobToB64(f.blob)})}
   return JSON.stringify({app:'FireTake',type:'backup',version:APPVER,created:new Date().toISOString(),projects,meta,files:fl});
 }
-let APPVER='2.13.4';
+let APPVER='2.13.5';
 async function runBackup(force){
   if(!DB.ok) return; const today=todayISO(); let last=''; try{last=localStorage.getItem('firetake.lastBackup')||''}catch(e){}
   if(!force&&last===today) return;
@@ -5705,5 +5757,6 @@ window.FT29={rvStart,rvStop,rvBulk,rvRemove,qIssues,lgRows,lgCrop,legendAutoCoun
 <script src="../src/fve/rates-from-history.js"></script>
 <script src="../src/learning-engine/learn-app.js"></script>
 <script src="../src/docs/doc-review.js"></script>
+<script src="../src/mail/quote-mail.js"></script>
 </body>
 </html>

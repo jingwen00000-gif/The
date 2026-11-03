@@ -5,6 +5,8 @@ contextBridge.exposeInMainWorld('firetake', {
   saveFile: (name, data) => ipcRenderer.invoke('save-file', { name, data }),
   openFile: (name, data) => ipcRenderer.invoke('open-file', { name, data }),
   printPDF: (html, name) => ipcRenderer.invoke('print-pdf', { html, name }),
+  pdfBytes: html => ipcRenderer.invoke('pdf-bytes', { html }),
+  openExternal: url => ipcRenderer.invoke('open-external', { url }),
   claude: (key, body) => ipcRenderer.invoke('claude', { key, body }),
   backupInfo: () => ipcRenderer.invoke('backup-info'),
   backupWrite: (name, data, keep) => ipcRenderer.invoke('backup-write', { name, data, keep }),

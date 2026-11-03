@@ -25,7 +25,7 @@ function createWindow() {
   });
   win.loadFile(path.join(__dirname, 'app', 'index.html'));
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (/^https?:/i.test(url)) shell.openExternal(url);
+    if (/^(https?|mailto):/i.test(url)) shell.openExternal(url);
     return { action: 'deny' };
   });
 }
@@ -100,6 +100,18 @@ ipcMain.handle('print-pdf', async (_e, { html, name }) => {
     pw.destroy();
     fs.unlink(tmp, () => {});
   }
+});
+
+// mailto: / https: links from the e-mail draft (system mail program, Gmail / Outlook web)
+ipcMain.handle('open-external', async (_e, { url }) => { if (/^(https?|mailto):/i.test(String(url))) { await shell.openExternal(String(url)); return true } return false });
+
+// Quote HTML → PDF bytes (no dialog): the attachment of an e-mail draft
+ipcMain.handle('pdf-bytes', async (_e, { html }) => {
+  const tmp = path.join(os.tmpdir(), 'firetake-mail-' + Date.now() + '.html');
+  fs.writeFileSync(tmp, html, 'utf8');
+  const pw = new BrowserWindow({ show: false, webPreferences: { javascript: false } });
+  try { await pw.loadFile(tmp); return await pw.webContents.printToPDF({ pageSize: 'A4', preferCSSPageSize: true, printBackground: true, margins: { marginType: 'default' } }); }
+  finally { pw.destroy(); fs.unlink(tmp, () => {}); }
 });
 
 // Anthropic Messages API (called from the main process)
