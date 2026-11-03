@@ -17,12 +17,35 @@ function fromInput(list){const G=new Map(); for(const f of list){const rp=f.webk
     if(!G.has(folder)) G.set(folder,[]); G.get(folder).push({path:parts.slice(parts.length>1?1:0).join('/'),name:f.name,size:f.size,read:async()=>f})}
   // a parent folder holding several tenders: one per project folder, loose files grouped by job code (src/inbox/tender-inbox.js)
   return [...G].flatMap(([folder,items])=>folder?FT_INBOX.splitTenders(folder,items):FT_INBOX.groupLoose(items,''))}
+// a zip's file list read from its central directory only (any size, Zip64 too): nothing is unpacked until a file is used,
+// so a zip of site photos costs nothing while the folder is sorted
+async function zipEntries(file){const size=file.size, bytes=async(a,n)=>new Uint8Array(await file.slice(a,a+n).arrayBuffer());
+  const tl=Math.min(size,65557+20), tail=await bytes(size-tl,tl), tv=new DataView(tail.buffer); let e=-1;
+  for(let i=tail.length-22;i>=0;i--) if(tv.getUint32(i,true)===0x06054b50){e=i; break}
+  if(e<0) throw new Error(tt('不是有效的 zip 文件'));
+  let n=tv.getUint16(e+10,true), cdSize=tv.getUint32(e+12,true), cdOff=tv.getUint32(e+16,true);
+  if(n===0xFFFF||cdSize===0xFFFFFFFF||cdOff===0xFFFFFFFF){const L=e-20; if(L>=0&&tv.getUint32(L,true)===0x07064b50){const z64=Number(tv.getBigUint64(L+8,true)), z=new DataView((await bytes(z64,56)).buffer);
+    if(z.getUint32(0,true)===0x06064b50){n=Number(z.getBigUint64(32,true)); cdSize=Number(z.getBigUint64(40,true)); cdOff=Number(z.getBigUint64(48,true))}}}
+  const cd=await bytes(cdOff,cdSize), dv=new DataView(cd.buffer), td=new TextDecoder(), out=[]; let p=0;
+  for(let k=0;k<n&&p+46<=cd.length;k++){if(dv.getUint32(p,true)!==0x02014b50) break;
+    const flags=dv.getUint16(p+8,true), method=dv.getUint16(p+10,true); let csize=dv.getUint32(p+20,true), usize=dv.getUint32(p+24,true); const nl=dv.getUint16(p+28,true), xl=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true); let lo=dv.getUint32(p+42,true);
+    const name=td.decode(cd.subarray(p+46,p+46+nl));
+    for(let q=p+46+nl;q<p+46+nl+xl-4;){const id=dv.getUint16(q,true), len=dv.getUint16(q+2,true); if(id===1){let r=q+4; if(usize===0xFFFFFFFF){usize=Number(dv.getBigUint64(r,true)); r+=8} if(csize===0xFFFFFFFF){csize=Number(dv.getBigUint64(r,true)); r+=8} if(lo===0xFFFFFFFF) lo=Number(dv.getBigUint64(r,true))} q+=4+len}
+    p+=46+nl+xl+cl;
+    if(name.endsWith('/')||(flags&1)||(method!==0&&method!==8)) continue;
+    out.push({name,size:usize,read:async()=>{const h=new DataView((await bytes(lo,30)).buffer), start=lo+30+h.getUint16(26,true)+h.getUint16(28,true), blob=file.slice(start,start+csize), base=name.split('/').pop();
+      if(method===0) return new File([blob],base); return new File([await new Response(blob.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob()],base)}})}
+  return out}
 async function expandZips(items){const out=[];
   for(const it of items){if(FT_INBOX.classify(it.path).kind!=='zip'){out.push(it); continue}
-    try{const z=await FT_LEARN.pricing.unzip(new Uint8Array(await (await it.read()).arrayBuffer()),inflate);
-      for(const [name,data] of Object.entries(z)){if(!data||name.endsWith('/')||/__MACOSX\//.test(name)) continue; const base=name.split('/').pop(); out.push({path:it.path.replace(/\.zip$/i,'')+'/'+name,name:base,size:data.length,read:async()=>new File([data],base)})}}
+    // photos stay in their zip (a zip of site photos is filed as one file); drawings, documents and e-mails come out
+    try{const L=(await zipEntries(await it.read())).filter(z=>!/__MACOSX\//.test(z.name)), img=z=>/\.(jpe?g|png|heic|heif|gif|bmp|tiff?|webp|mov|mp4|avi)$/i.test(z.name);
+      for(const z of L.filter(z=>!img(z))) out.push({path:it.path.replace(/\.zip$/i,'')+'/'+z.name,name:z.name.split('/').pop(),size:z.size,read:z.read});
+      if(L.some(img)) out.push({...it,keepZip:L.filter(img).length})}
     catch(e){out.push({...it,zipErr:String(e.message||e)})}}
   return out}
+// a promise that gives up after ms (a PDF that never finishes reading must not stop the whole import)
+const within=(p,ms,v)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(v),ms))]);
 // every page's text of a PDF (up to max pages), and the page size
 async function pdfPagesText(file,max){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const n=Math.min(doc.numPages,max||60), pages=[]; let w=0,h=0;
   for(let i=1;i<=n;i++){const pg=await doc.getPage(i); if(i===1){const vp=pg.getViewport({scale:1}); w=vp.width; h=vp.height} const tc=await pg.getTextContent(); pages.push(tc.items.map(x=>x.str).join(' '))}
@@ -40,12 +63,16 @@ async function pagePicture(file,num,px){const doc=await pdfjsLib.getDocument({da
 // page given a discipline; a PDF is offered for take-off when it has fire services pages (only those pages when it is a combined set),
 // flagged when another service's sheet carries fire devices (hydrants on the hydraulic sheet), otherwise filed as a drawing
 async function analyse(folder,items0,say){const items=await expandZips(items0); const G={draw:[],docs:[],emails:[],skipped:[]}; const texts=[], emails=[];
-  let n=0; for(const it of items){const c=FT_INBOX.classify(it.path); n++; if(say) say(`${folder||tt('（所选文件）')}：${n} / ${items.length} · ${it.name}`);
+  let n=0; for(const it of items){if(IA.stop) throw new Error(tt('已停止读取')); const c=FT_INBOX.classify(it.path); n++; if(say) say(`${folder||tt('（所选文件）')}：${n} / ${items.length} · ${it.name}`);
+    if(it.keepZip){G.docs.push({...it,cat:'OTHER'}); continue}
     if(c.kind==='skip'||c.kind==='zip'){G.skipped.push(it); continue}
     if(c.kind==='email'){G.emails.push(it); if(/\.eml$/i.test(it.name)){try{const m=FT_INBOX.parseEml(await (await it.read()).text()); if(m) emails.push(m)}catch(e){}} continue}
     if(c.kind==='doc'){G.docs.push({...it,cat:c.cat}); if(/\.(png|jpe?g)$/i.test(it.name)&&/conta?c?e?ct|联系|details?|info/i.test(it.name)) G.contactImg=it; continue}
     // a PDF drawing (or a PDF the name does not explain)
-    const f=await it.read(), P=await pdfPagesText(f,60), S1=FT_INBOX.summarise(P.pages.length?P.pages:[''],it.name);
+    // very large PDFs (> 150 MB) are not read page by page: a fire drawing by its name is opened, anything else filed
+    if(it.size>150*1024*1024){if(c.kind==='fire') G.draw.push({...it,s:FT_INBOX.summarise([''],it.name),pages:0,fire:true,maybe:false,take:true,onlyFire:false,big:true}); else G.docs.push({...it,cat:'DWG'}); continue}
+    const f=await it.read(), P=await within(pdfPagesText(f,60),90000,{pages:[],w:0,h:0,n:0,slow:true}), S1=FT_INBOX.summarise(P.pages.length?P.pages:[''],it.name);
+    if(P.slow&&c.kind!=='fire'){G.docs.push({...it,cat:'DWG'}); continue}
     const looksDoc=c.kind==='pdf?'&&S1.disc==='other'&&P.w&&P.w<P.h&&P.w<700;   /* a portrait A4 with nothing drawing-like: a document */
     if(looksDoc){G.docs.push({...it,cat:'TENDER'}); continue}
     // named as a fire drawing (FS-101, F102, a Fire folder): the whole file is fire, every page; otherwise its pages decide (combined sets)
@@ -106,11 +133,13 @@ async function importOne(a,v,into){
       drop.forEach(p=>{pdfPageRef.delete(p.id)}); S.pages=S.pages.filter(p=>!drop.includes(p)); if(drop.length) rest.push(d)}}
   if(S.pages.length&&!S.pages.some(p=>p.id===curPage)) curPage=S.pages[0].id;
   const by={}; for(const d of a.G.docs) (by[d.cat]=by[d.cat]||[]).push(d); if(rest.length) by.DWG=(by.DWG||[]).concat(rest); if(a.G.emails.length) by.EMAIL=(by.EMAIL||[]).concat(a.G.emails);
-  for(const [cat,L] of Object.entries(by)) await addDocs(await Promise.all(L.map(x=>x.read())),cat);
+  // a few files at a time (hundreds of photos read at once fail on Windows)
+  for(const [cat,L] of Object.entries(by)) for(let i=0;i<L.length;i+=8){const F=[]; for(const x of L.slice(i,i+8)){try{F.push(await x.read())}catch(e){console.warn(x.path,e)}} if(F.length) await addDocs(F,cat)}
   pagesInit(); await showPage(); changed(); await saveNow(); renderProjSel(); return curId}
 
-async function review(list,src,done){if(IA.busy) return; IA.busy=true; done=done||new Map(); const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
-  let A=[]; try{for(const f of list) A.push(done.get(f.folder)||{...await analyse(f.folder,f.items,say),keys:f.keys,root:f.root})}catch(e){IA.busy=false; ftModal(tt('读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
+async function review(list,src,done){if(IA.busy&&Date.now()-IA.busy<20*60000) return toast(tt('正在读取上一个文件夹，请稍候')); IA.busy=Date.now(); IA.stop=false; done=done||new Map();
+  const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[{t:tt('停止'),fn:()=>{IA.stop=true}}]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
+  let A=[]; try{for(const f of list) A.push(done.get(f.folder)||{...await analyse(f.folder,f.items,say),keys:f.keys,root:f.root})}catch(e){IA.busy=false; ftModal(tt(IA.stop?'已停止':'读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
   IA.busy=false;
   const dd=ftModal(tt('导入招标文件夹'),`<p class="note" style="margin:0 0 8px">${tt('每个文件夹会建成一个新项目：消防图纸直接打开算量，其他文件放进“招标资料”。请核对下面的信息（可修改），文件夹里的文件不会被改动。')}</p>${reviewHTML(A)}`,
     [{t:tt('取消')},...(src==='inbox'?[{t:tt('忽略这些文件夹'),fn:()=>{A.forEach(a=>markSeen(a,'ignored')); chip()}}]:[]),
