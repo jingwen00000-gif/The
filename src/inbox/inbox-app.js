@@ -27,6 +27,10 @@ async function expandZips(items){const out=[];
 async function pdfPagesText(file,max){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const n=Math.min(doc.numPages,max||60), pages=[]; let w=0,h=0;
   for(let i=1;i<=n;i++){const pg=await doc.getPage(i); if(i===1){const vp=pg.getViewport({scale:1}); w=vp.width; h=vp.height} const tc=await pg.getTextContent(); pages.push(tc.items.map(x=>x.str).join(' '))}
   const r={pages,w,h,n:doc.numPages}; doc.destroy(); return r}catch(e){return {pages:[],w:0,h:0,n:0}}}
+// an image file as JPEG base64 (at most 1600 px), for Claude
+async function jpeg64(file){const url=URL.createObjectURL(file); try{const im=await new Promise((res,rej)=>{const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url});
+  const k=Math.min(1,1600/Math.max(im.width,im.height)), cv=document.createElement('canvas'); cv.width=Math.round(im.width*k); cv.height=Math.round(im.height*k);
+  const ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); ctx.drawImage(im,0,0,cv.width,cv.height); return cv.toDataURL('image/jpeg',.9).split(',')[1]}finally{URL.revokeObjectURL(url)}}
 // a page of a PDF as a small picture (the review's preview)
 async function pagePicture(file,num,px){const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const pg=await doc.getPage(num||1); const v1=pg.getViewport({scale:1});
   const k=(px||520)/Math.max(v1.width,v1.height), vp=pg.getViewport({scale:k}); const cv=document.createElement('canvas'); cv.width=Math.ceil(vp.width); cv.height=Math.ceil(vp.height);
@@ -39,7 +43,7 @@ async function analyse(folder,items0,say){const items=await expandZips(items0); 
   let n=0; for(const it of items){const c=FT_INBOX.classify(it.path); n++; if(say) say(`${folder||tt('（所选文件）')}：${n} / ${items.length} · ${it.name}`);
     if(c.kind==='skip'||c.kind==='zip'){G.skipped.push(it); continue}
     if(c.kind==='email'){G.emails.push(it); if(/\.eml$/i.test(it.name)){try{const m=FT_INBOX.parseEml(await (await it.read()).text()); if(m) emails.push(m)}catch(e){}} continue}
-    if(c.kind==='doc'){G.docs.push({...it,cat:c.cat}); continue}
+    if(c.kind==='doc'){G.docs.push({...it,cat:c.cat}); if(/\.(png|jpe?g)$/i.test(it.name)&&/conta?c?e?ct|联系|details?|info/i.test(it.name)) G.contactImg=it; continue}
     // a PDF drawing (or a PDF the name does not explain)
     const f=await it.read(), P=await pdfPagesText(f,60), S1=FT_INBOX.summarise(P.pages.length?P.pages:[''],it.name);
     const looksDoc=c.kind==='pdf?'&&S1.disc==='other'&&P.w&&P.w<P.h&&P.w<700;   /* a portrait A4 with nothing drawing-like: a document */
@@ -51,8 +55,12 @@ async function analyse(folder,items0,say){const items=await expandZips(items0); 
     if(fire&&texts.length<3) texts.push(P.pages[S1.firePages[0]||0]||'')}
   const own=String((typeof co==='function'&&co().email)||'').split('@')[1]||'';
   const info=FT_INBOX.extract({folder,emails,texts,ownDomain:own});
+  // a screenshot of the contact details ('contact info.png'): read by Claude when an API key is set (fills only the empty fields)
+  if(G.contactImg&&typeof callClaude==='function'&&(CFG.apiKey||(typeof WEBAI==='function'&&WEBAI()))){try{if(say) say(tt('正在读取联系人图片…'));
+    const out=parseJSON(await callClaude('This image is the contact details for a construction tender. Reply with JSON only: {"project":"","company":"","contact":"","email":"","phone":"","site":""} (empty string when not shown; company = the builder / client issuing the tender).',await jpeg64(await G.contactImg.read()),null));
+    if(out){const m={name:out.project,client:out.company,contact:out.contact,email:out.email,phone:out.phone,site:out.site}; for(const [k,v] of Object.entries(m)) if(v&&!info[k]){info[k]=String(v).trim(); info.sources[k]='image'} G.contactRead=true}}catch(e){G.contactErr=String(e.message||e.code||e)}}
   G.draw.sort((x,y)=>(y.fire-x.fire)||(y.maybe-x.maybe)||x.name.localeCompare(y.name));
-  return {folder,info,G,count:items.length}}
+  return {folder,info,G,count:items.length,items:items0,subs:FT_INBOX.subfolders(items0)}}
 
 const DEV={sprinkler:'喷头',hydrant:'消火栓',hosereel:'消防卷盘',detector:'探测器',ewis:'EWIS / 扬声器',fip:'FIP',booster:'水泵接合器 / 泵',extinguisher:'灭火器'};
 const devTxt=f=>Object.entries(f||{}).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,n])=>`${tt(DEV[k]||k)} ${n}`).join(' · ');
@@ -73,6 +81,8 @@ function reviewHTML(A){const row=(k,label,v)=>`<label class="field">${tt(label)}
    return `<div class="card" style="margin:0 0 10px;padding:12px" data-ibi="${i}"><label style="display:flex;gap:8px;align-items:center;font-weight:700"><input type="checkbox" data-ibon ${a.G.draw.length?'checked':''}> ${html(a.folder||(a.root?tt('收件箱里散放的文件'):tt('（所选文件）')))} <span class="note" style="font-weight:400">${a.count} ${tt('个文件')}</span></label>
     ${warn.map(w=>`<p class="note" style="margin:4px 0 0;color:var(--warn)">⚠ ${w}</p>`).join('')}${into}
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px">${row('name','项目名称',a.info.name)}${row('client','客户',a.info.client)}${row('contact','联系人',a.info.contact)}${row('email','邮箱',a.info.email)}${row('phone','电话',a.info.phone)}${row('site','项目地址',a.info.site)}</div>
+    ${a.G.contactImg?`<p class="note" style="margin:4px 0 0">${a.G.contactRead?`✓ ${tt('联系人信息已从图片读取')}（${html(a.G.contactImg.name)}）`:`${tt('联系人图片')}：${html(a.G.contactImg.name)} · ${tt(a.G.contactErr?'读取失败，请手动填写':'设置 Claude API Key 后可自动读取，现在请手动填写')}`}</p>`:''}
+    ${a.subs&&a.subs.length>1&&!a.keys?.some(k=>k.startsWith('file:'))&&a.subs.filter(x=>/^\d{1,3}[\s._-]/.test(x)).length<a.subs.length/2?`<p class="note" style="margin:4px 0 0">${tt('整个文件夹算一个项目')}（${a.subs.length} ${tt('个子文件夹')}）· <button type="button" class="btn sm ghost" data-ibsplit="${i}">${tt('这些子文件夹其实是不同的项目？按子文件夹分开')}</button></p>`:''}
     ${a.info.closes?`<p class="note" style="margin:4px 0 0">${tt('截止')}：<b>${html(a.info.closes)}</b></p>`:''}
     <h4 style="margin:10px 0 4px">${tt('图纸')} <span class="note">${tt('勾选的打开算量，其余放进“招标资料”')} · ${tt('消防')} ${nf}${nm?` · <span style="color:var(--warn)">${nm} ${tt('张其他专业图纸含消防设备，请确认')}</span>`:''}</span></h4>
     ${a.G.draw.length?`<div class="tablewrap" style="max-height:40vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${tt('文件')}</th><th>${tt('专业')}</th><th>${tt('图上的消防设备')}</th><th></th></tr></thead><tbody>${drawRows(a,i)}</tbody></table></div>`:`<p class="note" style="color:var(--warn)">${tt('没有找到图纸 PDF')}</p>`}
@@ -99,8 +109,8 @@ async function importOne(a,v,into){
   for(const [cat,L] of Object.entries(by)) await addDocs(await Promise.all(L.map(x=>x.read())),cat);
   pagesInit(); await showPage(); changed(); await saveNow(); renderProjSel(); return curId}
 
-async function review(list,src){if(IA.busy) return; IA.busy=true; const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
-  let A=[]; try{for(const f of list) A.push({...await analyse(f.folder,f.items,say),keys:f.keys,root:f.root})}catch(e){IA.busy=false; ftModal(tt('读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
+async function review(list,src,done){if(IA.busy) return; IA.busy=true; done=done||new Map(); const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
+  let A=[]; try{for(const f of list) A.push(done.get(f.folder)||{...await analyse(f.folder,f.items,say),keys:f.keys,root:f.root})}catch(e){IA.busy=false; ftModal(tt('读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
   IA.busy=false;
   const dd=ftModal(tt('导入招标文件夹'),`<p class="note" style="margin:0 0 8px">${tt('每个文件夹会建成一个新项目：消防图纸直接打开算量，其他文件放进“招标资料”。请核对下面的信息（可修改），文件夹里的文件不会被改动。')}</p>${reviewHTML(A)}`,
     [{t:tt('取消')},...(src==='inbox'?[{t:tt('忽略这些文件夹'),fn:()=>{A.forEach(a=>markSeen(a,'ignored')); chip()}}]:[]),
@@ -109,7 +119,11 @@ async function review(list,src){if(IA.busy) return; IA.busy=true; const d=ftModa
        for(const x of picks){const e=prog.querySelector('#ibProg'); if(e) e.textContent=`${tt('正在导入')} ${x.v.name||x.a.folder}（${++done} / ${picks.length}）…`;
          try{last=await importOne(x.a,x.v,x.into); if(src==='inbox') markSeen(x.a,last)}catch(err){console.error(err); toast((x.v.name||x.a.folder)+'：'+(err.message||err))}}
        prog.close(); chip(); if(last){showTab(S.pages.some(p=>p.kind==='pdf')?'takeoff':'docs'); toast(`${tt('已导入')} ${done} ${tt('个项目')}`)}}}]);
-  dd.style.width='min(1080px,96vw)'; dd.style.maxWidth='96vw'; dd.addEventListener('close',()=>{dd.style.width=''; dd.style.maxWidth=''},{once:true}); wireReview(dd,A)}
+  dd.style.width='min(1080px,96vw)'; dd.style.maxWidth='96vw'; dd.addEventListener('close',()=>{dd.style.width=''; dd.style.maxWidth=''},{once:true}); wireReview(dd,A);
+  dd.querySelectorAll('[data-ibsplit]').forEach(b=>b.onclick=()=>{const i=+b.dataset.ibsplit, a=A[i]; dd.close();
+    const parts=FT_INBOX.splitTenders(a.folder,a.items,{bySub:true}).map(t=>({...t,keys:[t.folder,...(a.keys||[])],root:a.root}));
+    const keep=new Map(A.filter((x,j)=>j!==i).map(x=>[x.folder,x]));
+    const L=[...A.slice(0,i).map(x=>({folder:x.folder})),...parts,...A.slice(i+1).map(x=>({folder:x.folder}))]; review(L,src,keep)})}
 
 /* ---- desktop inbox: scan, header chip, settings ---- */
 let fresh=[], lastScan=0;

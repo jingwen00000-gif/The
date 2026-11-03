@@ -6,7 +6,7 @@ const k = p => { const c = I.classify(p); return c.kind + (c.cat ? ':' + c.cat :
 
 test('files: fire drawings, other drawings, FER / spec / addenda, e-mails, tender documents, zips, junk', () => {
   assert.equal(k('Drawings/LCE103150-F102.pdf'), 'fire'); assert.equal(k('FS-101 Ground Floor.pdf'), 'fire'); assert.equal(k('Fire Services Layout L2.pdf'), 'fire');
-  assert.equal(k('Fire/Level 3.pdf'), 'fire', 'a PDF in a Fire folder'); assert.equal(k('A-101 Ground Floor Plan.pdf'), 'dwg:DWG'); assert.equal(k('Architectural/GA L1.pdf'), 'dwg:DWG');
+  assert.equal(k('Fire/Level 3.pdf'), 'fire', 'a PDF in a Fire folder'); assert.equal(k('A-101 Ground Floor Plan.pdf'), 'dwg:DWG'); assert.equal(k('Architectural/GA L1.pdf'), 'doc:DWG', 'an architectural folder is filed without reading');
   assert.equal(k('FER Rev B.pdf'), 'doc:FER'); assert.equal(k('Fire Engineering Report.pdf'), 'doc:FER'); assert.equal(k('Fire Services Specification.pdf'), 'doc:SPEC'); assert.equal(k('Addendum 02.pdf'), 'doc:ADD');
   assert.equal(k('Tender Invitation.eml'), 'email:EMAIL'); assert.equal(k('RFT Conditions.pdf'), 'doc:TENDER'); assert.equal(k('Trade Breakup.xlsx'), 'doc:TENDER');
   assert.equal(k('Package.zip'), 'zip'); assert.equal(k('.DS_Store'), 'skip'); assert.equal(k('__MACOSX/x.pdf'), 'skip'); assert.equal(k('~$draft.docx'), 'skip');
@@ -56,18 +56,29 @@ test('discipline of a sheet: fire vs hydraulic (with hydrants), electrical (with
   assert.equal(I.summarise([hyd, ele], 'Services.pdf').disc !== 'fire', true);
 });
 
-test('several tenders at once: project folders split, sorting folders kept together, loose files grouped by job code', () => {
+test('a folder is one project whatever its subfolders; split by subfolder on request; loose files grouped by job code', () => {
   const it = p => ({ path: p, name: p.split('/').pop() });
-  const T = I.splitTenders('Downloads', ['Hornsby/Fire/FS-101.pdf', 'Hornsby/FER.pdf', 'Lucid/LCE103150-F102.pdf', 'Tiny job/FS-300.pdf', 'LCE2001-F1.pdf', 'LCE2001-F2.pdf', 'invite.eml'].map(it));
-  assert.deepEqual(T.map(t => [t.folder, t.items.map(i => i.path)]), [['Downloads/Hornsby', ['Fire/FS-101.pdf', 'FER.pdf']], ['Downloads/Lucid', ['LCE103150-F102.pdf']],
-    ['Downloads/Tiny job', ['FS-300.pdf']], ['Downloads · LCE2001', ['LCE2001-F1.pdf', 'LCE2001-F2.pdf', 'invite.eml']]]);
-  // one tender sorted into Fire / Specs / 02 Architectural folders stays one tender
-  assert.equal(I.splitTenders('Hornsby', ['Fire/a.pdf', 'Specs/s.pdf', '02 Architectural/x.pdf', 'Addendum 1/y.pdf', 'FER.pdf'].map(it)).length, 1);
-  // files of two jobs side by side: one group each, files without a code on their own
+  const job = ['01 Architectural Drawings/A-101.pdf', '02 Architectural Specification & Schedules/Spec.pdf', '04 Services Drawings & Specs/FS-101.pdf', '09 Reports/FER.pdf', 'contect infor .png'].map(it);
+  assert.equal(I.splitTenders('21-ossary-st-mascot-new-build-self-storage', job).length, 1);
+  assert.deepEqual(I.subfolders(job).length, 4);
+  const T = I.splitTenders('Downloads', ['Hornsby/Fire/FS-101.pdf', 'Hornsby/FER.pdf', 'Lucid/LCE103150-F102.pdf', 'LCE2001-F1.pdf', 'LCE2001-F2.pdf'].map(it), { bySub: true });
+  assert.deepEqual(T.map(t => [t.folder, t.items.map(i => i.path)]), [['Downloads/Hornsby', ['Fire/FS-101.pdf', 'FER.pdf']], ['Downloads/Lucid', ['LCE103150-F102.pdf']], ['Downloads · LCE2001', ['LCE2001-F1.pdf', 'LCE2001-F2.pdf']]]);
   assert.deepEqual(I.groupLoose(['LCE103150-F102.pdf', 'LCE103150-F103.pdf', '2405 - Hornsby FS-101.pdf', '2405 - Hornsby FS-102.pdf', 'Tender.eml'].map(it), '').map(g => [g.folder, g.items.length]),
     [['LCE103150', 2], ['2405', 2], ['', 1]]);
   assert.equal(I.jobCode('20261102 scan.pdf'), ''); assert.equal(I.jobCode('2026-11-02 notes.pdf'), ''); assert.equal(I.jobCode('FS-101.pdf'), '');
   assert.equal(I.tenderName('Downloads/2026-11-02 National Storage Hornsby'), 'National Storage Hornsby'); assert.equal(I.tenderName('Downloads · LCE2001'), 'LCE2001');
+});
+
+test('numbered folders say what the files are: documents filed, architectural / structural drawings filed without reading, services drawings read', () => {
+  const k = p => { const c = I.classify(p); return c.kind + (c.cat ? ':' + c.cat : ''); };
+  assert.equal(k('01 Architectural Drawings/A-101 Ground Floor.pdf'), 'doc:DWG');
+  assert.equal(k('03 Structural & Civil Documents/S-001.pdf'), 'doc:DWG');
+  assert.equal(k('02 Architectural Specification & Schedules/Door Schedule.pdf'), 'doc:SPEC');
+  assert.equal(k('04 Services Drawings & Specs/FS-101 Fire Services Ground.pdf'), 'fire');
+  assert.equal(k('04 Services Drawings & Specs/Drawing 7.pdf'), 'pdf?');
+  assert.equal(k('07 BCA & DDA/BCA Report fire detection.pdf'), 'doc:OTHER');
+  assert.equal(k('08 PPR, Prelims & Contract/Prelims.pdf'), 'doc:TENDER');
+  assert.equal(k('09 Reports/Fire Engineering Report.pdf'), 'doc:FER');
 });
 
 test('the same project again: matched by name or site address', () => {
@@ -83,5 +94,6 @@ test('downloaded zips side by side are one tender each; numbered batches (docs0,
   const Q = I.splitTenders('Quote', ['10-king-street-common-area-refurbishment (1).zip', '21-ossary-st-mascot-new-build-self-storage.zip'].map(it));
   assert.deepEqual(Q.map(t => I.tenderName(t.folder)), ['10 King Street Common Area Refurbishment', '21 Ossary St Mascot New Build Self Storage']);
   assert.equal(I.splitTenders('afterSentDocuments', ['docs0/a.pdf', 'docs1/b.pdf', 'docs10/c.pdf'].map(it)).length, 1);
+  assert.equal(I.splitTenders('Quote', ['a.zip', 'b.zip', 'notes.txt'].map(it)).length, 3, 'loose non-zip files stay together beside the zips');
   assert.equal(I.splitTenders('Job', ['tender.zip', 'FER.pdf'].map(it)).length, 1, 'one zip with its e-mail / FER stays one tender');
 });

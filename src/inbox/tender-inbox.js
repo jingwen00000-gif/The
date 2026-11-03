@@ -15,6 +15,8 @@ const SKIPRE=/(^|\/)(\.|~\$|thumbs\.db$|desktop\.ini$|__macosx\/)/i;
 const ext=n=>(String(n).match(/\.([a-z0-9]{1,5})$/i)||[,''])[1].toLowerCase();
 
 // → {kind:'fire'|'dwg'|'doc'|'email'|'zip'|'skip'|'pdf?', cat}  (cat: the tender-docs category; 'pdf?' = look at the first page)
+const DOCDIR=/(^|\/)[\d\s._-]*[^/]*\b(reports?|bca|dda|access|ppr|prelim\w*|contracts?|specs?|specifications?|schedules?|other\s+documents?|vertical\s+transport|elevators?|lifts?|town\s+planning|geotech\w*|surveys?|photos?|correspondence)\b[^/]*\//i;
+const DOCDIR_CAT=d=>/spec/i.test(d)?'SPEC':/prelim|contract|ppr|schedule/i.test(d)?'TENDER':'OTHER';
 function classify(path){const p=String(path||''), n=p.split('/').pop(), e=ext(n), low=p.toLowerCase();
   if(SKIPRE.test(p)||!e) return {kind:'skip'};
   if(e==='zip') return {kind:'zip'};
@@ -27,9 +29,13 @@ function classify(path){const p=String(path||''), n=p.split('/').pop(), e=ext(n)
   if(/\bfer\b|fire[\s_-]*eng(ineer(ing)?)?[\s_-]*(report|brief)|performance[\s_-]*solution/i.test(n)) return {kind:'doc',cat:'FER'};
   if(/spec/i.test(n)) return {kind:'doc',cat:'SPEC'};
   if(/addend/i.test(n)) return {kind:'doc',cat:'ADD'};
-  if(FIRE.test(n)||/(^|\/)fire[^/]*\//i.test(low)) return {kind:'fire'};
+  // a PDF in a documents folder (not a drawings folder) is a document: '09 Reports/BCA Report - fire detection.pdf'
+  {const dirs=p.split('/').slice(0,-1), d=dirs.find(x=>DOCDIR.test(x+'/')&&!/drawing|dwg|plans?\b|services/i.test(x)); if(d&&!/(^|[\d\s._-])fire/i.test(d)) return {kind:'doc',cat:DOCDIR_CAT(d)}}
+  if(FIRE.test(n)||/(^|\/)[\d\s._-]*fire[^/]*\//i.test(low)) return {kind:'fire'};
+  // a drawing in an architectural / structural / civil / landscape folder: filed without reading every page (large sets)
+  if(!FIRE.test(n)&&p.split('/').slice(0,-1).some(x=>/^[\d\s._-]*(arch|architect\w*|struct\w*|civil|landscape)\b/i.test(x)&&!/services|fire/i.test(x))) return {kind:'doc',cat:'DWG'};
   if(TENDERDOC.test(n)) return {kind:'doc',cat:'TENDER'};
-  if(ARCH.test(n)||/(^|\/)(arch|architect|struct|mech|elec|hydr|civil|drawings?)[^/]*\//i.test(low)) return {kind:'dwg',cat:'DWG'};
+  if(ARCH.test(n)||/(^|\/)[\d\s._-]*(arch|architect|struct|mech|elec|hydr|civil|drawings?)[^/]*\//i.test(low)) return {kind:'dwg',cat:'DWG'};
   return {kind:'pdf?'}}
 // a PDF whose first page reads like a fire services drawing
 function pageLooksFire(text){return /FIRE\s+(SERVICES|PROTECTION)|SPRINKLER|HYDRANT|HOSE\s*REEL|FIRE\s+DETECTION|OCCUPANT\s+WARNING|\bEWIS\b|\bFIP\b/i.test(String(text||''))}
@@ -145,20 +151,18 @@ function groupLoose(items,label){const zips=items.filter(isZip);
   const out=codes.map(c=>({folder:label?label+' · '+c:c,items:by.get(c)})); const rest=none.concat([...by.keys()].filter(c=>!codes.includes(c)).flatMap(c=>by.get(c)));
   if(rest.length) out.push({folder:label||'',items:rest,loose:true}); return out}
 // one picked / inbox folder → the tenders in it. items: [{path relative to the folder, name, …}]
-// - only files, or files plus sorting folders (Fire/, Specs/): one tender
-// - two or more folders that are not sorting folders: one tender per folder; loose files beside them grouped by job code
-function splitTenders(folder,items){const subs=new Map(), loose=[];
-  for(const it of items){const i=it.path.indexOf('/'); if(i<0){loose.push(it); continue} const s=it.path.slice(0,i); if(!subs.has(s)) subs.set(s,[]); subs.get(s).push(it)}
-  let proj=[...subs.keys()].filter(s=>!isCategoryFolder(s));
-  // numbered batches of one download (docs0, docs1, docs10 …; Part 1, Part 2): one tender, not one each
-  const stem=x=>x.replace(/[\s_-]*\(?\d+\)?$/,'').toLowerCase();
-  if(proj.length>1&&proj.every(x=>/\d+\)?$/.test(x)&&stem(x)===stem(proj[0]))) proj=[];
-  const zips=loose.filter(isZip);
-  if(proj.length+(zips.length>1?zips.length:0)<2&&!(proj.length&&zips.length)) return [{folder,items}];
-  const join=s=>folder?folder+'/'+s:s, out=proj.map(s=>({folder:join(s),items:subs.get(s).map(i=>({...i,path:i.path.slice(s.length+1)}))}));
-  const rest=loose.concat([...subs.keys()].filter(s=>!proj.includes(s)).flatMap(s=>subs.get(s)));
-  return out.concat(groupLoose(rest,folder||''))}
-NS_EXTRA.zipName=zipName;
+// A folder is one project, whatever its subfolders (01 Architectural Drawings, 04 Services Drawings & Specs, 09 Reports …).
+// Exceptions: two or more downloaded zips side by side are one tender each (the platforms send one zip per job);
+// opt.bySub (the review's 按子文件夹分开 button) makes one tender per subfolder.
+function subfolders(items){const S=new Set(); for(const it of items){const i=it.path.indexOf('/'); if(i>0) S.add(it.path.slice(0,i))} return [...S]}
+function splitTenders(folder,items,opt){opt=opt||{}; const loose=items.filter(i=>!i.path.includes('/')), zips=loose.filter(isZip);
+  const join=s=>folder?folder+'/'+s:s;
+  if(opt.bySub){const subs=subfolders(items); if(subs.length<2) return [{folder,items}];
+    const out=subs.map(s=>({folder:join(s),items:items.filter(i=>i.path.startsWith(s+'/')).map(i=>({...i,path:i.path.slice(s.length+1)}))}));
+    return loose.length?out.concat(groupLoose(loose,folder||'')):out}
+  if(zips.length>1){const rest=items.filter(i=>!zips.includes(i)); return zips.map(z=>({folder:join(zipName(z.name)),items:[z]})).concat(rest.length?[{folder,items:rest}]:[])}
+  return [{folder,items}]}
+NS_EXTRA.zipName=zipName; NS_EXTRA.subfolders=subfolders;
 // the last part of a tender's folder key, as its name
 function tenderName(folder){let n=cleanFolder(String(folder||'').split('/').pop().split(' · ').pop());
   // a platform's file-style name: '21-ossary-st-mascot-new-build-self-storage' → '21 Ossary St Mascot New Build Self Storage'
