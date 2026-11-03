@@ -16,3 +16,4 @@ data/training-projects/**/*.pdf
 data/training-projects/**/*.xlsx
 data/training-projects/**/*.xls
 dist/
+dist2/
