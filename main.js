@@ -1,4 +1,4 @@
-// FireTake desktop shell (Electron)
+// Strix FireTake desktop shell (Electron)
 const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -6,6 +6,9 @@ const os = require('os');
 const crypto = require('crypto');
 
 let win;
+// the product was renamed (FireTake → Strix FireTake): keep the data where it always was (projects, settings, rate library live in
+// the userData folder, which Electron names after the product)
+app.setPath('userData', path.join(app.getPath('appData'), 'FireTake'));
 
 function createWindow() {
   win = new BrowserWindow({
@@ -13,7 +16,7 @@ function createWindow() {
     height: 900,
     minWidth: 1000,
     minHeight: 640,
-    title: 'FireTake 消防算量报价',
+    title: 'Strix FireTake 消防算量报价',
     icon: path.join(__dirname, 'icon.png'),
     backgroundColor: '#E9EDF1',
     webPreferences: {
@@ -50,9 +53,9 @@ function buildMenu() {
     ] },
     { label: '帮助', submenu: [
       { label: '申请 Anthropic API Key', click: () => shell.openExternal('https://console.anthropic.com/') },
-      { label: '关于 FireTake', click: () => dialog.showMessageBox(win, {
-        type: 'info', title: '关于 FireTake',
-        message: 'FireTake 消防算量报价 v' + app.getVersion(),
+      { label: '关于 Strix FireTake', click: () => dialog.showMessageBox(win, {
+        type: 'info', title: '关于 Strix FireTake',
+        message: 'Strix FireTake 消防算量报价 v' + app.getVersion(),
         detail: '图纸算量、澳标核对、被动防火、计价与 Scope of Work / Exclusions 生成。\n数据保存在本机：' + app.getPath('userData')
       }) }
     ] }

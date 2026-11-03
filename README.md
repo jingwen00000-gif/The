@@ -1,4 +1,8 @@
-# FireTake 源代码
+# Strix FireTake 源代码
+
+![Strix](assets/brand/strix-logo.png)
+
+软件名 **Strix FireTake**（原 FireTake）。内部标识（更新包、备份文件、数据文件夹）仍是 FireTake，旧版本的数据、备份和更新包照常可用。
 
 Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js` 负责保存对话框、PDF 导出、Anthropic API、自动备份和在线更新。
 
@@ -116,3 +120,8 @@ Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js`
   - **发给老板审核**：各系统价格、总价、GST；内部的直接成本 / 现场管理费 / 不可预见费 / 利润和利润率、工时和工期；还没确认的识别结果、没设比例的图纸；未回复的 RFI；Scope of Work、Inclusions、Assumptions、Exclusions。老板邮箱会记住。
   - **发给客户**：报价信（总价、各系统价格、主要包含 / 不包含、有效期、签名），不含任何成本和利润。
 - 发送方式：**在 Outlook 打开草稿（自动附上 PDF 报价单，桌面版）**、Gmail、Outlook 网页版（Microsoft 365 / Outlook.com）、默认邮件程序、下载 .eml 草稿、复制正文。网页邮箱不能自动附件：先“保存 PDF 报价单”再拖进去。
+
+## v2.13.6 更名 Strix FireTake
+
+- 软件名改为 **Strix FireTake**：窗口标题、页头（Strix 标志）、关于、程序图标；主色改为 Strix 橙（按钮 #B84F2B，保证白字清晰；深色模式 #F08A62）。标志文件在 `assets/brand/`。
+- 数据位置不变（仍是原来的 FireTake 数据文件夹），旧版本的项目、设置、单价库、备份和更新包照常可用。
