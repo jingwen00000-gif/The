@@ -74,3 +74,18 @@ test('rates from finished jobs: the pricing library suggests rates, ticked rows 
   assert.equal(r.cable.m, 1.5);
 });
 
+
+test('review bar 批量删除: this kind on this sheet, this kind on every sheet; confirmed marks untouched; undo restores', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { S.marks = []; S.runs = []; const P = S.pages.filter(q => q.kind === 'pdf');
+    for (const pg of P.slice(0, 2)) for (let k = 0; k < 4; k++) { S.marks.push({ id: uid(), page: pg.id, type: 'spk_pend', x: 100 + k * 40, y: 200, pending: true, src: 'match' }); S.marks.push({ id: uid(), page: pg.id, type: 'smoke', x: 100 + k * 40, y: 300, pending: true, src: 'match' }); }
+    S.marks.push({ id: 'kept', page: P[0].id, type: 'spk_pend', x: 600, y: 600 }); curPage = P[0].id; await showPage(); changed(); await FT29.rvStart();
+    const pend = () => S.marks.filter(m => m.pending).length, x = { kind: 'mark', o: S.marks.find(m => m.pending && m.type === 'spk_pend' && m.page === P[0].id) };
+    FT29.rvBulk(x); const opts = [...document.querySelectorAll('#ftModal .ftmbtns button')].map(b => b.textContent); document.querySelector('#ftModal .ftmbtns button').click(); const a = pend();
+    FT29.rvBulk({ kind: 'mark', o: S.marks.find(m => m.pending && m.type === 'spk_pend') }); [...document.querySelectorAll('#ftModal .ftmbtns button')].find(b => /所有页面的/.test(b.textContent)).click(); const b = pend();
+    const kept = S.marks.some(m => m.id === 'kept'); undo(); const c = pend(); FT29.rvStop();
+    renderReview(); const pg = document.querySelector('#rvDelPg'); if (pg) pg.click(); const panel = !!document.querySelector('#ftModal[open]') && /本页全部待确认/.test(document.querySelector('#ftModal').textContent);
+    return { opts, a, b, c, kept, panel }; });
+  assert.deepEqual(r.opts.slice(0, 4), ['本页的「喷头 下垂型」（4）', '本页全部待确认（8）', '所有页面的「喷头 下垂型」（图标搜索结果）（8）', '所有页面全部待确认（16）']);
+  assert.equal(r.a, 12); assert.equal(r.b, 8); assert.ok(r.kept); assert.equal(r.c, 12); assert.ok(r.panel, 'the side panel 清除本页 button opens the same menu');
+});

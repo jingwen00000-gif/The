@@ -455,7 +455,7 @@ kbd{font-family:var(--f-mono)}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.2</small></div>
+  <div class="brand"><span>Fire<b>Take</b></span><small>v2.13.3</small></div>
   <select id="projSel" class="projsel" aria-label="切换项目"></select>
   <span class="ptlbl">类型</span><div class="seg ptseg" id="ptypeSeg" role="group" aria-label="项目类型"><button data-pt="NEW" title="新建 / 在建工程">新建工程</button><button data-pt="REFURB" title="既有建筑改造">翻新装修</button></div>
   <nav class="tabs" role="tablist">
@@ -1343,10 +1343,11 @@ function renderReview(){
   const pr=S.runs.filter(r=>r.pending).length, pm=S.marks.filter(m=>m.pending).length; const out=$('#reviewBox'); if(out) out.remove();
   if(!pr&&!pm) return;
   const d=document.createElement('div'); d.className='review'; d.id='reviewBox';
-  d.innerHTML=`<div><b>待确认：</b>${pm} 个构件、${pr} 段管线（图上虚线显示）。逐个点击可修改，或批量处理。</div><div class="acts"><button class="btn sm primary" id="rvOk">全部确认</button><button class="btn sm" id="rvDel">全部清除</button></div>`;
+  d.innerHTML=`<div><b>待确认：</b>${pm} 个构件、${pr} 段管线（图上虚线显示）。逐个点击可修改，或批量处理。</div><div class="acts"><button class="btn sm primary" id="rvOk">全部确认</button><button class="btn sm" id="rvDel">全部清除</button><button class="btn sm" id="rvDelPg">清除本页</button></div>`;
   $('#detectSec').appendChild(d);
   $('#rvOk').onclick=()=>{snap(); S.runs.forEach(r=>delete r.pending); S.marks.forEach(m=>delete m.pending); changed(); toast('已确认并计入数量')};
   $('#rvDel').onclick=()=>{snap(); S.runs=S.runs.filter(r=>!r.pending); S.marks=S.marks.filter(m=>!m.pending); changed()};
+  $('#rvDelPg').onclick=()=>window.FT29&&FT29.rvBulk(null);
 }
 
 /* ============ Detection: PDF text layer ============ */
@@ -2454,7 +2455,7 @@ const I18N={
 "选中管线":"Selected pipe","附加竖向长度":"Extra vertical length","测量长度":"Measured length","选中构件":"Selected item","来源：":"Source: ","来源":"Source","全部页面":"All pages",
 "还没有测量管道。选择“管道测量”工具 (P) 在图纸上点击。":"No pipe measured yet. Pick the Measure pipe tool (P) and click on the drawing.","段管线所在页未设比例，未计入。":"pipe runs are on pages without a scale and are not counted.",
 "还没有构件。选择“构件计数”工具 (C) 点击图纸。":"No items yet. Pick the Count tool (C) and click on the drawing.","点击切换到该构件计数":"Click to count this item","待确认：":"To review: ","个构件、":"items, ",
-"段管线（图上虚线显示）。逐个点击可修改，或批量处理。":"pipe runs (dashed on the drawing). Click each to edit, or handle them all at once.","全部确认":"Confirm all","全部清除":"Clear all","已确认并计入数量":"Confirmed and counted",
+"段管线（图上虚线显示）。逐个点击可修改，或批量处理。":"pipe runs (dashed on the drawing). Click each to edit, or handle them all at once.","全部确认":"Confirm all","清除本页":"Clear this sheet","批量删除 ▾":"Bulk delete ▾","删除本页或所有页面的同类待确认结果":"Delete pending results of this kind on this sheet or every sheet","本页的":"This sheet: ","本页全部待确认":"Everything pending on this sheet","所有页面的":"Every sheet: ","（图标搜索结果）":" (symbol search results)","所有页面全部待确认":"Everything pending on every sheet","批量删除待确认结果":"Bulk delete pending results","只删除还没确认的识别结果，已确认的不受影响。可以按 Ctrl+Z 撤销。":"Only results not yet confirmed are deleted; confirmed ones stay. Ctrl+Z undoes it.","当前页":"Current sheet","已删除":"Deleted","项待确认结果":"pending results","这一类":"this kind","全部清除":"Clear all","已确认并计入数量":"Confirmed and counted",
 "先打开图纸":"Open a drawing first","本页不是 PDF，没有文字层。请用":"This page is not a PDF and has no text layer. Use","请重新打开该":"Please reopen this","找到":"Found",
 "个构件标注（已加入待确认）。图例和标题栏里的字也会被读到，确认前请删掉多余的。":"item labels (added to To review). Text in the legend and title block is read too, so delete extras before confirming.",
 "图纸管径标注：":"Pipe size labels: ","图纸比例：":"Drawing scale: ","识别需要 Anthropic API Key。":"detection needs an Anthropic API key.","打开设置":"Open Settings","底图未加载，请重新打开图纸。":"Drawing not loaded, please reopen it.",
@@ -3326,7 +3327,7 @@ async function buildBackup(){
   const fl=[]; for(const f of files){fl.push({...f,blob:undefined,b64:await blobToB64(f.blob)})}
   return JSON.stringify({app:'FireTake',type:'backup',version:APPVER,created:new Date().toISOString(),projects,meta,files:fl});
 }
-let APPVER='2.13.2';
+let APPVER='2.13.3';
 async function runBackup(force){
   if(!DB.ok) return; const today=todayISO(); let last=''; try{last=localStorage.getItem('firetake.lastBackup')||''}catch(e){}
   if(!force&&last===today) return;
@@ -5385,13 +5386,31 @@ function rvPanel(x,left,skipped){let b=$('#rvBar'); if(!b){b=document.createElem
   <div class="rv-bar"><i style="width:${pct}%"></i></div>
   <div class="rv-acts"><button class="btn sm primary" data-rv="ok">✓ 确认<kbd>Enter</kbd></button><button class="btn sm" data-rv="del">✕ 删除<kbd>Del</kbd></button>
   ${ref?`<button class="btn sm" data-rv="act:relocate">移位<kbd>R</kbd></button><button class="btn sm" data-rv="act:remove">拆除<kbd>D</kbd></button><button class="btn sm" data-rv="act:new">新装<kbd>N</kbd></button>`:''}
-  <button class="btn sm ghost" data-rv="skip">跳过<kbd>→</kbd></button><span style="flex:1"></span><button class="btn sm ghost" data-rv="all" title="剩下的全部确认">全部确认（剩 ${left} 项）</button></div>`;
+  <button class="btn sm ghost" data-rv="skip">跳过<kbd>→</kbd></button><button class="btn sm" data-rv="bulk" title="删除本页或所有页面的同类待确认结果">批量删除 ▾<kbd>⇧Del</kbd></button><span style="flex:1"></span><button class="btn sm ghost" data-rv="all" title="剩下的全部确认">全部确认（剩 ${left} 项）</button></div>`;
   wireRv(b)}
+// bulk delete of pending results (a box search over all sheets can leave hundreds): this kind on this sheet, everything pending on this
+// sheet, this kind on every sheet (one search's results: same device and same source), or everything pending
+function rvRemove(L){if(!L.length) return 0; snap(); const ids=k=>new Set(L.filter(x=>x.kind===k).map(x=>x.o.id)); const m=ids('mark'), r=ids('run');
+  if(m.size) S.marks=S.marks.filter(o=>!m.has(o.id)); if(r.size) S.runs=S.runs.filter(o=>!r.has(o.id));
+  for(const x of L) if(x.kind!=='mark'&&x.kind!=='run'){sel={kind:x.kind,id:x.o.id}; pfDel()} sel=null; changed(); return L.length}
+function rvBulk(x){const P=allPending(), pg=curPage; const same=y=>x&&y.kind===x.kind&&(x.kind==='mark'?y.o.type===x.o.type&&(y.o.src||'')===(x.o.src||''):x.kind==='run'?y.o.sys===x.o.sys:true);
+  const name=x?(x.kind==='mark'?((ITEM[x.o.type]||{}).zh||x.o.type):x.kind==='run'?(((SYS[x.o.sys]||{}).zh||x.o.sys)+' '+T('管线')):T('这一类')):'';
+  const pname=(()=>{const p=S.pages.find(q=>q.id===pg); return p?p.name.replace(/\.pdf$/i,''):''})();
+  const opts=[];
+  if(x) opts.push({t:`${T('本页的')}「${name}」`,L:P.filter(y=>y.o.page===pg&&same(y))});
+  opts.push({t:T('本页全部待确认'),L:P.filter(y=>y.o.page===pg)});
+  if(x) opts.push({t:`${T('所有页面的')}「${name}」${x.kind==='mark'&&x.o.src==='match'?T('（图标搜索结果）'):''}`,L:P.filter(same)});
+  opts.push({t:T('所有页面全部待确认'),L:P});
+  const ok=opts.filter(o=>o.L.length); if(!ok.length){toast(T('没有待确认的识别结果')); return}
+  ftModal(T('批量删除待确认结果'),`<p class="note" style="margin:0 0 8px">${T('只删除还没确认的识别结果，已确认的不受影响。可以按 Ctrl+Z 撤销。')}${pname?`<br>${T('当前页')}：${esc(pname)}`:''}</p>`,
+    ok.map(o=>({t:`${o.t}（${o.L.length}）`,fn:()=>{const n=rvRemove(o.L); toast(`${T('已删除')} ${n} ${T('项待确认结果')}`); if(RV.on){RV.total=Math.max(0,RV.total-n); rvNext()}}})).concat([{t:T('取消')}]));
+  const d=$('#ftModal'); const bs=d.querySelector('.ftmbtns'); if(bs){bs.style.flexDirection='column'; bs.style.alignItems='stretch'; bs.querySelectorAll('button').forEach(b=>b.style.textAlign='left')}}
 function wireRv(b){b.querySelectorAll('[data-rv]').forEach(e=>e.onclick=()=>rvDo(e.dataset.rv))}
 async function rvDo(a){const x=RV.cur;
   if(a==='exit') return rvStop();
   if(a==='again'){RV.skip.clear(); return rvNext()}
   if(a==='all'){const L=rvQueue(); if(!await ftConfirm(T('把剩下的 ')+L.length+T(' 项全部确认并计入数量？'))) return; snap(); L.forEach(y=>delete y.o.pending); changed(); toast('已确认并计入数量'); return rvNext()}
+  if(a==='bulk') return rvBulk(x);
   if(!x) return;
   if(a==='skip'){RV.skip.add(x.o.id); return rvNext()}
   if(a==='del'){sel={kind:x.kind,id:x.o.id}; delSel(); return rvNext()}
@@ -5399,7 +5418,7 @@ async function rvDo(a){const x=RV.cur;
   if(a==='ok'){snap(); delete x.o.pending; changed(); return rvNext()}}
 document.addEventListener('keydown',ev=>{if(!RV.on||currentTab!=='takeoff') return; if(/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)||$('#ftModal')&&$('#ftModal').open) return; if(ev.ctrlKey||ev.metaKey||ev.altKey) return;
   const k=ev.key; let a=null; const ref=isRef()&&RV.cur&&RV.cur.kind==='mark';
-  if(k==='Enter') a='ok'; else if(k==='Delete'||k==='Backspace') a='del'; else if(k==='ArrowRight'||k==='Tab') a='skip'; else if(k==='Escape') a='exit';
+  if(k==='Enter') a='ok'; else if((k==='Delete'||k==='Backspace')&&ev.shiftKey) a='bulk'; else if(k==='Delete'||k==='Backspace') a='del'; else if(k==='ArrowRight'||k==='Tab') a='skip'; else if(k==='Escape') a='exit';
   else if(ref&&(k==='r'||k==='R')) a='act:relocate'; else if(ref&&(k==='d'||k==='D')) a='act:remove'; else if(ref&&(k==='n'||k==='N')) a='act:new';
   if(!a) return; ev.preventDefault(); ev.stopImmediatePropagation(); rvDo(a)},true);
 function rvChip(){const w=document.getElementById('cwrap'); if(!w) return; let c=$('#rvChip'); const n=S?allPending().length:0;
@@ -5623,7 +5642,7 @@ document.addEventListener('click',e=>{$$('details.ftmenu[open]').forEach(d=>{if(
 const st=document.createElement('style'); st.textContent='#qPtype{display:none!important} #v-passive .card.ptype{display:none!important}'; document.head.appendChild(st);
 const ps=$('#ptypeSeg'); if(ps) ps.title=T('新建：按图纸统计新管线穿过防火墙 / 楼板。翻新：拆除旧管线、既有穿透勘察和整改、非工作时间。决定计价方式、Scope of Work 与 Exclusions');
 setTimeout(()=>{updBadges(); refreshNextbar(); buildSecnav(currentTab)},400);
-window.FT29={rvStart,rvStop,qIssues,lgRows,lgCrop,legendAutoCount,lga:()=>LGA};
+window.FT29={rvStart,rvStop,rvBulk,rvRemove,qIssues,lgRows,lgCrop,legendAutoCount,lga:()=>LGA};
 })();
 </script>
 
