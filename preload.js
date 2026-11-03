@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('firetake', {
   desktop: true,
+  setLang: lang => ipcRenderer.invoke('set-lang', { lang }),
   saveFile: (name, data) => ipcRenderer.invoke('save-file', { name, data }),
   openFile: (name, data) => ipcRenderer.invoke('open-file', { name, data }),
   printPDF: (html, name) => ipcRenderer.invoke('print-pdf', { html, name }),

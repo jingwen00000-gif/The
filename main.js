@@ -33,35 +33,39 @@ function createWindow() {
   });
 }
 
-function buildMenu() {
-  const isMac = process.platform === 'darwin';
+// the menu bar follows the app's language (设置 → 语言; remembered in ft-config.json as lang)
+const L = (zh, en) => readCfg().lang === 'en' ? en : zh;
+function buildMenu(lang) {
+  const isMac = process.platform === 'darwin', en = (lang || readCfg().lang) === 'en', t = (zh, e) => en ? e : zh;
   const template = [
     ...(isMac ? [{ role: 'appMenu' }] : []),
-    { label: '文件', submenu: [
-      { label: '打开备份文件夹', click: () => shell.openPath(backupDir()) },
+    { label: t('文件', 'File'), submenu: [
+      { label: t('打开备份文件夹', 'Open backup folder'), click: () => shell.openPath(backupDir()) },
       { type: 'separator' },
-      isMac ? { role: 'close', label: '关闭窗口' } : { role: 'quit', label: '退出' }
+      isMac ? { role: 'close', label: t('关闭窗口', 'Close window') } : { role: 'quit', label: t('退出', 'Exit') }
     ] },
-    { label: '编辑', submenu: [
-      { role: 'undo', label: '撤销' }, { role: 'redo', label: '重做' }, { type: 'separator' },
-      { role: 'cut', label: '剪切' }, { role: 'copy', label: '复制' }, { role: 'paste', label: '粘贴' }, { role: 'selectAll', label: '全选' }
+    { label: t('编辑', 'Edit'), submenu: [
+      { role: 'undo', label: t('撤销', 'Undo') }, { role: 'redo', label: t('重做', 'Redo') }, { type: 'separator' },
+      { role: 'cut', label: t('剪切', 'Cut') }, { role: 'copy', label: t('复制', 'Copy') }, { role: 'paste', label: t('粘贴', 'Paste') }, { role: 'selectAll', label: t('全选', 'Select all') }
     ] },
-    { label: '视图', submenu: [
-      { role: 'reload', label: '重新加载' }, { role: 'toggleDevTools', label: '开发者工具' }, { type: 'separator' },
-      { role: 'resetZoom', label: '实际大小' }, { role: 'zoomIn', label: '放大界面' }, { role: 'zoomOut', label: '缩小界面' },
-      { type: 'separator' }, { role: 'togglefullscreen', label: '全屏' }
+    { label: t('视图', 'View'), submenu: [
+      { role: 'reload', label: t('重新加载', 'Reload') }, { role: 'toggleDevTools', label: t('开发者工具', 'Developer tools') }, { type: 'separator' },
+      { role: 'resetZoom', label: t('实际大小', 'Actual size') }, { role: 'zoomIn', label: t('放大界面', 'Zoom in') }, { role: 'zoomOut', label: t('缩小界面', 'Zoom out') },
+      { type: 'separator' }, { role: 'togglefullscreen', label: t('全屏', 'Full screen') }
     ] },
-    { label: '帮助', submenu: [
-      { label: '申请 Anthropic API Key', click: () => shell.openExternal('https://console.anthropic.com/') },
-      { label: '关于 Strix FireTake', click: () => dialog.showMessageBox(win, {
-        type: 'info', title: '关于 Strix FireTake',
-        message: 'Strix FireTake 消防算量报价 v' + app.getVersion(),
-        detail: '图纸算量、澳标核对、被动防火、计价与 Scope of Work / Exclusions 生成。\n数据保存在本机：' + app.getPath('userData')
+    { label: t('帮助', 'Help'), submenu: [
+      { label: t('申请 Anthropic API Key', 'Get an Anthropic API key'), click: () => shell.openExternal('https://console.anthropic.com/') },
+      { label: t('关于 Strix FireTake', 'About Strix FireTake'), click: () => dialog.showMessageBox(win, {
+        type: 'info', title: t('关于 Strix FireTake', 'About Strix FireTake'),
+        message: t('Strix FireTake 消防算量报价 v', 'Strix FireTake Fire Takeoff & Quote v') + app.getVersion(),
+        detail: t('图纸算量、澳标核对、被动防火、计价与 Scope of Work / Exclusions 生成。\n数据保存在本机：', 'Drawing take-off, Australian Standards checks, passive fire, pricing and Scope of Work / Exclusions.\nData is stored on this computer: ') + app.getPath('userData')
       }) }
     ] }
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  if (win && !win.isDestroyed()) win.setTitle(t('Strix FireTake 消防算量报价', 'Strix FireTake Fire Takeoff & Quote'));
 }
+ipcMain.handle('set-lang', (_e, { lang }) => { const c = readCfg(); if (c.lang !== lang) { c.lang = lang; writeCfg(c); } buildMenu(lang); return true; });
 
 const toBuf = data => (typeof data === 'string' ? Buffer.from(data, 'utf8') : Buffer.from(data));
 
@@ -178,7 +182,7 @@ ipcMain.handle('inbox-read', (_e, { rel }) => { const p = inInbox(rel); if (!fs.
 ipcMain.handle('dir-get', () => ({ dataDir: dataDir(), backupDir: backupDir(), customBackup: !!readCfg().backupDir, inboxDir: inboxDir() }));
 ipcMain.handle('dir-choose', async (_e, { kind }) => {
   const key = kind === 'backup' ? 'backupDir' : kind === 'inbox' ? 'inboxDir' : 'dataDir';
-  const r = await dialog.showOpenDialog(win, { title: kind === 'backup' ? '选择备份文件夹' : kind === 'inbox' ? '选择招标收件箱文件夹（每个招标一个子文件夹）' : '选择项目数据文件夹', properties: ['openDirectory', 'createDirectory'] });
+  const r = await dialog.showOpenDialog(win, { title: kind === 'backup' ? L('选择备份文件夹', 'Choose the backup folder') : kind === 'inbox' ? L('选择招标收件箱文件夹（每个招标一个子文件夹）', 'Choose the tender inbox folder (one subfolder per tender)') : L('选择项目数据文件夹', 'Choose the project data folder'), properties: ['openDirectory', 'createDirectory'] });
   if (r.canceled || !r.filePaths[0]) return null;
   const c = readCfg(); c[key] = r.filePaths[0]; writeCfg(c);
   return r.filePaths[0];
@@ -275,7 +279,7 @@ ipcMain.handle('update-apply', async (_e, { bundle, sha256 }) => {
   } catch (err) { return { error: err.message }; }
 });
 ipcMain.handle('update-apply-file', async () => {
-  const r = await dialog.showOpenDialog(win, { title: '选择 FireTake 更新包', filters: [{ name: 'FireTake 更新包', extensions: ['ftupd'] }], properties: ['openFile'] });
+  const r = await dialog.showOpenDialog(win, { title: L('选择 FireTake 更新包', 'Choose a FireTake update package'), filters: [{ name: L('FireTake 更新包', 'FireTake update package'), extensions: ['ftupd'] }], properties: ['openFile'] });
   if (r.canceled || !r.filePaths[0]) return null;
   try {
     const v = applyBundle(fs.readFileSync(r.filePaths[0]), null);
