@@ -132,3 +132,25 @@ test('框选比例: a box around the scale note sets the scale (and offers the o
   if (r.skip) return;
   assert.equal(r.ratio, r.want); assert.ok(Math.abs(r.mpu - r.want * 0.0254 / 72) < 1e-9); if (r.others) assert.ok(r.modal, 'offers the same-size sheets');
 });
+
+test('tender folder import: fire drawing opened, documents filed (zip expanded), project / client / contact / site / closing date filled', async () => {
+  const { page } = app;
+  const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close();
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    const eml = ['From: "Jane Smith" <jane@acmebuild.com.au>', 'Subject: Tender - Hornsby Storage', 'Content-Type: text/plain; charset=utf-8', '', 'Site: 28 Salisbury Road, Asquith NSW 2077. Tenders close 13 November 2026.', '', 'Jane Smith', 'Acme Building Group Pty Ltd', 'M: 0412 345 678'].join('\r\n');
+    // a stored (uncompressed) zip with one entry, built by hand
+    const enc = new TextEncoder(), name = enc.encode('Fire Services Specification.txt'), data = enc.encode('Sprinklers to AS 2118.1.');
+    const crc = (() => { let c, t = []; for (let n = 0; n < 256; n++) { c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } let x = 0xFFFFFFFF; for (const b of data) x = t[(x ^ b) & 0xFF] ^ (x >>> 8); return (x ^ 0xFFFFFFFF) >>> 0; })();
+    const loc = new DataView(new ArrayBuffer(30)); loc.setUint32(0, 0x04034b50, true); loc.setUint32(14, crc, true); loc.setUint32(18, data.length, true); loc.setUint32(22, data.length, true); loc.setUint16(26, name.length, true);
+    const cen = new DataView(new ArrayBuffer(46)); cen.setUint32(0, 0x02014b50, true); cen.setUint32(16, crc, true); cen.setUint32(20, data.length, true); cen.setUint32(24, data.length, true); cen.setUint16(28, name.length, true);
+    const locLen = 30 + name.length + data.length, end = new DataView(new ArrayBuffer(22)); end.setUint32(0, 0x06054b50, true); end.setUint16(8, 1, true); end.setUint16(10, 1, true); end.setUint32(12, 46 + name.length, true); end.setUint32(16, locLen, true);
+    const zip = new Blob([loc, name, data, cen, name, end]);
+    const items = [['Fire/FS-101.pdf', new File([u], 'FS-101.pdf')], ['Tender Invitation.eml', new File([eml], 'Tender Invitation.eml')], ['FER Rev B.txt', new File(['3.4 Existing hydrant system to remain.'], 'FER Rev B.txt')], ['Specs.zip', new File([zip], 'Specs.zip')]]
+      .map(([p, f]) => ({ path: p, name: f.name, size: f.size, read: async () => f }));
+    const a = await FT_INBOX_APP.analyse('2026-11-02 Hornsby Storage', items); await FT_INBOX_APP.importOne(a, a.info);
+    return { info: a.info, fire: a.G.fire.length, name: S.name, client: S.client, contact: S.contact, phone: S.phone, site: S.site, notes: S.notes, pages: S.pages.filter(p => p.kind === 'pdf').length, docs: S.docs.map(x => x.cat + ':' + x.name).sort() }; }, pdf);
+  assert.equal(r.name, 'Hornsby Storage'); assert.equal(r.client, 'Acme Building Group Pty Ltd'); assert.equal(r.contact, 'Jane Smith'); assert.equal(r.phone, '0412 345 678');
+  assert.equal(r.site, '28 Salisbury Road, Asquith NSW 2077'); assert.match(r.notes, /Tender closes: 13 November 2026/); assert.equal(r.fire, 1); assert.ok(r.pages >= 1);
+  assert.deepEqual(r.docs, ['EMAIL:Tender Invitation.eml', 'FER:FER Rev B.txt', 'SPEC:Fire Services Specification.txt']);
+});

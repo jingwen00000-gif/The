@@ -23,5 +23,7 @@ contextBridge.exposeInMainWorld('firetake', {
   fsRead: (rel, binary) => ipcRenderer.invoke('fs-read', { rel, binary }),
   fsList: rel => ipcRenderer.invoke('fs-list', { rel }),
   fsMove: (from, to) => ipcRenderer.invoke('fs-move', { from, to }),
-  fsDelete: rel => ipcRenderer.invoke('fs-delete', { rel })
+  fsDelete: rel => ipcRenderer.invoke('fs-delete', { rel }),
+  inboxList: () => ipcRenderer.invoke('inbox-list'),
+  inboxRead: rel => ipcRenderer.invoke('inbox-read', { rel })
 });

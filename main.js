@@ -144,15 +144,43 @@ function inData(rel) {
   if (p !== root && !p.startsWith(root + path.sep)) throw new Error('非法路径：' + rel);
   return p;
 }
-ipcMain.handle('dir-get', () => ({ dataDir: dataDir(), backupDir: backupDir(), customBackup: !!readCfg().backupDir }));
+// tender inbox: a folder the estimator saves downloaded tenders into (one subfolder per tender); read only — never changed or deleted
+function inboxDir() { const d = readCfg().inboxDir; return d && fs.existsSync(d) ? d : null; }
+function inInbox(rel) {
+  const root = inboxDir(); if (!root) throw new Error('未设置招标收件箱文件夹');
+  const p = path.resolve(root, String(rel || ''));
+  if (p !== root && !p.startsWith(root + path.sep)) throw new Error('非法路径：' + rel);
+  return p;
+}
+const SKIP = /^(\.|~\$|Thumbs\.db$|desktop\.ini$|__MACOSX$)/i;
+ipcMain.handle('inbox-list', () => {
+  const root = inboxDir(); if (!root) return null;
+  const out = [];
+  for (const d of fs.readdirSync(root, { withFileTypes: true })) {
+    if (!d.isDirectory() || SKIP.test(d.name)) continue;
+    const files = []; const walk = (rel, depth) => {
+      if (depth > 4 || files.length > 400) return;
+      for (const e of fs.readdirSync(path.join(root, rel), { withFileTypes: true })) {
+        if (SKIP.test(e.name)) continue; const r = path.join(rel, e.name);
+        if (e.isDirectory()) walk(r, depth + 1); else { const st = fs.statSync(path.join(root, r)); files.push({ rel: r.split(path.sep).join('/'), name: e.name, size: st.size, mtime: st.mtimeMs }); }
+      }
+    };
+    try { walk(d.name, 0); } catch (e) {}
+    out.push({ folder: d.name, files, mtime: Math.max(0, ...files.map(f => f.mtime)) });
+  }
+  return { dir: root, folders: out };
+});
+ipcMain.handle('inbox-read', (_e, { rel }) => { const p = inInbox(rel); if (!fs.existsSync(p)) return null; return new Uint8Array(fs.readFileSync(p)); });
+ipcMain.handle('dir-get', () => ({ dataDir: dataDir(), backupDir: backupDir(), customBackup: !!readCfg().backupDir, inboxDir: inboxDir() }));
 ipcMain.handle('dir-choose', async (_e, { kind }) => {
-  const r = await dialog.showOpenDialog(win, { title: kind === 'backup' ? '选择备份文件夹' : '选择项目数据文件夹', properties: ['openDirectory', 'createDirectory'] });
+  const key = kind === 'backup' ? 'backupDir' : kind === 'inbox' ? 'inboxDir' : 'dataDir';
+  const r = await dialog.showOpenDialog(win, { title: kind === 'backup' ? '选择备份文件夹' : kind === 'inbox' ? '选择招标收件箱文件夹（每个招标一个子文件夹）' : '选择项目数据文件夹', properties: ['openDirectory', 'createDirectory'] });
   if (r.canceled || !r.filePaths[0]) return null;
-  const c = readCfg(); c[kind === 'backup' ? 'backupDir' : 'dataDir'] = r.filePaths[0]; writeCfg(c);
+  const c = readCfg(); c[key] = r.filePaths[0]; writeCfg(c);
   return r.filePaths[0];
 });
-ipcMain.handle('dir-clear', (_e, { kind }) => { const c = readCfg(); delete c[kind === 'backup' ? 'backupDir' : 'dataDir']; writeCfg(c); return true; });
-ipcMain.handle('dir-open', (_e, { kind }) => shell.openPath(kind === 'backup' ? backupDir() : (dataDir() || '')));
+ipcMain.handle('dir-clear', (_e, { kind }) => { const c = readCfg(); delete c[kind === 'backup' ? 'backupDir' : kind === 'inbox' ? 'inboxDir' : 'dataDir']; writeCfg(c); return true; });
+ipcMain.handle('dir-open', (_e, { kind }) => shell.openPath(kind === 'backup' ? backupDir() : kind === 'inbox' ? (inboxDir() || '') : (dataDir() || '')));
 ipcMain.handle('fs-write', (_e, { rel, data }) => {
   const p = inData(rel); fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p + '.tmp', toBuf(data)); fs.renameSync(p + '.tmp', p); return true;
