@@ -117,3 +117,18 @@ test('quote e-mail drafts: boss / client tabs from the open quote, boss address 
   assert.match(boss, /INTERNAL — not for the client/); assert.ok(!cl.body.includes('INTERNAL')); assert.equal(cl.to, 'jane@acme.com.au'); assert.match(cl.body, /^Dear Jane,/);
   assert.match(dl.suggestedFilename(), /_email\.eml$/); assert.equal(kept, 'boss@firetake.com.au');
 });
+
+test('框选比例: a box around the scale note sets the scale (and offers the other sheets of the same size)', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); showTab('takeoff');
+    const pdfs = S.pages.filter(q => q.kind === 'pdf'); let p = null, it = null;
+    for (const q of pdfs) { const t = (await pdfTextItems(q)).find(x => /1\s*:\s*\d{2,4}/.test(x.s)); if (t) { p = q; it = t; break; } }
+    if (!p) return { skip: true };
+    S.pages.forEach(q => { q.mPerUnit = null; q.ratio = null; }); curPage = p.id; await showPage();
+    document.querySelector('#ratioBox').click(); legendDrag = { a: [it.x - 10, it.y - 10] }; legendRect = [it.x - 10, it.y - 10, it.x + (it.w || 40) + 10, it.y + 10];
+    await legendUp(); const want = +it.s.match(/1\s*:\s*(\d{2,4})/)[1];
+    const modal = !!document.querySelector('#ftModal[open]'); const others = S.pages.filter(q => q !== p && q.kind === 'pdf' && Math.abs(q.w - p.w) < 2).length;
+    return { want, ratio: p.ratio, mpu: p.mPerUnit, modal, others }; });
+  if (r.skip) return;
+  assert.equal(r.ratio, r.want); assert.ok(Math.abs(r.mpu - r.want * 0.0254 / 72) < 1e-9); if (r.others) assert.ok(r.modal, 'offers the same-size sheets');
+});
