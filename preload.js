@@ -3,6 +3,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('firetake', {
   desktop: true,
   setLang: lang => ipcRenderer.invoke('set-lang', { lang }),
+  cloud: {
+    status: () => ipcRenderer.invoke('cloud-status'), config: (config, backup) => ipcRenderer.invoke('cloud-config', { config, backup }),
+    signIn: provider => ipcRenderer.invoke('cloud-signin', { provider }), signOut: provider => ipcRenderer.invoke('cloud-signout', { provider }),
+    list: (provider, id) => ipcRenderer.invoke('cloud-list', { provider, id }), walk: (provider, id) => ipcRenderer.invoke('cloud-walk', { provider, id }),
+    download: (provider, id) => ipcRenderer.invoke('cloud-download', { provider, id }), backups: () => ipcRenderer.invoke('cloud-backups'),
+    backupNow: (name, keep) => ipcRenderer.invoke('cloud-backup-now', { name, keep }),
+    mailSearch: (provider, q) => ipcRenderer.invoke('mail-search', { provider, q }), mailMessage: (provider, id) => ipcRenderer.invoke('mail-message', { provider, id }),
+    mailAttachment: (provider, msg, id) => ipcRenderer.invoke('mail-attachment', { provider, msg, id })
+  },
   saveFile: (name, data) => ipcRenderer.invoke('save-file', { name, data }),
   openFile: (name, data) => ipcRenderer.invoke('open-file', { name, data }),
   printPDF: (html, name) => ipcRenderer.invoke('print-pdf', { html, name }),
@@ -11,6 +20,8 @@ contextBridge.exposeInMainWorld('firetake', {
   claude: (key, body) => ipcRenderer.invoke('claude', { key, body }),
   backupInfo: () => ipcRenderer.invoke('backup-info'),
   backupWrite: (name, data, keep) => ipcRenderer.invoke('backup-write', { name, data, keep }),
+  backupZip: { begin: name => ipcRenderer.invoke('backup-zip-begin', { name }), add: (id, name, data) => ipcRenderer.invoke('backup-zip-add', { id, name, data }),
+    end: (id, keep) => ipcRenderer.invoke('backup-zip-end', { id, keep }), abort: id => ipcRenderer.invoke('backup-zip-abort', { id }) },
   backupOpenDir: () => ipcRenderer.invoke('backup-open-dir'),
   appVersion: () => ipcRenderer.invoke('app-version'),
   updateCheck: url => ipcRenderer.invoke('update-check', { url }),

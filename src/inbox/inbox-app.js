@@ -139,7 +139,7 @@ async function importOne(a,v,into){
   const set=(k,x)=>{if(x&&(!into||!S[k]||k==='name'&&S[k]==='新项目')) S[k]=x}; set('name',v.name||a.info.name||FT_INBOX.tenderName(a.folder)); ['client','contact','email','phone','site'].forEach(k=>set(k,v[k]));
   if(a.info.closes&&!String(S.notes||'').includes(a.info.closes)) S.notes=[S.notes,`Tender closes: ${a.info.closes}`].filter(Boolean).join('\n'); S.inboxFolder=a.folder||S.inboxFolder||'';
   const take=a.G.draw.filter(d=>d.take), rest=a.G.draw.filter(d=>!d.take);
-  for(const d of take){const f=await d.read(); await openFiles([f]);
+  for(const d of take){const f=await d.read(); await openFiles([f],{quiet:true});
     // a combined set: keep only its fire services pages for take-off (the whole set is still filed under 招标资料)
     if(d.onlyFire&&d.s.firePages.length){const key=f.name+'|'+f.size, keep=new Set(d.s.firePages.map(x=>x+1)); const drop=S.pages.filter(p=>p.file===key&&!keep.has(p.num));
       drop.forEach(p=>{pdfPageRef.delete(p.id)}); S.pages=S.pages.filter(p=>!drop.includes(p)); if(drop.length) rest.push(d)}}
@@ -195,7 +195,7 @@ async function renderSettings(el){if(!el) return; if(!desk()){el.innerHTML=`<p c
 // any edition: pick a folder
 function pickFolder(){const inp=document.createElement('input'); inp.type='file'; inp.multiple=true; inp.webkitdirectory=true; inp.style.display='none'; document.body.appendChild(inp);
   inp.onchange=()=>{const L=[...inp.files]; inp.remove(); if(L.length) review(fromInput(L),'pick')}; inp.click()}
-IA.scan=scan; IA.review=review; IA.reviewHTML=reviewHTML; IA.desktopTenders=desktopTenders; IA.analyse=analyse; IA.importOne=importOne; IA.fromInput=fromInput; IA.renderSettings=renderSettings; IA.pickFolder=pickFolder;
+IA.scan=scan; IA.review=review; IA.zipEntries=zipEntries; IA.reviewHTML=reviewHTML; IA.desktopTenders=desktopTenders; IA.analyse=analyse; IA.importOne=importOne; IA.fromInput=fromInput; IA.renderSettings=renderSettings; IA.pickFolder=pickFolder;
 (async()=>{for(let i=0;i<100&&!(typeof DB!=='undefined'&&DB.ok&&typeof S!=='undefined'&&S);i++) await new Promise(r=>setTimeout(r,200)); scan(false)})();
 root.addEventListener('focus',()=>{if(Date.now()-lastScan>60000) scan(false)});
 })(typeof window!=='undefined'?window:globalThis);

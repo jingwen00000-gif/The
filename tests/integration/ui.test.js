@@ -189,6 +189,28 @@ test('a drawing whose saved copy is missing: the canvas offers 重新打开, and
   assert.ok(r.storedOk, 'the drawing is saved as a full copy'); assert.ok(r.shown); assert.equal(r.pages, r.n0, 'no duplicate page'); assert.ok(r.linked); assert.ok(r.hidden);
 });
 
+test('page list: × deletes a sheet at once (with its take-off), ticks + 删除选中 delete several, 撤销 brings them back', async () => {
+  const { page } = app;
+  const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
+  await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); showTab('takeoff');
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    await newProject(); for (const n of ['A.pdf', 'B.pdf', 'C.pdf']) await openFiles([new File([u], n, { type: 'application/pdf' })]);
+    S.pages.forEach((p, i) => S.marks.push({ id: 'pm' + i, page: p.id, type: 'spk_pend', x: 1, y: 1 })); changed(); }, pdf);
+  const n0 = await page.evaluate(() => S.pages.length);
+  await page.click('#pageBtn');
+  await page.click('#pageList [data-pg] >> nth=0 >> [data-pgx]');
+  const one = await page.evaluate(() => ({ pages: S.pages.length, marks: S.marks.length }));
+  await page.click('#pageUndoBtn');
+  const back = await page.evaluate(() => ({ pages: S.pages.length, marks: S.marks.length }));
+  await page.click('#pageList [data-pg] >> nth=0 >> [data-pgk]'); await page.click('#pageList [data-pg] >> nth=2 >> [data-pgk]', { modifiers: ['Shift'] });
+  await page.click('#pageDelSel'); await page.click('#pageDelSel');
+  const many = await page.evaluate(() => S.pages.length);
+  await page.click('#pageUndoBtn'); const again = await page.evaluate(() => S.pages.length);
+  await page.mouse.click(5, 5); const closed = await page.isHidden('#pagePop');
+  assert.equal(one.pages, n0 - 1); assert.ok(one.marks < n0, 'its take-off went with it'); assert.deepEqual(back, { pages: n0, marks: n0 });
+  assert.equal(many, n0 - 3); assert.equal(again, n0); assert.ok(closed);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');

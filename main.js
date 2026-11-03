@@ -1,5 +1,5 @@
 // Strix FireTake desktop shell (Electron)
-const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu, safeStorage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -232,9 +232,55 @@ ipcMain.handle('backup-write', (_e, { name, data, keep }) => {
   fs.renameSync(p + '.tmp', p);
   const all = fs.readdirSync(dir).filter(f => f.endsWith('.ftbak')).sort().reverse();
   all.slice(keep || 14).forEach(f => { try { fs.unlinkSync(path.join(dir, f)); } catch (e) {} });
+  // the same backup to every signed-in cloud account (Strix FireTake/Backups), in the background
+  if (readCfg().cloudBackup !== false && cloud.status().some(x => x.signedIn)) {
+    cloudLast = { at: Date.now(), running: true, results: [] };
+    cloud.backup(name, Buffer.from(data, 'utf8'), keep || 14).then(r => { cloudLast = { at: Date.now(), running: false, results: r }; }).catch(e => { cloudLast = { at: Date.now(), running: false, results: [{ ok: false, error: e.message }] }; });
+  }
   return p;
 });
+
+/* ---- cloud accounts (src/cloud/cloud-main.js): sign-in tokens encrypted with the OS (safeStorage), Client IDs in ft-config.json ---- */
+const { createCloud } = require('./src/cloud/cloud-main.js');
+const cloudFile = () => path.join(app.getPath('userData'), 'cloud-accounts.json');
+const cloudStore = {
+  all() { try { const raw = fs.readFileSync(cloudFile()); return JSON.parse(safeStorage.isEncryptionAvailable() ? safeStorage.decryptString(raw) : raw.toString('utf8')); } catch (e) { return {}; } },
+  get(p) { return this.all()[p] || null; },
+  set(p, v) { const a = this.all(); if (v) a[p] = v; else delete a[p]; const t = JSON.stringify(a);
+    fs.writeFileSync(cloudFile(), safeStorage.isEncryptionAvailable() ? safeStorage.encryptString(t) : Buffer.from(t, 'utf8')); }
+};
+const cloud = createCloud({ fetch: (...a) => fetch(...a), store: cloudStore, config: () => readCfg().cloud || {}, openExternal: u => shell.openExternal(u),
+  endpoints: process.env.FT_CLOUD_TEST ? JSON.parse(process.env.FT_CLOUD_TEST) : undefined });
+let cloudLast = null;
+const cloudTry = fn => async (_e, a) => { try { return { ok: true, value: await fn(a || {}) }; } catch (e) { return { ok: false, error: e.message || String(e) }; } };
+ipcMain.handle('cloud-status', cloudTry(() => ({ accounts: cloud.status(), config: readCfg().cloud || {}, backup: readCfg().cloudBackup !== false, last: cloudLast, redirect: { google: cloud.redirect('google'), microsoft: cloud.redirect('microsoft'), dropbox: cloud.redirect('dropbox') } })));
+ipcMain.handle('cloud-config', cloudTry(({ config, backup }) => { const c = readCfg(); if (config) c.cloud = config; if (backup != null) c.cloudBackup = !!backup; writeCfg(c); return true; }));
+ipcMain.handle('cloud-signin', cloudTry(async ({ provider }) => { const r = await cloud.signIn(provider); if (win && !win.isDestroyed()) { if (win.isMinimized()) win.restore(); win.focus(); } return r; }));
+ipcMain.handle('cloud-signout', cloudTry(({ provider }) => cloud.signOut(provider)));
+ipcMain.handle('cloud-list', cloudTry(({ provider, id }) => cloud.list(provider, id)));
+ipcMain.handle('cloud-walk', cloudTry(({ provider, id }) => cloud.walk(provider, id, 400, 4)));
+ipcMain.handle('cloud-download', cloudTry(async ({ provider, id }) => new Uint8Array(await cloud.download(provider, id))));
+ipcMain.handle('cloud-backups', cloudTry(async () => { const out = []; for (const s of cloud.status().filter(x => x.signedIn)) { try { for (const f of await cloud.listApp(s.provider, ['Backups'])) if (/\.ftbak$/i.test(f.name)) out.push({ ...f, provider: s.provider }); } catch (e) { out.push({ provider: s.provider, error: e.message }); } } return out; }));
+ipcMain.handle('cloud-backup-now', cloudTry(async ({ name, keep }) => { const p = path.join(backupDir(), name); if (!fs.existsSync(p)) throw new Error('no backup ' + name); return cloud.backup(name, { path: p, size: fs.statSync(p).size }, keep || 14); }));
+ipcMain.handle('mail-search', cloudTry(({ provider, q }) => cloud.mailSearch(provider, q, 25)));
+ipcMain.handle('mail-message', cloudTry(({ provider, id }) => cloud.mailMessage(provider, id)));
+ipcMain.handle('mail-attachment', cloudTry(async ({ provider, msg, id }) => new Uint8Array(await cloud.mailAttachment(provider, msg, id))));
 ipcMain.handle('backup-open-dir', () => shell.openPath(backupDir()));
+// the backup as a zip written file by file (src/backup/zip-writer.js): memory stays small whatever the size of the projects
+const { zipWriter } = require('./src/backup/zip-writer.js');
+const bkOpen = new Map();
+ipcMain.handle('backup-zip-begin', (_e, { name }) => { const dir = backupDir(), id = crypto.randomBytes(8).toString('hex'), tmp = path.join(dir, name + '.' + id + '.tmp');
+  bkOpen.set(id, { z: zipWriter(tmp), tmp, name, dir }); return id; });
+ipcMain.handle('backup-zip-add', (_e, { id, name, data }) => { const b = bkOpen.get(id); if (!b) throw new Error('backup not open'); b.z.add(name, Buffer.from(typeof data === 'string' ? Buffer.from(data, 'utf8') : data)); return true; });
+ipcMain.handle('backup-zip-abort', (_e, { id }) => { const b = bkOpen.get(id); if (b) { b.z.abort(); bkOpen.delete(id); } return true; });
+ipcMain.handle('backup-zip-end', (_e, { id, keep }) => { const b = bkOpen.get(id); if (!b) throw new Error('backup not open'); bkOpen.delete(id);
+  const size = b.z.end(), p = path.join(b.dir, b.name); fs.renameSync(b.tmp, p);
+  fs.readdirSync(b.dir).filter(f => f.endsWith('.ftbak')).sort().reverse().slice(keep || 14).forEach(f => { try { fs.unlinkSync(path.join(b.dir, f)); } catch (e) {} });
+  if (readCfg().cloudBackup !== false && cloud.status().some(x => x.signedIn)) {
+    cloudLast = { at: Date.now(), running: true, results: [] };
+    cloud.backup(b.name, { path: p, size }, keep || 14).then(r => { cloudLast = { at: Date.now(), running: false, results: r }; }).catch(e => { cloudLast = { at: Date.now(), running: false, results: [{ ok: false, error: e.message }] }; });
+  }
+  return { path: p, size }; });
 
 /* ---------- updates ----------
    Manifest (JSON, at the URL set in Settings):
