@@ -85,6 +85,43 @@ function extract(info){info=info||{}; const out={name:'',site:'',client:'',conta
   for(const t of texts){const c=String(t).match(CLOSE); if(c){out.closes=c[3].trim(); break}}
   return out}
 
-const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject};
+/* ---- which service a drawing sheet is ----
+   discipline(text, name) → {disc, score, fire:{device: count}, fireCount, why}
+   disc: fire | hydraulic | electrical | mechanical | architectural | structural | civil | other
+   Strong clues: the title block's heading (FIRE SERVICES / HYDRAULIC SERVICES …) and the drawing number prefix (FS-101, H-201, E-101 …);
+   weaker: what is drawn and labelled (sprinklers, hydrants vs basins, sewer; lights, GPOs; ducts, diffusers). fire lists the fire
+   devices named on the sheet, so a hydraulic sheet with hydrants or an electrical sheet with smoke detectors can be flagged. */
+// [discipline, sheet title (the service heading a title: 'PROPOSED FIRE SERVICES LEVEL 2 ARRANGEMENT', 'MECHANICAL SERVICES LAYOUT'), a bare mention
+//  ('… SERVICES' in the title block or the notes — notes name the other trades all the time, so it weighs little), drawing number prefix]
+const DISC=[
+  ['fire',/(?:FIRE\s+(?:SERVICES|PROTECTION|SPRINKLER|HYDRANT|DETECTION)|(?:WET|DRY)\s+FIRE|SPRINKLER|FIRE\s+&\s+EWIS)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/FIRE\s+(?:SERVICES|PROTECTION)/g,/(^|[^A-Z0-9])(FS|FP|FSD|FH|FD|F)[-_ ]?\d{2,4}/],
+  ['hydraulic',/(?:HYDRAULIC|PLUMBING|DRAINAGE|SANITARY|STORMWATER|SEWER(?:AGE)?)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/HYDRAULIC\s+SERVICES/g,/(^|[^A-Z0-9])(H|HY|HYD|P)[-_ ]?\d{2,4}/],
+  ['electrical',/(?:ELECTRICAL|LIGHTING|POWER|COMMUNICATIONS?|SECURITY)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/ELECTRICAL\s+SERVICES/g,/(^|[^A-Z0-9])(E|EL|ELE)[-_ ]?\d{2,4}/],
+  ['mechanical',/(?:MECHANICAL|HVAC|AIR[-\s]CONDITIONING|VENTILATION)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/MECHANICAL\s+SERVICES/g,/(^|[^A-Z0-9])(M|ME|MECH)[-_ ]?\d{2,4}/],
+  ['architectural',/(?:ARCHITECTURAL|GENERAL\s+ARRANGEMENT|REFLECTED\s+CEILING)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/ARCHITECT/g,/(^|[^A-Z0-9])(A|AR|ARC|DA)[-_ ]?\d{2,4}/],
+  ['structural',/(?:STRUCTURAL|FOOTING|SLAB|REINFORCEMENT)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/STRUCTURAL\s+ENGINEER/g,/(^|[^A-Z0-9])(S|ST|STR)[-_ ]?\d{2,4}/],
+  ['civil',/(?:CIVIL|BULK\s+EARTHWORKS|SITEWORKS|ROAD)(?:SERVICES\s+)?[^\n]{0,40}?(?:LAYOUT|PLAN|ARRANGEMENT|SCHEMATIC|DETAILS?|COVER|LEGEND|NOTES|SECTIONS?|ELEVATIONS?)/g,/CIVIL\s+ENGINEER/g,/(^|[^A-Z0-9])(C|CV|CIV)[-_ ]?\d{2,4}/]];
+const WORDS={
+  fire:{sprinkler:/SPRINKLER|\bSPK\b|PENDENT|PENDANT|UPRIGHT\s+HEAD/g,hydrant:/HYDRANT/g,hosereel:/HOSE\s*REEL/g,detector:/SMOKE\s+DETECTOR|HEAT\s+DETECTOR|THERMAL\s+DETECTOR|\bVESDA\b|ASPIRAT/g,
+    ewis:/\bEWIS\b|OCCUPANT\s+WARNING|\bSPEAKER\b|STROBE/g,fip:/\bFIP\b|FDCIE|FIRE\s+INDICATOR/g,booster:/BOOSTER|FIRE\s+PUMP|JOCKEY/g,extinguisher:/EXTINGUISHER|FIRE\s+BLANKET/g},
+  hydraulic:/SEWER|STORMWATER|\bSW\b|HOT\s+WATER|COLD\s+WATER|\bHWU\b|\bTMV\b|\bWC\b|BASIN|SINK|FLOOR\s+WASTE|DOWNPIPE|GAS\s+(METER|LINE|PIPE)|GREASE\s+ARRESTOR|BACKFLOW/g,
+  electrical:/\bGPO\b|LIGHT(ING)?\s+FITTING|LUMINAIRE|SWITCHBOARD|\bDB[-\s]?\d|\bMSB\b|DATA\s+OUTLET|\bLED\b|DOWNLIGHT|EXIT\s+SIGN|EMERGENCY\s+LIGHT/g,
+  mechanical:/\bDUCT|DIFFUSER|\bAHU\b|\bFCU\b|\bVAV\b|EXHAUST\s+FAN|SUPPLY\s+AIR|RETURN\s+AIR|OUTSIDE\s+AIR|CONDENSER|SPLIT\s+SYSTEM|FIRE\s+DAMPER|\bGRILLE/g};
+const LABEL={fire:'消防',hydraulic:'给排水',electrical:'电气',mechanical:'机械 / 空调',architectural:'建筑',structural:'结构',civil:'土建 / 市政',other:'其他'};
+function discipline(text,name){const T=String(text||'').toUpperCase(), N=String(name||'').toUpperCase().replace(/\.PDF$/,''); const sc={}, why=[];
+  for(const [d,title,bare,num] of DISC){const t=(T.match(title)||[]).length, m=(T.match(bare)||[]).length; if(t){sc[d]=(sc[d]||0)+6+Math.min(1,t-1)*2; why.push(d+':title')} else if(m){sc[d]=(sc[d]||0)+2; why.push(d+':mention')} if(num.test(N)){sc[d]=(sc[d]||0)+5; why.push(d+':number')}}
+  const fire={}; let fc=0; for(const [k,re] of Object.entries(WORDS.fire)){const n=(T.match(re)||[]).length; if(n){fire[k]=n; fc+=n}}
+  sc.fire=(sc.fire||0)+Math.min(8,fc*.5);
+  for(const d of ['hydraulic','electrical','mechanical']){const n=(T.match(WORDS[d])||[]).length; if(n) sc[d]=(sc[d]||0)+Math.min(8,n*.5)}
+  const best=Object.entries(sc).sort((a,b)=>b[1]-a[1])[0]; const disc=best&&best[1]>=2?best[0]:'other';
+  return {disc,label:LABEL[disc],score:best?Math.round(best[1]*10)/10:0,fire,fireCount:fc,why}}
+// a drawing set (pages) → which pages are fire services, which carry fire devices on another service's sheet
+function summarise(pages,name){const P=pages.map((t,i)=>({i,...discipline(t,pages.length===1?name:'')}));
+  const firePages=P.filter(p=>p.disc==='fire').map(p=>p.i), withFire=P.filter(p=>p.disc!=='fire'&&p.fireCount>=3).map(p=>p.i);
+  const all=discipline(pages.join('\n'),name), counts={}; P.forEach(p=>counts[p.disc]=(counts[p.disc]||0)+1);
+  const fire={}; for(const p of P) for(const [k,n] of Object.entries(p.fire)) fire[k]=(fire[k]||0)+n;
+  const disc=firePages.length?'fire':((Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]||['other'])[0]);
+  return {disc,label:LABEL[disc],pages:P.length,firePages,withFire,counts,fire,all}}
+const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL};
 root.FT_INBOX=NS; if(typeof module!=='undefined'&&module.exports) module.exports=NS;
 })(typeof window!=='undefined'?window:globalThis);

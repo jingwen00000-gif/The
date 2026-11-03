@@ -149,8 +149,27 @@ test('tender folder import: fire drawing opened, documents filed (zip expanded),
     const items = [['Fire/FS-101.pdf', new File([u], 'FS-101.pdf')], ['Tender Invitation.eml', new File([eml], 'Tender Invitation.eml')], ['FER Rev B.txt', new File(['3.4 Existing hydrant system to remain.'], 'FER Rev B.txt')], ['Specs.zip', new File([zip], 'Specs.zip')]]
       .map(([p, f]) => ({ path: p, name: f.name, size: f.size, read: async () => f }));
     const a = await FT_INBOX_APP.analyse('2026-11-02 Hornsby Storage', items); await FT_INBOX_APP.importOne(a, a.info);
-    return { info: a.info, fire: a.G.fire.length, name: S.name, client: S.client, contact: S.contact, phone: S.phone, site: S.site, notes: S.notes, pages: S.pages.filter(p => p.kind === 'pdf').length, docs: S.docs.map(x => x.cat + ':' + x.name).sort() }; }, pdf);
+    return { info: a.info, fire: a.G.draw.filter(d => d.fire).length, name: S.name, client: S.client, contact: S.contact, phone: S.phone, site: S.site, notes: S.notes, pages: S.pages.filter(p => p.kind === 'pdf').length, docs: S.docs.map(x => x.cat + ':' + x.name).sort() }; }, pdf);
   assert.equal(r.name, 'Hornsby Storage'); assert.equal(r.client, 'Acme Building Group Pty Ltd'); assert.equal(r.contact, 'Jane Smith'); assert.equal(r.phone, '0412 345 678');
   assert.equal(r.site, '28 Salisbury Road, Asquith NSW 2077'); assert.match(r.notes, /Tender closes: 13 November 2026/); assert.equal(r.fire, 1); assert.ok(r.pages >= 1);
   assert.deepEqual(r.docs, ['EMAIL:Tender Invitation.eml', 'FER:FER Rev B.txt', 'SPEC:Fire Services Specification.txt']);
+});
+
+test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
+  const { page } = app;
+  const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close();
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    // a one-page PDF written by hand: a hydraulic layout (A1 landscape) that also shows hydrants
+    const txt = 'BT /F1 18 Tf 1800 200 Td (HYDRAULIC SERVICES GROUND FLOOR LAYOUT) Tj ET BT /F1 12 Tf 200 900 Td (SEWER DRAINAGE  COLD WATER  HOT WATER  BASIN  WC  FLOOR WASTE  FIRE HYDRANT  FIRE HYDRANT  FIRE HYDRANT) Tj ET';
+    const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>', '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 2384 1684] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+      `<< /Length ${txt.length} >>\nstream\n${txt}\nendstream`, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'];
+    let out = '%PDF-1.4\n', offs = []; objs.forEach((o, i) => { offs.push(out.length); out += `${i + 1} 0 obj\n${o}\nendobj\n`; });
+    const x = out.length; out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('') + `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`;
+    const items = [['Plan 1.pdf', new File([u], 'Plan 1.pdf')], ['Plan 2.pdf', new File([out], 'Plan 2.pdf')]].map(([p, f]) => ({ path: p, name: f.name, size: f.size, read: async () => f }));
+    const a = await FT_INBOX_APP.analyse('Small job', items); const rows = a.G.draw.map(d => [d.name, d.s.disc, d.take, d.maybe]);
+    await FT_INBOX_APP.importOne(a, a.info);
+    return { rows, pages: S.pages.filter(p => p.kind === 'pdf').map(p => p.name), docs: S.docs.map(d => d.cat + ':' + d.name) }; }, pdf);
+  const byName = Object.fromEntries(r.rows.map(x => [x[0], x])); assert.equal(byName['Plan 2.pdf'][1], 'hydraulic'); assert.equal(byName['Plan 2.pdf'][2], false); assert.equal(byName['Plan 2.pdf'][3], true, 'flagged: hydrants on it');
+  assert.ok(r.pages.every(n => !/Plan 2/.test(n))); assert.ok(r.docs.includes('DWG:Plan 2.pdf'));
 });

@@ -26,38 +26,71 @@ async function expandZips(items){const out=[];
       for(const [name,data] of Object.entries(z)){if(!data||name.endsWith('/')||/__MACOSX\//.test(name)) continue; const base=name.split('/').pop(); out.push({path:it.path.replace(/\.zip$/i,'')+'/'+name,name:base,size:data.length,read:async()=>new File([data],base)})}}
     catch(e){out.push({...it,zipErr:String(e.message||e)})}}
   return out}
-async function firstPageText(file){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const pg=await doc.getPage(1); const vp=pg.getViewport({scale:1});
-  const tc=await pg.getTextContent(); const t=tc.items.map(i=>i.str).join(' '); const r={text:t,w:vp.width,h:vp.height,pages:doc.numPages}; doc.destroy(); return r}catch(e){return {text:'',w:0,h:0}}}
+// every page's text of a PDF (up to max pages), and the page size
+async function pdfPagesText(file,max){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const n=Math.min(doc.numPages,max||60), pages=[]; let w=0,h=0;
+  for(let i=1;i<=n;i++){const pg=await doc.getPage(i); if(i===1){const vp=pg.getViewport({scale:1}); w=vp.width; h=vp.height} const tc=await pg.getTextContent(); pages.push(tc.items.map(x=>x.str).join(' '))}
+  const r={pages,w,h,n:doc.numPages}; doc.destroy(); return r}catch(e){return {pages:[],w:0,h:0,n:0}}}
+// a page of a PDF as a small picture (the review's preview)
+async function pagePicture(file,num,px){const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const pg=await doc.getPage(num||1); const v1=pg.getViewport({scale:1});
+  const k=(px||520)/Math.max(v1.width,v1.height), vp=pg.getViewport({scale:k}); const cv=document.createElement('canvas'); cv.width=Math.ceil(vp.width); cv.height=Math.ceil(vp.height);
+  const ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); await pg.render({canvasContext:ctx,viewport:vp}).promise; doc.destroy(); return cv.toDataURL('image/png')}
 
-// read and sort one folder
-async function analyse(folder,items0,say){const items=await expandZips(items0); const G={fire:[],dwg:[],docs:[],emails:[],skipped:[]}; const texts=[], emails=[];
-  let n=0; for(const it of items){const c=FT_INBOX.classify(it.path); n++; if(say&&n%5===0) say(`${folder}：${n} / ${items.length}`);
+// read and sort one folder. Drawings (every PDF that is not a report / specification / tender document) are read page by page and each
+// page given a discipline; a PDF is offered for take-off when it has fire services pages (only those pages when it is a combined set),
+// flagged when another service's sheet carries fire devices (hydrants on the hydraulic sheet), otherwise filed as a drawing
+async function analyse(folder,items0,say){const items=await expandZips(items0); const G={draw:[],docs:[],emails:[],skipped:[]}; const texts=[], emails=[];
+  let n=0; for(const it of items){const c=FT_INBOX.classify(it.path); n++; if(say) say(`${folder||tt('（所选文件）')}：${n} / ${items.length} · ${it.name}`);
     if(c.kind==='skip'||c.kind==='zip'){G.skipped.push(it); continue}
     if(c.kind==='email'){G.emails.push(it); if(/\.eml$/i.test(it.name)){try{const m=FT_INBOX.parseEml(await (await it.read()).text()); if(m) emails.push(m)}catch(e){}} continue}
-    if(c.kind==='fire'){G.fire.push(it); if(texts.length<3){const p=await firstPageText(await it.read()); texts.push(p.text)} continue}
-    if(c.kind==='dwg'){G.dwg.push(it); continue}
     if(c.kind==='doc'){G.docs.push({...it,cat:c.cat}); continue}
-    // a PDF the name does not explain: its first page decides
-    const p=await firstPageText(await it.read());
-    if(FT_INBOX.pageLooksFire(p.text)){G.fire.push(it); if(texts.length<3) texts.push(p.text)}
-    else if(p.w>p.h&&p.w>1100) G.dwg.push(it); else G.docs.push({...it,cat:'TENDER'})}
+    // a PDF drawing (or a PDF the name does not explain)
+    const f=await it.read(), P=await pdfPagesText(f,60), S1=FT_INBOX.summarise(P.pages.length?P.pages:[''],it.name);
+    const looksDoc=c.kind==='pdf?'&&S1.disc==='other'&&P.w&&P.w<P.h&&P.w<700;   /* a portrait A4 with nothing drawing-like: a document */
+    if(looksDoc){G.docs.push({...it,cat:'TENDER'}); continue}
+    // named as a fire drawing (FS-101, F102, a Fire folder): the whole file is fire, every page; otherwise its pages decide (combined sets)
+    if(c.kind==='fire'){S1.disc='fire'; S1.label=FT_INBOX.LABEL.fire; S1.firePages=[...Array(S1.pages).keys()]}
+    const fire=S1.disc==='fire', maybe=!fire&&S1.withFire.length>0;
+    G.draw.push({...it,s:S1,pages:P.n,fire,maybe,take:fire,onlyFire:fire&&S1.firePages.length<S1.pages});
+    if(fire&&texts.length<3) texts.push(P.pages[S1.firePages[0]||0]||'')}
   const own=String((typeof co==='function'&&co().email)||'').split('@')[1]||'';
   const info=FT_INBOX.extract({folder,emails,texts,ownDomain:own});
+  G.draw.sort((x,y)=>(y.fire-x.fire)||(y.maybe-x.maybe)||x.name.localeCompare(y.name));
   return {folder,info,G,count:items.length}}
 
+const DEV={sprinkler:'喷头',hydrant:'消火栓',hosereel:'消防卷盘',detector:'探测器',ewis:'EWIS / 扬声器',fip:'FIP',booster:'水泵接合器 / 泵',extinguisher:'灭火器'};
+const devTxt=f=>Object.entries(f||{}).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,n])=>`${tt(DEV[k]||k)} ${n}`).join(' · ');
+function drawRows(a,i){return a.G.draw.map((d,j)=>{const s=d.s, multi=s.pages>1;
+  const tag=d.fire?`<span class="pill ok">${tt('消防')}</span>`:d.maybe?`<span class="pill warn">${tt(FT_INBOX.LABEL[s.disc])} · ${tt('含消防设备')}</span>`:`<span class="pill">${tt(FT_INBOX.LABEL[s.disc])}</span>`;
+  const pg=multi?(d.fire?`${tt('消防页')} ${s.firePages.length} / ${s.pages}`:`${s.pages} ${tt('页')}`):'';
+  return `<tr data-ibd="${i}:${j}"><td><input type="checkbox" data-ibtake ${d.take?'checked':''} aria-label="${tt('导入算量')}"></td><td style="min-width:220px">${html(d.name)}<div class="note">${html(d.path.includes('/')?d.path.slice(0,d.path.lastIndexOf('/')):'')}</div></td>
+    <td style="white-space:nowrap">${tag}${pg?`<div class="note">${pg}</div>`:''}</td><td class="note" style="min-width:200px">${html(devTxt(d.fire?s.fire:s.all.fire))||'—'}</td>
+    <td style="white-space:nowrap">${multi&&d.fire&&s.firePages.length<s.pages?`<label class="note" style="display:flex;gap:4px;align-items:center"><input type="checkbox" data-ibonly ${d.onlyFire?'checked':''}> ${tt('只导入消防页')}</label>`:''}<button type="button" class="btn sm ghost" data-ibprev>${tt('预览')}</button></td></tr>
+    <tr data-ibpv="${i}:${j}" hidden><td></td><td colspan="4"></td></tr>`}).join('')}
 function reviewHTML(A){const row=(k,label,v)=>`<label class="field">${tt(label)}<input data-ib="${k}" value="${html(v||'')}"></label>`;
-  return A.map((a,i)=>`<div class="card" style="margin:0 0 10px;padding:12px" data-ibi="${i}"><label style="display:flex;gap:8px;align-items:center;font-weight:700"><input type="checkbox" data-ibon checked> ${html(a.folder||tt('（所选文件）'))} <span class="note" style="font-weight:400">${a.count} ${tt('个文件')}</span></label>
+  return A.map((a,i)=>{const nf=a.G.draw.filter(d=>d.fire).length, nm=a.G.draw.filter(d=>d.maybe).length;
+   return `<div class="card" style="margin:0 0 10px;padding:12px" data-ibi="${i}"><label style="display:flex;gap:8px;align-items:center;font-weight:700"><input type="checkbox" data-ibon checked> ${html(a.folder||tt('（所选文件）'))} <span class="note" style="font-weight:400">${a.count} ${tt('个文件')}</span></label>
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px">${row('name','项目名称',a.info.name)}${row('client','客户',a.info.client)}${row('contact','联系人',a.info.contact)}${row('email','邮箱',a.info.email)}${row('phone','电话',a.info.phone)}${row('site','项目地址',a.info.site)}</div>
     ${a.info.closes?`<p class="note" style="margin:4px 0 0">${tt('截止')}：<b>${html(a.info.closes)}</b></p>`:''}
-    <p class="note" style="margin:6px 0 0">${tt('消防图纸')} <b>${a.G.fire.length}</b>${a.G.fire.length?'：'+a.G.fire.slice(0,6).map(x=>html(x.name)).join('、')+(a.G.fire.length>6?' …':''):` <span style="color:var(--warn)">${tt('（没找到消防图纸，可导入后手动打开）')}</span>`}
-      · ${tt('其他图纸')} ${a.G.dwg.length} · ${tt('资料')} ${a.G.docs.length} · ${tt('邮件')} ${a.G.emails.length}</p></div>`).join('')}
+    <h4 style="margin:10px 0 4px">${tt('图纸')} <span class="note">${tt('勾选的打开算量，其余放进“招标资料”')} · ${tt('消防')} ${nf}${nm?` · <span style="color:var(--warn)">${nm} ${tt('张其他专业图纸含消防设备，请确认')}</span>`:''}</span></h4>
+    ${a.G.draw.length?`<div class="tablewrap" style="max-height:40vh;overflow:auto"><table class="t"><thead><tr><th></th><th>${tt('文件')}</th><th>${tt('专业')}</th><th>${tt('图上的消防设备')}</th><th></th></tr></thead><tbody>${drawRows(a,i)}</tbody></table></div>`:`<p class="note" style="color:var(--warn)">${tt('没有找到图纸 PDF')}</p>`}
+    <p class="note" style="margin:6px 0 0">${tt('资料')} ${a.G.docs.length} · ${tt('邮件')} ${a.G.emails.length}${a.G.skipped.length?` · ${tt('跳过')} ${a.G.skipped.length}`:''}</p></div>`}).join('')}
+function wireReview(box,A){box.querySelectorAll('[data-ibprev]').forEach(b=>b.onclick=async()=>{const tr=b.closest('[data-ibd]'), [i,j]=tr.dataset.ibd.split(':').map(Number), d=A[i].G.draw[j], pv=box.querySelector(`[data-ibpv="${i}:${j}"]`);
+    if(!pv.hidden){pv.hidden=true; return} pv.hidden=false; const cell=pv.children[1]; cell.innerHTML=`<span class="note">${tt('正在生成预览…')}</span>`;
+    try{const num=(d.fire?d.s.firePages[0]:(d.s.withFire[0]??0))+1; cell.innerHTML=`<img src="${await pagePicture(await d.read(),num,620)}" alt="" style="max-width:100%;border:1px solid var(--line);border-radius:6px"><div class="note">${tt('第')} ${num} / ${d.pages} ${tt('页')}</div>`}catch(e){cell.textContent=String(e.message||e)}});
+  box.querySelectorAll('[data-ibtake]').forEach(c=>c.onchange=()=>{const [i,j]=c.closest('[data-ibd]').dataset.ibd.split(':').map(Number); A[i].G.draw[j].take=c.checked});
+  box.querySelectorAll('[data-ibonly]').forEach(c=>c.onchange=()=>{const [i,j]=c.closest('[data-ibd]').dataset.ibd.split(':').map(Number); A[i].G.draw[j].onlyFire=c.checked})}
 
 async function importOne(a,v){await newProject(); S.name=v.name||a.folder||S.name; S.client=v.client||''; S.contact=v.contact||''; S.email=v.email||''; S.phone=v.phone||''; S.site=v.site||'';
   if(a.info.closes) S.notes=[S.notes,`Tender closes: ${a.info.closes}`].filter(Boolean).join('\n'); S.inboxFolder=a.folder||'';
-  if(a.G.fire.length) await openFiles(await Promise.all(a.G.fire.map(x=>x.read())));
-  const by={}; for(const d of a.G.docs) (by[d.cat]=by[d.cat]||[]).push(d); if(a.G.dwg.length) by.DWG=(by.DWG||[]).concat(a.G.dwg); if(a.G.emails.length) by.EMAIL=(by.EMAIL||[]).concat(a.G.emails);
+  const take=a.G.draw.filter(d=>d.take), rest=a.G.draw.filter(d=>!d.take);
+  for(const d of take){const f=await d.read(); await openFiles([f]);
+    // a combined set: keep only its fire services pages for take-off (the whole set is still filed under 招标资料)
+    if(d.onlyFire&&d.s.firePages.length){const key=f.name+'|'+f.size, keep=new Set(d.s.firePages.map(x=>x+1)); const drop=S.pages.filter(p=>p.file===key&&!keep.has(p.num));
+      drop.forEach(p=>{pdfPageRef.delete(p.id)}); S.pages=S.pages.filter(p=>!drop.includes(p)); if(drop.length) rest.push(d)}}
+  if(S.pages.length&&!S.pages.some(p=>p.id===curPage)) curPage=S.pages[0].id;
+  const by={}; for(const d of a.G.docs) (by[d.cat]=by[d.cat]||[]).push(d); if(rest.length) by.DWG=(by.DWG||[]).concat(rest); if(a.G.emails.length) by.EMAIL=(by.EMAIL||[]).concat(a.G.emails);
   for(const [cat,L] of Object.entries(by)) await addDocs(await Promise.all(L.map(x=>x.read())),cat);
-  changed(); await saveNow(); renderProjSel(); return curId}
+  pagesInit(); await showPage(); changed(); await saveNow(); renderProjSel(); return curId}
 
 async function review(list,src){if(IA.busy) return; IA.busy=true; const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
   let A=[]; try{for(const f of list) A.push(await analyse(f.folder,f.items,say))}catch(e){IA.busy=false; ftModal(tt('读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
@@ -69,7 +102,7 @@ async function review(list,src){if(IA.busy) return; IA.busy=true; const d=ftModa
        for(const x of picks){const e=prog.querySelector('#ibProg'); if(e) e.textContent=`${tt('正在导入')} ${x.v.name||x.a.folder}（${++done} / ${picks.length}）…`;
          try{last=await importOne(x.a,x.v); if(src==='inbox'){CFG.inboxSeen=CFG.inboxSeen||{}; CFG.inboxSeen[x.a.folder]=last; saveCfg(); fresh=fresh.filter(f=>f.folder!==x.a.folder)}}catch(err){console.error(err); toast((x.v.name||x.a.folder)+'：'+(err.message||err))}}
        prog.close(); chip(); if(last){showTab(S.pages.some(p=>p.kind==='pdf')?'takeoff':'docs'); toast(`${tt('已导入')} ${done} ${tt('个项目')}`)}}}]);
-  dd.style.width='min(980px,96vw)'; dd.addEventListener('close',()=>{dd.style.width=''},{once:true})}
+  dd.style.width='min(1080px,96vw)'; dd.style.maxWidth='96vw'; dd.addEventListener('close',()=>{dd.style.width=''; dd.style.maxWidth=''},{once:true}); wireReview(dd,A)}
 
 /* ---- desktop inbox: scan, header chip, settings ---- */
 let fresh=[], lastScan=0;

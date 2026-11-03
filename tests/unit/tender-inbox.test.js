@@ -41,3 +41,17 @@ test('site address: the PROJECT address, not the consultant office in the title 
   assert.equal(I.extract({ folder: 'x', texts: [tb] }).site, '28 SALISBURY ROAD, ASQUITH NSW 2077');
   assert.equal(I.extract({ folder: 'x', texts: ['Level 6, 4-6 Bligh Street Sydney NSW 2000 Phone: 02 9080 5533'] }).site, '', 'only an office: no site');
 });
+
+test('discipline of a sheet: fire vs hydraulic (with hydrants), electrical (with detectors), mechanical; notes naming other trades do not count', () => {
+  const fire = 'PROPOSED FIRE SERVICES LEVEL 2 ARRANGEMENT EAST. SPRINKLER HEAD PENDENT x 40. HOSE REEL. SMOKE DETECTOR. NOTES: COORDINATE WITH MECHANICAL SERVICES AND ARCHITECTURAL AND STRUCTURAL LAYOUT.';
+  const hyd = 'HYDRAULIC SERVICES GROUND FLOOR LAYOUT. SEWER DRAINAGE. COLD WATER. HOT WATER. BASIN. WC. FLOOR WASTE. DOWNPIPE. FIRE HYDRANT. FIRE HYDRANT. FIRE HYDRANT BOOSTER.';
+  const ele = 'ELECTRICAL SERVICES LIGHTING LAYOUT LEVEL 1. LED DOWNLIGHT. LED DOWNLIGHT. EXIT SIGN. EMERGENCY LIGHT. GPO. GPO. SWITCHBOARD DB-1. SMOKE DETECTOR (BY FIRE CONTRACTOR).';
+  const mech = 'MECHANICAL SERVICES LAYOUT LEVEL 1. SUPPLY AIR DIFFUSER. RETURN AIR GRILLE. FCU-01. DUCT 400x300. FIRE DAMPER. EXHAUST FAN.';
+  assert.equal(I.discipline(fire).disc, 'fire'); assert.equal(I.discipline(hyd).disc, 'hydraulic'); assert.equal(I.discipline(ele).disc, 'electrical'); assert.equal(I.discipline(mech).disc, 'mechanical');
+  assert.equal(I.discipline(hyd).fire.hydrant, 3, 'hydrants on the hydraulic sheet are reported');
+  assert.equal(I.discipline('', 'H-201 Ground Floor.pdf').disc, 'hydraulic'); assert.equal(I.discipline('', 'FS-101.pdf').disc, 'fire'); assert.equal(I.discipline('', 'E-101.pdf').disc, 'electrical');
+  // a combined set: only the fire pages; the hydraulic page with hydrants is flagged
+  const s = I.summarise([fire, hyd, ele, mech], 'Combined drawings.pdf');
+  assert.equal(s.disc, 'fire'); assert.deepEqual(s.firePages, [0]); assert.deepEqual(s.withFire, [1]); assert.equal(s.pages, 4);
+  assert.equal(I.summarise([hyd, ele], 'Services.pdf').disc !== 'fire', true);
+});
