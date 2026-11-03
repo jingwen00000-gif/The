@@ -10,7 +10,7 @@ root = pathlib.Path(__file__).parent
 ver = json.load(open(root / 'package.json'))['version']
 files = {}
 src_files = sorted(str(p.relative_to(root)) for p in (root / 'src').rglob('*.js'))
-for rel in ['main.js', 'preload.js', 'package.json', 'icon.png', 'app/index.html', 'app/builtin.js', 'app/fve.js', 'app/pdf.js', 'app/pdf.worker.js', 'data/knowledge/knowledge.bundle.js'] + src_files:
+for rel in ['main.js', 'preload.js', 'package.json', 'icon.png', 'app/index.html', 'app/builtin.js', 'app/fve.js', 'app/pdf.js', 'app/pdf.worker.js', 'data/knowledge/knowledge.bundle.js'] + src_files + sorted(str(p.relative_to(root)) for p in (root / 'app' / 'ocr').rglob('*') if p.is_file()):
     files[rel] = base64.b64encode((root / rel).read_bytes()).decode()
 bundle = json.dumps({'app': 'FireTake', 'version': ver, 'files': files}).encode()
 name = f'FireTake-update-{ver}.ftupd'

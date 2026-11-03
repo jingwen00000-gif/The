@@ -129,6 +129,39 @@ function summarise(pages,name){const P=pages.map((t,i)=>({i,...discipline(t,page
   const disc=firePages.length?'fire':((Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]||['other'])[0]);
   return {disc,label:LABEL[disc],pages:P.length,firePages,withFire,counts,fire,all}}
 
+
+/* ---- a contact card: an e-mail signature / business card as text (typed, or read from a screenshot) ----
+   parseContact(text, {ownDomain}) → {contact, role, client, email, phone, mobile, office}
+   'ALEX MORGAN / ESTIMATING MANAGER / T +61 2 9000 1234 / M +61 400 111 222 / E a.morgan@buildco.com.au / A Headquarters, …'
+   → Alex Morgan, Estimating Manager, Buildco, a.morgan@buildco.com.au, +61 400 111 222 (mobile), +61 2 9000 1234 */
+const ROLE=/\b(manager|estimator|estimating|director|coordinator|co-ordinator|engineer|supervisor|administrator|officer|lead|head|principal|partner|associate|procurement|contracts?|project|site|construction|commercial|senior|junior|assistant|cadet|foreman|ceo|coo|cfo|gm)\b/i;
+const FREEMAIL=/^(gmail|outlook|hotmail|bigpond|yahoo|icloud|live|optusnet|me|msn|protonmail)$/i;
+// an Australian number written the usual way: +61 400 111 222, +61 2 9000 1234, 0400 111 222, 02 9000 1234, 1300 123 456
+function auPhone(x){const d=String(x||'').replace(/[^\d+]/g,''), n=d.replace(/^\+/,'');
+  let m; if((m=n.match(/^61(4\d{2})(\d{3})(\d{3})$/))) return `+61 ${m[1]} ${m[2]} ${m[3]}`; if((m=n.match(/^61([2378])(\d{4})(\d{4})$/))) return `+61 ${m[1]} ${m[2]} ${m[3]}`;
+  if((m=n.match(/^(04\d{2})(\d{3})(\d{3})$/))) return `${m[1]} ${m[2]} ${m[3]}`; if((m=n.match(/^(0[2378])(\d{4})(\d{4})$/))) return `${m[1]} ${m[2]} ${m[3]}`; if((m=n.match(/^(1[38]00)(\d{3})(\d{3})$/))) return `${m[1]} ${m[2]} ${m[3]}`;
+  return String(x||'').trim()}
+function parseContact(text,opt){opt=opt||{}; const own=String(opt.ownDomain||'').toLowerCase();
+  const raw=String(text||'').replace(/\r/g,''), L=raw.split('\n').map(l=>l.replace(/[|•·]+/g,' ').replace(/\s+/g,' ').trim()).filter(Boolean);
+  const out={contact:'',role:'',client:'',email:'',phone:'',mobile:'',office:''};
+  const emails=[...raw.matchAll(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g)].map(m=>m[0].toLowerCase()).filter(e=>!own||!e.endsWith('@'+own));
+  out.email=emails[0]||'';
+  const ph=re=>{for(const l of L){const m=l.match(re); if(m){const n=(l.slice(m.index+m[0].length).match(/\+?[\d()][\d ()-]{7,}\d/)||[])[0]; if(n) return n.replace(/\s+/g,' ').trim()}} return ''};
+  out.mobile=ph(/^(?:M|Mob(?:ile)?|Cell)\b\.?\s*:?/i); out.phone=ph(/^(?:T|P|Ph(?:one)?|Tel(?:ephone)?|Office|Direct|D)\b\.?\s*:?/i);
+  if(!out.mobile){const m=raw.match(/(?:\+?61\s?|0)4\d{2}[\s-]?\d{3}[\s-]?\d{3}/); if(m) out.mobile=m[0].trim()}
+  if(!out.phone){const m=raw.match(PHONE); if(m&&m[0].trim()!==out.mobile) out.phone=m[0].trim()}
+  out.mobile=auPhone(out.mobile); out.phone=auPhone(out.phone); if(out.phone===out.mobile) out.phone='';
+  const addr=L.find(l=>/^(?:A|Address|Add)\b\.?\s*:?\s+\S/i.test(l)); if(addr) out.office=addr.replace(/^(?:A|Address|Add)\b\.?\s*:?\s*/i,'');
+  // the person: the first short line of words only (2–4 words), not a role, not a firm, before the phone lines
+  const isName=l=>/^[A-Za-z][A-Za-z'’.-]*(?:\s+[A-Za-z][A-Za-z'’.-]*){1,3}$/.test(l)&&!ROLE.test(l)&&!FIRMRE.test(l)&&!/\b(regards|thanks|cheers|kind|best|sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|darwin|office|hq|headquarters)\b/i.test(l);
+  const iName=L.findIndex(isName); if(iName>=0){out.contact=title(L[iName]).replace(/\bMc([a-z])/g,(m,c)=>'Mc'+c.toUpperCase()); const r=L[iName+1]; if(r&&ROLE.test(r)&&r.length<60) out.role=title(r)}
+  // the firm: a line ending in a firm word, else the e-mail / web domain (a logo word equal to the domain confirms it)
+  const firm=L.map(l=>(l.match(FIRMRE)||[])[1]).find(Boolean);
+  const dom=(out.email.split('@')[1]||(raw.match(/\b(?:www\.)?([a-z0-9-]+)\.(?:com|net|org)(?:\.au)?\b/i)||[])[1]||'').split('.')[0];
+  out.client=firm?firm.trim():(dom&&!FREEMAIL.test(dom)?(L.find(l=>l.replace(/\s+/g,'').toLowerCase()===dom.toLowerCase())?title(dom):title(dom.replace(/[-_]+/g,' '))):'');
+  return out}
+// a file that holds the client's contact details: 'contact info.png', 'contect infor .png', 'Client details.txt', '联系人.jpg'
+const isContactFile=n=>/conta?c?e?ct|联系|client[\s_-]*(details?|info)|signature|business[\s_-]*card/i.test(String(n||''));
 /* ---- several tenders at once ---- */
 const NS_EXTRA={};
 // a folder that sorts one tender's files (Fire, Drawings, Specs, 01 Architectural …) rather than being a tender of its own
@@ -174,6 +207,6 @@ function sameProject(info,projects){const n=norm(info&&info.name), st=norm(info&
     if(n&&pn&&(n===pn||(n.length>=8&&pn.length>=8&&(n.includes(pn)||pn.includes(n))))) return {p,why:'name'};
     if(st&&ps&&st.length>=8&&(st===ps||st.includes(ps)&&ps.length>=8||ps.includes(st))) return {p,why:'site'}}
   return null}
-const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL,isCategoryFolder,jobCode,groupLoose,splitTenders,tenderName,sameProject,...NS_EXTRA};
+const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL,isCategoryFolder,jobCode,groupLoose,splitTenders,tenderName,sameProject,parseContact,isContactFile,...NS_EXTRA};
 root.FT_INBOX=NS; if(typeof module!=='undefined'&&module.exports) module.exports=NS;
 })(typeof window!=='undefined'?window:globalThis);

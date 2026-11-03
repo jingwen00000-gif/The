@@ -98,3 +98,13 @@ test('a folder is one project even with zips inside (site photos are zipped); sp
   assert.equal(I.splitTenders('Quote', ['a.zip', 'b.zip', 'notes.txt'].map(it), { bySub: true }).length, 3, 'loose non-zip files stay together');
   assert.equal(I.splitTenders('afterSentDocuments', ['docs0/a.pdf', 'docs1/b.pdf', 'docs10/c.pdf'].map(it)).length, 1);
 });
+
+test('a contact card (e-mail signature read from a screenshot): person, role, firm, e-mail, mobile, phone', () => {
+  const t = 'ALEX MORGAN\nESTIMATING MANAGER\n\nT +61 29000 1234\nM +61 400 111 222\nE a.morgan@buildco.com.au\nA Headquarters, 10 Example Road, Alexandria, NSW, 2015\nW buildco.com.au\n\nBUILDCO\n\nSydney HQ Sydney CBD Melbourne Office\nT +61 2 9000 1234 +61 3 9000 5678';
+  const c = I.parseContact(t);
+  assert.equal(c.contact, 'Alex Morgan'); assert.equal(c.role, 'Estimating Manager'); assert.equal(c.client, 'Buildco');
+  assert.equal(c.email, 'a.morgan@buildco.com.au'); assert.equal(c.mobile, '+61 400 111 222'); assert.equal(c.phone, '+61 2 9000 1234');
+  assert.equal(I.parseContact('Jane Smith\nProject Manager\nAcme Building Group Pty Ltd\n0412345678\njane@acmebuild.com.au').client, 'Acme Building Group Pty Ltd');
+  assert.equal(I.parseContact('me@ours.com.au\nBob Lee\nbob@client.com.au', { ownDomain: 'ours.com.au' }).email, 'bob@client.com.au');
+  assert.ok(I.isContactFile('contect infor .png')); assert.ok(I.isContactFile('Client details.txt')); assert.ok(!I.isContactFile('FS-101.pdf'));
+});

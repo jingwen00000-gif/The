@@ -65,9 +65,10 @@ async function pagePicture(file,num,px){const doc=await pdfjsLib.getDocument({da
 async function analyse(folder,items0,say){const items=await expandZips(items0); const G={draw:[],docs:[],emails:[],skipped:[]}; const texts=[], emails=[];
   let n=0; for(const it of items){if(IA.stop) throw new Error(tt('已停止读取')); const c=FT_INBOX.classify(it.path); n++; if(say) say(`${folder||tt('（所选文件）')}：${n} / ${items.length} · ${it.name}`);
     if(it.keepZip){G.docs.push({...it,cat:'OTHER'}); continue}
+    if(FT_INBOX.isContactFile(it.name)&&/\.pdf$/i.test(it.name)){G.docs.push({...it,cat:'OTHER'}); if(!G.contactImg) G.contactImg=it; continue}
     if(c.kind==='skip'||c.kind==='zip'){G.skipped.push(it); continue}
     if(c.kind==='email'){G.emails.push(it); if(/\.eml$/i.test(it.name)){try{const m=FT_INBOX.parseEml(await (await it.read()).text()); if(m) emails.push(m)}catch(e){}} continue}
-    if(c.kind==='doc'){G.docs.push({...it,cat:c.cat}); if(/\.(png|jpe?g)$/i.test(it.name)&&/conta?c?e?ct|联系|details?|info/i.test(it.name)) G.contactImg=it; continue}
+    if(c.kind==='doc'){G.docs.push({...it,cat:c.cat}); if(FT_INBOX.isContactFile(it.name)&&/\.(png|jpe?g|webp|bmp|gif|txt|pdf)$/i.test(it.name)&&!G.contactImg) G.contactImg=it; continue}
     // a PDF drawing (or a PDF the name does not explain)
     // very large PDFs (> 150 MB) are not read page by page: a fire drawing by its name is opened, anything else filed
     if(it.size>150*1024*1024){if(c.kind==='fire') G.draw.push({...it,s:FT_INBOX.summarise([''],it.name),pages:0,fire:true,maybe:false,take:true,onlyFire:false,big:true}); else G.docs.push({...it,cat:'DWG'}); continue}
@@ -82,10 +83,21 @@ async function analyse(folder,items0,say){const items=await expandZips(items0); 
     if(fire&&texts.length<3) texts.push(P.pages[S1.firePages[0]||0]||'')}
   const own=String((typeof co==='function'&&co().email)||'').split('@')[1]||'';
   const info=FT_INBOX.extract({folder,emails,texts,ownDomain:own});
-  // a screenshot of the contact details ('contact info.png'): read by Claude when an API key is set (fills only the empty fields)
-  if(G.contactImg&&typeof callClaude==='function'&&(CFG.apiKey||(typeof WEBAI==='function'&&WEBAI()))){try{if(say) say(tt('正在读取联系人图片…'));
-    const out=parseJSON(await callClaude('This image is the contact details for a construction tender. Reply with JSON only: {"project":"","company":"","contact":"","email":"","phone":"","site":""} (empty string when not shown; company = the builder / client issuing the tender).',await jpeg64(await G.contactImg.read()),null));
-    if(out){const m={name:out.project,client:out.company,contact:out.contact,email:out.email,phone:out.phone,site:out.site}; for(const [k,v] of Object.entries(m)) if(v&&!info[k]){info[k]=String(v).trim(); info.sources[k]='image'} G.contactRead=true}}catch(e){G.contactErr=String(e.message||e.code||e)}}
+  // the client's contact details saved in the folder ('contact info.png' — a screenshot of the e-mail signature, a .txt or a .pdf):
+  // read offline (Tesseract OCR for an image), Claude only when the offline read finds nothing and an API key is set.
+  // What the estimator saved wins over what was guessed from the tender e-mail; the site address is not taken from it (that is their office)
+  if(G.contactImg){const f=G.contactImg; try{if(say) say(tt('正在读取联系人信息…')+' '+f.name); const file=await f.read(); let text='';
+      if(/\.txt$/i.test(f.name)) text=await file.text();
+      else if(/\.pdf$/i.test(f.name)) text=(await pdfPagesText(file,2)).pages.join('\n');
+      else if(root.FT_OCR) text=await within(FT_OCR.read(file),120000,'');
+      let c=text?FT_INBOX.parseContact(text,{ownDomain:own}):null; G.contactHow='ocr';
+      if((!c||!c.email&&!c.contact)&&/\.(png|jpe?g|webp|bmp|gif)$/i.test(f.name)&&typeof callClaude==='function'&&(CFG.apiKey||(typeof WEBAI==='function'&&WEBAI()))){
+        const out=parseJSON(await callClaude('This image is the contact details of a construction company sending a tender (often an e-mail signature). Reply with JSON only: {"contact":"","role":"","client":"","email":"","phone":"","mobile":""} (empty string when not shown; client = the company name).',await jpeg64(file),null));
+        if(out){c=out; G.contactHow='ai'}}
+      if(c&&(c.email||c.contact||c.client)){const phone=[c.mobile,c.phone].filter(Boolean).filter((x,i,A)=>A.indexOf(x)===i).join(' / ');
+        const m={client:c.client,contact:c.contact,email:c.email,phone}; for(const [k,v] of Object.entries(m)) if(v){info[k]=String(v).trim(); info.sources[k]='contact file'}
+        if(c.role) info.role=c.role; G.contactRead=true} else G.contactErr=tt('没有读出联系人')}
+    catch(e){G.contactErr=String(e.message||e.code||e)}}
   G.draw.sort((x,y)=>(y.fire-x.fire)||(y.maybe-x.maybe)||x.name.localeCompare(y.name));
   return {folder,info,G,count:items.length,items:items0,subs:FT_INBOX.subfolders(items0),zips:items0.filter(i=>!i.path.includes('/')&&/\.zip$/i.test(i.name)).length,parts:FT_INBOX.splitParts(items0)}}
 
@@ -108,7 +120,7 @@ function reviewHTML(A){const row=(k,label,v)=>`<label class="field">${tt(label)}
    return `<div class="card" style="margin:0 0 10px;padding:12px" data-ibi="${i}"><label style="display:flex;gap:8px;align-items:center;font-weight:700"><input type="checkbox" data-ibon ${a.G.draw.length?'checked':''}> ${html(a.folder||(a.root?tt('收件箱里散放的文件'):tt('（所选文件）')))} <span class="note" style="font-weight:400">${a.count} ${tt('个文件')}</span></label>
     ${warn.map(w=>`<p class="note" style="margin:4px 0 0;color:var(--warn)">⚠ ${w}</p>`).join('')}${into}
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px">${row('name','项目名称',a.info.name)}${row('client','客户',a.info.client)}${row('contact','联系人',a.info.contact)}${row('email','邮箱',a.info.email)}${row('phone','电话',a.info.phone)}${row('site','项目地址',a.info.site)}</div>
-    ${a.G.contactImg?`<p class="note" style="margin:4px 0 0">${a.G.contactRead?`✓ ${tt('联系人信息已从图片读取')}（${html(a.G.contactImg.name)}）`:`${tt('联系人图片')}：${html(a.G.contactImg.name)} · ${tt(a.G.contactErr?'读取失败，请手动填写':'设置 Claude API Key 后可自动读取，现在请手动填写')}`}</p>`:''}
+    ${a.G.contactImg?`<p class="note" style="margin:4px 0 0">${a.G.contactRead?`✓ ${tt('联系人信息已从文件读取')}（${html(a.G.contactImg.name)}${a.info.role?' · '+html(a.info.role):''}），${tt('请核对')}`:`${tt('联系人文件')}：${html(a.G.contactImg.name)} · ${tt('没有读出联系人，请手动填写')}`}</p>`:''}
     ${a.parts>1&&!a.keys?.some(k=>k.startsWith('file:'))?`<p class="note" style="margin:4px 0 0">${tt('整个文件夹算一个项目')}（${a.subs.length?`${a.subs.length} ${tt('个子文件夹')}`:''}${a.subs.length&&a.zips?' · ':''}${a.zips?`${a.zips} ${tt('个 zip')}`:''}）${a.subs.filter(x=>/^\d{1,3}[\s._-]/.test(x)).length<a.subs.length/2||a.zips>1?` · <button type="button" class="btn sm ghost" data-ibsplit="${i}">${tt('里面其实是几个不同的项目？按子文件夹 / zip 分开')}</button>`:''}</p>`:''}
     ${a.info.closes?`<p class="note" style="margin:4px 0 0">${tt('截止')}：<b>${html(a.info.closes)}</b></p>`:''}
     <h4 style="margin:10px 0 4px">${tt('图纸')} <span class="note">${tt('勾选的打开算量，其余放进“招标资料”')} · ${tt('消防')} ${nf}${nm?` · <span style="color:var(--warn)">${nm} ${tt('张其他专业图纸含消防设备，请确认')}</span>`:''}</span></h4>
@@ -124,7 +136,7 @@ function wireReview(box,A){box.querySelectorAll('[data-ibprev]').forEach(b=>b.on
 async function importOne(a,v,into){
   if(into&&into!==curId) await switchProject(into); else if(!into) await newProject();
   // into an existing project (a re-issue / addendum): only the empty fields are filled
-  const set=(k,x)=>{if(x&&(!into||!S[k])) S[k]=x}; set('name',v.name||FT_INBOX.tenderName(a.folder)); ['client','contact','email','phone','site'].forEach(k=>set(k,v[k]));
+  const set=(k,x)=>{if(x&&(!into||!S[k]||k==='name'&&S[k]==='新项目')) S[k]=x}; set('name',v.name||a.info.name||FT_INBOX.tenderName(a.folder)); ['client','contact','email','phone','site'].forEach(k=>set(k,v[k]));
   if(a.info.closes&&!String(S.notes||'').includes(a.info.closes)) S.notes=[S.notes,`Tender closes: ${a.info.closes}`].filter(Boolean).join('\n'); S.inboxFolder=a.folder||S.inboxFolder||'';
   const take=a.G.draw.filter(d=>d.take), rest=a.G.draw.filter(d=>!d.take);
   for(const d of take){const f=await d.read(); await openFiles([f]);

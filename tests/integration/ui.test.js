@@ -173,6 +173,22 @@ test('several tenders at once: a picked folder is one project (split on request)
   assert.ok(r.docs.some(x => /Addendum 1\.txt/.test(x)));
 });
 
+test('a drawing whose saved copy is missing: the canvas offers 重新打开, and the re-opened file is linked back to the same page', async () => {
+  const { page } = app;
+  const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); showTab('takeoff');
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    await newProject(); await openFiles([new File([u], 'FS100 - Level 1.pdf', { type: 'application/pdf' })]);
+    const pg = S.pages.find(p => p.kind === 'pdf'); const id = pg.id, n0 = S.pages.filter(p => p.kind === 'pdf').length;
+    // the saved copy is gone (as when a OneDrive / zip file could not be read back)
+    pdfPageRef.delete(id); bitmaps.delete(id); pg.file = 'FS100 - Level 1.pdf|1'; curPage = id; draw();
+    const shown = !document.getElementById('reopenBtn').hidden;
+    const stored = (await DB.byProj(curId)).find(f => /FS100/.test(f.name)); const storedOk = !!stored && (await stored.blob.arrayBuffer()).byteLength === u.length;
+    await openFiles([new File([u], 'FS100 - Level 1.pdf', { type: 'application/pdf' })]); draw();
+    return { shown, storedOk, n0, pages: S.pages.filter(p => p.kind === 'pdf').length, linked: pdfPageRef.has(id), hidden: document.getElementById('reopenBtn').hidden }; }, pdf);
+  assert.ok(r.storedOk, 'the drawing is saved as a full copy'); assert.ok(r.shown); assert.equal(r.pages, r.n0, 'no duplicate page'); assert.ok(r.linked); assert.ok(r.hidden);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
