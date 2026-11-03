@@ -155,6 +155,23 @@ test('tender folder import: fire drawing opened, documents filed (zip expanded),
   assert.deepEqual(r.docs, ['EMAIL:Tender Invitation.eml', 'FER:FER Rev B.txt', 'SPEC:Fire Services Specification.txt']);
 });
 
+test('several tenders at once: a parent folder splits per project; a re-issue is matched and added to the existing project', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close();
+    const mk = (rp, body) => { const f = new File([body || 'x'], rp.split('/').pop()); Object.defineProperty(f, 'webkitRelativePath', { value: rp }); return f; };
+    const split = FT_INBOX_APP.fromInput([mk('Nov/Hornsby Storage/Fire/FS-101.pdf'), mk('Nov/Hornsby Storage/FER.txt'), mk('Nov/Lucid/LCE103150-F102.pdf'), mk('Nov/Lucid/Spec.pdf')]).map(t => [t.folder, t.items.length]);
+    const before = liveProjects().length, id = curId, name = S.name;
+    const items = [['Addendum 1.txt', new File(['Addendum 1: hydrant booster relocated.'], 'Addendum 1.txt')]].map(([p, f]) => ({ path: p, name: f.name, size: f.size, read: async () => f }));
+    const a = await FT_INBOX_APP.analyse('2026-11-05 Hornsby Storage', items);
+    const box = document.createElement('div'); box.innerHTML = FT_INBOX_APP.reviewHTML([a]); const sel = box.querySelector('[data-ibinto]');
+    await FT_INBOX_APP.importOne(a, { ...a.info, client: 'Someone Else' }, sel && sel.value);
+    return { split, warn: box.textContent.includes('已有相似的项目'), into: sel && sel.value, id, same: curId === id, count: liveProjects().length - before, name: S.name, name0: name, client: S.client, docs: S.docs.map(x => x.cat + ':' + x.name) }; });
+  assert.deepEqual(r.split, [['Nov/Hornsby Storage', 2], ['Nov/Lucid', 2]]);
+  assert.ok(r.warn, 'the review says a similar project exists'); assert.equal(r.into, r.id);
+  assert.ok(r.same); assert.equal(r.count, 0, 'no new project'); assert.equal(r.name, r.name0); assert.equal(r.client, 'Acme Building Group Pty Ltd', 'filled fields kept');
+  assert.ok(r.docs.some(x => /Addendum 1\.txt/.test(x)));
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');

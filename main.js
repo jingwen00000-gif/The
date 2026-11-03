@@ -155,9 +155,12 @@ function inInbox(rel) {
 const SKIP = /^(\.|~\$|Thumbs\.db$|desktop\.ini$|__MACOSX$)/i;
 ipcMain.handle('inbox-list', () => {
   const root = inboxDir(); if (!root) return null;
-  const out = [];
+  const out = [], loose = [];
   for (const d of fs.readdirSync(root, { withFileTypes: true })) {
-    if (!d.isDirectory() || SKIP.test(d.name)) continue;
+    if (SKIP.test(d.name)) continue;
+    // files saved straight into the inbox (several tenders' files side by side): listed as folder '' and grouped by job code in the app
+    if (d.isFile()) { try { const st = fs.statSync(path.join(root, d.name)); loose.push({ rel: d.name, name: d.name, size: st.size, mtime: st.mtimeMs }); } catch (e) {} continue; }
+    if (!d.isDirectory()) continue;
     const files = []; const walk = (rel, depth) => {
       if (depth > 4 || files.length > 400) return;
       for (const e of fs.readdirSync(path.join(root, rel), { withFileTypes: true })) {
@@ -168,6 +171,7 @@ ipcMain.handle('inbox-list', () => {
     try { walk(d.name, 0); } catch (e) {}
     out.push({ folder: d.name, files, mtime: Math.max(0, ...files.map(f => f.mtime)) });
   }
+  if (loose.length) out.push({ folder: '', files: loose.slice(0, 400), mtime: Math.max(0, ...loose.map(f => f.mtime)) });
   return { dir: root, folders: out };
 });
 ipcMain.handle('inbox-read', (_e, { rel }) => { const p = inInbox(rel); if (!fs.existsSync(p)) return null; return new Uint8Array(fs.readFileSync(p)); });

@@ -68,7 +68,7 @@ function cleanSubject(s){return String(s||'').replace(/^\s*((re|fw|fwd|aw)\s*:\s
 function extract(info){info=info||{}; const out={name:'',site:'',client:'',contact:'',email:'',phone:'',closes:'',sources:{}};
   const mails=(info.emails||[]).filter(Boolean).filter(m=>m.from&&m.from.email&&(!info.ownDomain||!m.from.email.endsWith('@'+info.ownDomain)));
   const m=mails[0]||null;
-  out.name=cleanFolder(info.folder); if(out.name) out.sources.name='folder';
+  out.name=tenderName(info.folder); if(out.name) out.sources.name='folder';
   if(!out.name&&m&&m.subject){out.name=cleanSubject(m.subject); out.sources.name='e-mail subject'}
   if(m){out.contact=m.from.name||''; out.email=m.from.email; out.sources.contact='e-mail';
     const body=String(m.body||''), sig=body.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
@@ -122,6 +122,39 @@ function summarise(pages,name){const P=pages.map((t,i)=>({i,...discipline(t,page
   const fire={}; for(const p of P) for(const [k,n] of Object.entries(p.fire)) fire[k]=(fire[k]||0)+n;
   const disc=firePages.length?'fire':((Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]||['other'])[0]);
   return {disc,label:LABEL[disc],pages:P.length,firePages,withFire,counts,fire,all}}
-const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL};
+
+/* ---- several tenders at once ---- */
+// a folder that sorts one tender's files (Fire, Drawings, Specs, 01 Architectural …) rather than being a tender of its own
+const CAT_DIR=/^(?:fire(?:\s+(?:services?|protection|drawings?))?|fs|drawings?|dwgs?|plans?|pdfs?|cad|specs?|specifications?|documents?|docs?|tender(?:\s+(?:documents?|docs?|drawings?))?|itt|rft|rfq|architectur(?:al|e)|arch|hydraulics?|hyd|plumbing|electrical|elec|mechanical|mech|hvac|structural|struct|civil|services|consultants?|reports?|fer|bca|ncc|addend(?:a|um)(?:\s*\d+)?|rev(?:ision)?s?(?:\s*[a-z0-9]+)?|issued?(?:\s+for\s+\w+)?|for\s+tender|transmittals?|emails?|correspondence|scope|schedules?|bom|boq|photos?|images?|old|superseded|archive|misc|other|general|landscape|civil\s+&\s+structural|survey|geotech(?:nical)?|town\s+planning|da|cc|ifc)$/i;
+function isCategoryFolder(n){return CAT_DIR.test(String(n||'').replace(/^[\s\d._-]*(?=[a-z])/i,'').replace(/[_]+/g,' ').trim())}
+// a job / project code at the start of a file name: 'LCE103150-F102.pdf' → LCE103150, '2405 - Hornsby FS-101.pdf' → 2405 (dates are not codes)
+function jobCode(name){const b=String(name||'').split('/').pop().replace(/\.[a-z0-9]+$/i,''); const m=b.match(/^([A-Z]{0,5}\d{4,7}[A-Z]?)(?=$|[\s_.-])/i);
+  if(!m) return ''; const c=m[1].toUpperCase(); if(/^(19|20)\d{6}$/.test(c)||/^(19|20)\d{2}$/.test(c)&&/^\d{4}[-_.]\d{2}[-_.]\d{2}/.test(b)) return ''; return c}
+// loose files (no folder of their own): one group per job code; files without a code (the e-mail, the FER) join the only group, or a group of their own
+function groupLoose(items,label){const by=new Map(), none=[]; for(const it of items){const c=jobCode(it.name); if(c){if(!by.has(c)) by.set(c,[]); by.get(c).push(it)} else none.push(it)}
+  const codes=[...by.keys()].filter(c=>by.get(c).length>1||!none.length||by.size===1);
+  if(codes.length<=1) return items.length?[{folder:(codes[0]&&label?label+' · '+codes[0]:label||codes[0]||''),items}]:[];
+  const out=codes.map(c=>({folder:label?label+' · '+c:c,items:by.get(c)})); const rest=none.concat([...by.keys()].filter(c=>!codes.includes(c)).flatMap(c=>by.get(c)));
+  if(rest.length) out.push({folder:label||'',items:rest,loose:true}); return out}
+// one picked / inbox folder → the tenders in it. items: [{path relative to the folder, name, …}]
+// - only files, or files plus sorting folders (Fire/, Specs/): one tender
+// - two or more folders that are not sorting folders: one tender per folder; loose files beside them grouped by job code
+function splitTenders(folder,items){const subs=new Map(), loose=[];
+  for(const it of items){const i=it.path.indexOf('/'); if(i<0){loose.push(it); continue} const s=it.path.slice(0,i); if(!subs.has(s)) subs.set(s,[]); subs.get(s).push(it)}
+  const proj=[...subs.keys()].filter(s=>!isCategoryFolder(s));
+  if(proj.length<2) return [{folder,items}];
+  const join=s=>folder?folder+'/'+s:s, out=proj.map(s=>({folder:join(s),items:subs.get(s).map(i=>({...i,path:i.path.slice(s.length+1)}))}));
+  const rest=loose.concat([...subs.keys()].filter(s=>!proj.includes(s)).flatMap(s=>subs.get(s)));
+  return out.concat(groupLoose(rest,folder||''))}
+// the last part of a tender's folder key, as its name
+function tenderName(folder){return cleanFolder(String(folder||'').split('/').pop().split(' · ').pop())}
+// an existing project that looks like this tender (same name or same site address)
+const norm=s=>String(s||'').toLowerCase().replace(/\b(the|project|proposed|new|development|fire services?|tender|stage \d+)\b/g,' ').replace(/[^a-z0-9]+/g,' ').trim();
+function sameProject(info,projects){const n=norm(info&&info.name), st=norm(info&&info.site);
+  for(const p of projects||[]){const pn=norm(p.name), ps=norm(p.site);
+    if(n&&pn&&(n===pn||(n.length>=8&&pn.length>=8&&(n.includes(pn)||pn.includes(n))))) return {p,why:'name'};
+    if(st&&ps&&st.length>=8&&(st===ps||st.includes(ps)&&ps.length>=8||ps.includes(st))) return {p,why:'site'}}
+  return null}
+const NS={classify,pageLooksFire,parseEml,extract,cleanFolder,cleanSubject,discipline,summarise,LABEL,isCategoryFolder,jobCode,groupLoose,splitTenders,tenderName,sameProject};
 root.FT_INBOX=NS; if(typeof module!=='undefined'&&module.exports) module.exports=NS;
 })(typeof window!=='undefined'?window:globalThis);

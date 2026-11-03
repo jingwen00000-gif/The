@@ -12,14 +12,11 @@ const desk=()=>!!(root.firetake&&root.firetake.inboxList);
 const inflate=async d=>new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
 
 // a folder's files as {path, name, size, read() → File}
-function fromDesktop(f){return f.files.filter(x=>x.size<300*1024*1024).map(x=>({path:x.rel.slice(f.folder.length+1),name:x.name,size:x.size,read:async()=>new File([await root.firetake.inboxRead(x.rel)],x.name)}))}
+function fromDesktop(f){return f.files.filter(x=>x.size<300*1024*1024).map(x=>({rel:x.rel,path:f.folder?x.rel.slice(f.folder.length+1):x.rel,name:x.name,size:x.size,read:async()=>new File([await root.firetake.inboxRead(x.rel)],x.name)}))}
 function fromInput(list){const G=new Map(); for(const f of list){const rp=f.webkitRelativePath||f.name, parts=rp.split('/'); const folder=parts.length>1?parts[0]:'';
     if(!G.has(folder)) G.set(folder,[]); G.get(folder).push({path:parts.slice(parts.length>1?1:0).join('/'),name:f.name,size:f.size,read:async()=>f})}
-  // a parent folder holding several tender folders: one tender per second-level folder
-  const out=[]; for(const [folder,items] of G){const sub=new Set(items.map(i=>i.path.includes('/')?i.path.split('/')[0]:'')); const loose=items.filter(i=>!i.path.includes('/'));
-    if(sub.size>1&&!loose.length&&items.length>4) for(const s of sub) out.push({folder:s,items:items.filter(i=>i.path.startsWith(s+'/')).map(i=>({...i,path:i.path.slice(s.length+1)}))});
-    else out.push({folder,items})}
-  return out}
+  // a parent folder holding several tenders: one per project folder, loose files grouped by job code (src/inbox/tender-inbox.js)
+  return [...G].flatMap(([folder,items])=>folder?FT_INBOX.splitTenders(folder,items):FT_INBOX.groupLoose(items,''))}
 async function expandZips(items){const out=[];
   for(const it of items){if(FT_INBOX.classify(it.path).kind!=='zip'){out.push(it); continue}
     try{const z=await FT_LEARN.pricing.unzip(new Uint8Array(await (await it.read()).arrayBuffer()),inflate);
@@ -67,8 +64,14 @@ function drawRows(a,i){return a.G.draw.map((d,j)=>{const s=d.s, multi=s.pages>1;
     <td style="white-space:nowrap">${multi&&d.fire&&s.firePages.length<s.pages?`<label class="note" style="display:flex;gap:4px;align-items:center"><input type="checkbox" data-ibonly ${d.onlyFire?'checked':''}> ${tt('只导入消防页')}</label>`:''}<button type="button" class="btn sm ghost" data-ibprev>${tt('预览')}</button></td></tr>
     <tr data-ibpv="${i}:${j}" hidden><td></td><td colspan="4"></td></tr>`}).join('')}
 function reviewHTML(A){const row=(k,label,v)=>`<label class="field">${tt(label)}<input data-ib="${k}" value="${html(v||'')}"></label>`;
+  const P=typeof liveProjects==='function'?liveProjects().filter(p=>p.name||p.site):[];
   return A.map((a,i)=>{const nf=a.G.draw.filter(d=>d.fire).length, nm=a.G.draw.filter(d=>d.maybe).length;
-   return `<div class="card" style="margin:0 0 10px;padding:12px" data-ibi="${i}"><label style="display:flex;gap:8px;align-items:center;font-weight:700"><input type="checkbox" data-ibon checked> ${html(a.folder||tt('（所选文件）'))} <span class="note" style="font-weight:400">${a.count} ${tt('个文件')}</span></label>
+   const dup=FT_INBOX.sameProject(a.info,P), twin=A.slice(0,i).find(b=>FT_INBOX.sameProject(a.info,[{name:b.info.name,site:b.info.site}]));
+   const codes=[...new Set(a.G.draw.filter(d=>d.fire).map(d=>FT_INBOX.jobCode(d.name)).filter(Boolean))];
+   const warn=[dup?`${tt('已有相似的项目')}：<b>${html(dup.p.name||dup.p.site)}</b>（${tt(dup.why==='name'?'名称相同':'地址相同')}）`:'',twin?`${tt('和上面的')} “${html(twin.folder||twin.info.name)}” ${tt('像是同一个项目')}`:'',codes.length>1?`${tt('消防图纸有几个不同的项目编号')}（${codes.map(html).join(', ')}）${tt('，这个文件夹可能混了几个项目')}`:''].filter(Boolean);
+   const into=dup?`<label class="field" style="margin-top:6px">${tt('导入到')}<select data-ibinto><option value="${html(dup.p.id)}" selected>${tt('已有项目')}：${html(dup.p.name||dup.p.site)}</option><option value="">${tt('新建项目')}</option></select></label>`:'';
+   return `<div class="card" style="margin:0 0 10px;padding:12px" data-ibi="${i}"><label style="display:flex;gap:8px;align-items:center;font-weight:700"><input type="checkbox" data-ibon checked> ${html(a.folder||(a.root?tt('收件箱里散放的文件'):tt('（所选文件）')))} <span class="note" style="font-weight:400">${a.count} ${tt('个文件')}</span></label>
+    ${warn.map(w=>`<p class="note" style="margin:4px 0 0;color:var(--warn)">⚠ ${w}</p>`).join('')}${into}
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px">${row('name','项目名称',a.info.name)}${row('client','客户',a.info.client)}${row('contact','联系人',a.info.contact)}${row('email','邮箱',a.info.email)}${row('phone','电话',a.info.phone)}${row('site','项目地址',a.info.site)}</div>
     ${a.info.closes?`<p class="note" style="margin:4px 0 0">${tt('截止')}：<b>${html(a.info.closes)}</b></p>`:''}
     <h4 style="margin:10px 0 4px">${tt('图纸')} <span class="note">${tt('勾选的打开算量，其余放进“招标资料”')} · ${tt('消防')} ${nf}${nm?` · <span style="color:var(--warn)">${nm} ${tt('张其他专业图纸含消防设备，请确认')}</span>`:''}</span></h4>
@@ -80,8 +83,11 @@ function wireReview(box,A){box.querySelectorAll('[data-ibprev]').forEach(b=>b.on
   box.querySelectorAll('[data-ibtake]').forEach(c=>c.onchange=()=>{const [i,j]=c.closest('[data-ibd]').dataset.ibd.split(':').map(Number); A[i].G.draw[j].take=c.checked});
   box.querySelectorAll('[data-ibonly]').forEach(c=>c.onchange=()=>{const [i,j]=c.closest('[data-ibd]').dataset.ibd.split(':').map(Number); A[i].G.draw[j].onlyFire=c.checked})}
 
-async function importOne(a,v){await newProject(); S.name=v.name||a.folder||S.name; S.client=v.client||''; S.contact=v.contact||''; S.email=v.email||''; S.phone=v.phone||''; S.site=v.site||'';
-  if(a.info.closes) S.notes=[S.notes,`Tender closes: ${a.info.closes}`].filter(Boolean).join('\n'); S.inboxFolder=a.folder||'';
+async function importOne(a,v,into){
+  if(into&&into!==curId) await switchProject(into); else if(!into) await newProject();
+  // into an existing project (a re-issue / addendum): only the empty fields are filled
+  const set=(k,x)=>{if(x&&(!into||!S[k])) S[k]=x}; set('name',v.name||FT_INBOX.tenderName(a.folder)); ['client','contact','email','phone','site'].forEach(k=>set(k,v[k]));
+  if(a.info.closes&&!String(S.notes||'').includes(a.info.closes)) S.notes=[S.notes,`Tender closes: ${a.info.closes}`].filter(Boolean).join('\n'); S.inboxFolder=a.folder||S.inboxFolder||'';
   const take=a.G.draw.filter(d=>d.take), rest=a.G.draw.filter(d=>!d.take);
   for(const d of take){const f=await d.read(); await openFiles([f]);
     // a combined set: keep only its fire services pages for take-off (the whole set is still filed under 招标资料)
@@ -93,25 +99,34 @@ async function importOne(a,v){await newProject(); S.name=v.name||a.folder||S.nam
   pagesInit(); await showPage(); changed(); await saveNow(); renderProjSel(); return curId}
 
 async function review(list,src){if(IA.busy) return; IA.busy=true; const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
-  let A=[]; try{for(const f of list) A.push(await analyse(f.folder,f.items,say))}catch(e){IA.busy=false; ftModal(tt('读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
+  let A=[]; try{for(const f of list) A.push({...await analyse(f.folder,f.items,say),keys:f.keys,root:f.root})}catch(e){IA.busy=false; ftModal(tt('读取失败'),`<p>${html(e.message||e)}</p>`,[{t:tt('关闭')}]); return}
   IA.busy=false;
   const dd=ftModal(tt('导入招标文件夹'),`<p class="note" style="margin:0 0 8px">${tt('每个文件夹会建成一个新项目：消防图纸直接打开算量，其他文件放进“招标资料”。请核对下面的信息（可修改），文件夹里的文件不会被改动。')}</p>${reviewHTML(A)}`,
-    [{t:tt('取消')},...(src==='inbox'?[{t:tt('忽略这些文件夹'),fn:()=>{CFG.inboxSeen=CFG.inboxSeen||{}; A.forEach(a=>CFG.inboxSeen[a.folder]='ignored'); saveCfg(); fresh=fresh.filter(f=>!A.some(a=>a.folder===f.folder)); chip()}}]:[]),
-     {t:tt('导入'),cls:'primary',fn:async()=>{const box=$('#ftModal'); const picks=[...box.querySelectorAll('[data-ibi]')].map(el=>({a:A[+el.dataset.ibi],on:el.querySelector('[data-ibon]').checked,v:Object.fromEntries([...el.querySelectorAll('[data-ib]')].map(i=>[i.dataset.ib,i.value.trim()]))})).filter(x=>x.on);
+    [{t:tt('取消')},...(src==='inbox'?[{t:tt('忽略这些文件夹'),fn:()=>{A.forEach(a=>markSeen(a,'ignored')); chip()}}]:[]),
+     {t:tt('导入'),cls:'primary',fn:async()=>{const box=$('#ftModal'); const picks=[...box.querySelectorAll('[data-ibi]')].map(el=>({a:A[+el.dataset.ibi],on:el.querySelector('[data-ibon]').checked,v:Object.fromEntries([...el.querySelectorAll('[data-ib]')].map(i=>[i.dataset.ib,i.value.trim()])),into:(el.querySelector('[data-ibinto]')||{}).value||''})).filter(x=>x.on);
        const prog=ftModal(tt('正在导入'),`<p id="ibProg" style="margin:0"></p>`,[]); let done=0, last=null;
        for(const x of picks){const e=prog.querySelector('#ibProg'); if(e) e.textContent=`${tt('正在导入')} ${x.v.name||x.a.folder}（${++done} / ${picks.length}）…`;
-         try{last=await importOne(x.a,x.v); if(src==='inbox'){CFG.inboxSeen=CFG.inboxSeen||{}; CFG.inboxSeen[x.a.folder]=last; saveCfg(); fresh=fresh.filter(f=>f.folder!==x.a.folder)}}catch(err){console.error(err); toast((x.v.name||x.a.folder)+'：'+(err.message||err))}}
+         try{last=await importOne(x.a,x.v,x.into); if(src==='inbox') markSeen(x.a,last)}catch(err){console.error(err); toast((x.v.name||x.a.folder)+'：'+(err.message||err))}}
        prog.close(); chip(); if(last){showTab(S.pages.some(p=>p.kind==='pdf')?'takeoff':'docs'); toast(`${tt('已导入')} ${done} ${tt('个项目')}`)}}}]);
   dd.style.width='min(1080px,96vw)'; dd.style.maxWidth='96vw'; dd.addEventListener('close',()=>{dd.style.width=''; dd.style.maxWidth=''},{once:true}); wireReview(dd,A)}
 
 /* ---- desktop inbox: scan, header chip, settings ---- */
 let fresh=[], lastScan=0;
+// the inbox's tenders: each folder (split when it holds several projects), loose files in the inbox itself grouped by job code.
+// key: what CFG.inboxSeen remembers (a folder, or each loose file so files added later are still offered)
+function desktopTenders(r){const seen=CFG.inboxSeen||{}, out=[];
+  for(const f of r.folders){const items=fromDesktop(f); if(!items.length) continue;
+    if(!f.folder){const L=items.filter(i=>!seen['file:'+i.rel]); for(const g of FT_INBOX.groupLoose(L,'')) out.push({...g,root:true,keys:g.items.map(i=>'file:'+i.rel)}); continue}
+    if(seen[f.folder]) continue;
+    for(const g of FT_INBOX.splitTenders(f.folder,items)) if(!seen[g.folder]) out.push({...g,keys:[g.folder]})}
+  return out}
+const markSeen=(t,v)=>{CFG.inboxSeen=CFG.inboxSeen||{}; for(const k of t.keys||[t.folder]) CFG.inboxSeen[k]=v; saveCfg(); fresh=fresh.filter(f=>!(f.keys||[f.folder]).some(k=>(t.keys||[t.folder]).includes(k)))};
 async function scan(manual){if(!desk()) return; const r=await root.firetake.inboxList().catch(()=>null); if(!r){fresh=[]; chip(); if(manual) toast(tt('还没有设置招标收件箱文件夹')); return}
-  const seen=CFG.inboxSeen||{}; fresh=r.folders.filter(f=>!seen[f.folder]&&f.files.length); chip(); lastScan=Date.now();
-  if(manual){if(fresh.length) review(fresh.map(f=>({folder:f.folder,items:fromDesktop(f)})),'inbox'); else toast(tt('没有新的招标文件夹'))}}
+  fresh=desktopTenders(r); chip(); lastScan=Date.now();
+  if(manual){if(fresh.length) review(fresh,'inbox'); else toast(tt('没有新的招标文件夹'))}}
 function chip(){let c=document.getElementById('inboxChip'); const st=document.getElementById('saveSt');
   if(!fresh.length){if(c) c.remove(); return}
-  if(!c&&st){c=document.createElement('button'); c.id='inboxChip'; c.className='pill warn'; c.style.cursor='pointer'; c.style.border='0'; st.parentNode.insertBefore(c,st); c.onclick=()=>review(fresh.map(f=>({folder:f.folder,items:fromDesktop(f)})),'inbox')}
+  if(!c&&st){c=document.createElement('button'); c.id='inboxChip'; c.className='pill warn'; c.style.cursor='pointer'; c.style.border='0'; st.parentNode.insertBefore(c,st); c.onclick=()=>review(fresh,'inbox')}
   if(c){c.textContent=`📥 ${fresh.length} ${tt('个新招标')}`; c.title=fresh.map(f=>f.folder).join('\n')}}
 async function renderSettings(el){if(!el) return; if(!desk()){el.innerHTML=`<p class="note" style="margin:0">${tt('浏览器版：在“项目总览”点“从文件夹导入招标”选择文件夹导入。')}</p>`; return}
   const d=await root.firetake.dirGet().catch(()=>({})); const dir=d&&d.inboxDir;
@@ -124,7 +139,7 @@ async function renderSettings(el){if(!el) return; if(!desk()){el.innerHTML=`<p c
 // any edition: pick a folder
 function pickFolder(){const inp=document.createElement('input'); inp.type='file'; inp.multiple=true; inp.webkitdirectory=true; inp.style.display='none'; document.body.appendChild(inp);
   inp.onchange=()=>{const L=[...inp.files]; inp.remove(); if(L.length) review(fromInput(L),'pick')}; inp.click()}
-IA.scan=scan; IA.review=review; IA.analyse=analyse; IA.importOne=importOne; IA.fromInput=fromInput; IA.renderSettings=renderSettings; IA.pickFolder=pickFolder;
+IA.scan=scan; IA.review=review; IA.reviewHTML=reviewHTML; IA.desktopTenders=desktopTenders; IA.analyse=analyse; IA.importOne=importOne; IA.fromInput=fromInput; IA.renderSettings=renderSettings; IA.pickFolder=pickFolder;
 (async()=>{for(let i=0;i<100&&!(typeof DB!=='undefined'&&DB.ok&&typeof S!=='undefined'&&S);i++) await new Promise(r=>setTimeout(r,200)); scan(false)})();
 root.addEventListener('focus',()=>{if(Date.now()-lastScan>60000) scan(false)});
 })(typeof window!=='undefined'?window:globalThis);

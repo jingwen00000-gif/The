@@ -55,3 +55,25 @@ test('discipline of a sheet: fire vs hydraulic (with hydrants), electrical (with
   assert.equal(s.disc, 'fire'); assert.deepEqual(s.firePages, [0]); assert.deepEqual(s.withFire, [1]); assert.equal(s.pages, 4);
   assert.equal(I.summarise([hyd, ele], 'Services.pdf').disc !== 'fire', true);
 });
+
+test('several tenders at once: project folders split, sorting folders kept together, loose files grouped by job code', () => {
+  const it = p => ({ path: p, name: p.split('/').pop() });
+  const T = I.splitTenders('Downloads', ['Hornsby/Fire/FS-101.pdf', 'Hornsby/FER.pdf', 'Lucid/LCE103150-F102.pdf', 'Tiny job/FS-300.pdf', 'LCE2001-F1.pdf', 'LCE2001-F2.pdf', 'invite.eml'].map(it));
+  assert.deepEqual(T.map(t => [t.folder, t.items.map(i => i.path)]), [['Downloads/Hornsby', ['Fire/FS-101.pdf', 'FER.pdf']], ['Downloads/Lucid', ['LCE103150-F102.pdf']],
+    ['Downloads/Tiny job', ['FS-300.pdf']], ['Downloads · LCE2001', ['LCE2001-F1.pdf', 'LCE2001-F2.pdf', 'invite.eml']]]);
+  // one tender sorted into Fire / Specs / 02 Architectural folders stays one tender
+  assert.equal(I.splitTenders('Hornsby', ['Fire/a.pdf', 'Specs/s.pdf', '02 Architectural/x.pdf', 'Addendum 1/y.pdf', 'FER.pdf'].map(it)).length, 1);
+  // files of two jobs side by side: one group each, files without a code on their own
+  assert.deepEqual(I.groupLoose(['LCE103150-F102.pdf', 'LCE103150-F103.pdf', '2405 - Hornsby FS-101.pdf', '2405 - Hornsby FS-102.pdf', 'Tender.eml'].map(it), '').map(g => [g.folder, g.items.length]),
+    [['LCE103150', 2], ['2405', 2], ['', 1]]);
+  assert.equal(I.jobCode('20261102 scan.pdf'), ''); assert.equal(I.jobCode('2026-11-02 notes.pdf'), ''); assert.equal(I.jobCode('FS-101.pdf'), '');
+  assert.equal(I.tenderName('Downloads/2026-11-02 National Storage Hornsby'), 'National Storage Hornsby'); assert.equal(I.tenderName('Downloads · LCE2001'), 'LCE2001');
+});
+
+test('the same project again: matched by name or site address', () => {
+  const P = [{ id: 'a', name: 'Proposed National Storage, Hornsby', site: '' }, { id: 'b', name: 'Lucid', site: '12 Smith Street, Parramatta NSW 2150' }];
+  assert.equal(I.sameProject({ name: 'National Storage Hornsby' }, P).p.id, 'a');
+  assert.equal(I.sameProject({ name: 'Lucid Apartments Stage 2', site: '12 Smith St Parramatta' }, P), null);
+  assert.equal(I.sameProject({ name: 'Other', site: '12 Smith Street Parramatta NSW 2150' }, P).why, 'site');
+  assert.equal(I.sameProject({ name: 'Khartoum Road' }, P), null);
+});
