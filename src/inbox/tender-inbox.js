@@ -151,18 +151,17 @@ function groupLoose(items,label){const zips=items.filter(isZip);
   const out=codes.map(c=>({folder:label?label+' · '+c:c,items:by.get(c)})); const rest=none.concat([...by.keys()].filter(c=>!codes.includes(c)).flatMap(c=>by.get(c)));
   if(rest.length) out.push({folder:label||'',items:rest,loose:true}); return out}
 // one picked / inbox folder → the tenders in it. items: [{path relative to the folder, name, …}]
-// A folder is one project, whatever its subfolders (01 Architectural Drawings, 04 Services Drawings & Specs, 09 Reports …).
-// Exceptions: two or more downloaded zips side by side are one tender each (the platforms send one zip per job);
-// opt.bySub (the review's 按子文件夹分开 button) makes one tender per subfolder.
+// A folder is always one project, whatever is inside: subfolders (01 Architectural Drawings, 09 Reports …) and zips
+// (site photos are often zipped) are that project's files. opt.bySub (the review's 分开 button, used only on request)
+// makes one tender per subfolder and per zip at the top of the folder.
 function subfolders(items){const S=new Set(); for(const it of items){const i=it.path.indexOf('/'); if(i>0) S.add(it.path.slice(0,i))} return [...S]}
-function splitTenders(folder,items,opt){opt=opt||{}; const loose=items.filter(i=>!i.path.includes('/')), zips=loose.filter(isZip);
-  const join=s=>folder?folder+'/'+s:s;
-  if(opt.bySub){const subs=subfolders(items); if(subs.length<2) return [{folder,items}];
-    const out=subs.map(s=>({folder:join(s),items:items.filter(i=>i.path.startsWith(s+'/')).map(i=>({...i,path:i.path.slice(s.length+1)}))}));
-    return loose.length?out.concat(groupLoose(loose,folder||'')):out}
-  if(zips.length>1){const rest=items.filter(i=>!zips.includes(i)); return zips.map(z=>({folder:join(zipName(z.name)),items:[z]})).concat(rest.length?[{folder,items:rest}]:[])}
-  return [{folder,items}]}
-NS_EXTRA.zipName=zipName; NS_EXTRA.subfolders=subfolders;
+function splitParts(items){return subfolders(items).length+items.filter(i=>!i.path.includes('/')&&isZip(i)).length}
+function splitTenders(folder,items,opt){opt=opt||{}; if(!opt.bySub||splitParts(items)<2) return [{folder,items}];
+  const join=s=>folder?folder+'/'+s:s, loose=items.filter(i=>!i.path.includes('/')), zips=loose.filter(isZip), rest=loose.filter(i=>!isZip(i));
+  const out=subfolders(items).map(s=>({folder:join(s),items:items.filter(i=>i.path.startsWith(s+'/')).map(i=>({...i,path:i.path.slice(s.length+1)}))}))
+    .concat(zips.map(z=>({folder:join(zipName(z.name)),items:[z]})));
+  return rest.length?out.concat([{folder,items:rest}]):out}
+NS_EXTRA.zipName=zipName; NS_EXTRA.subfolders=subfolders; NS_EXTRA.splitParts=splitParts;
 // the last part of a tender's folder key, as its name
 function tenderName(folder){let n=cleanFolder(String(folder||'').split('/').pop().split(' · ').pop());
   // a platform's file-style name: '21-ossary-st-mascot-new-build-self-storage' → '21 Ossary St Mascot New Build Self Storage'

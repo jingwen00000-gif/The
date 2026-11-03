@@ -62,7 +62,7 @@ test('a folder is one project whatever its subfolders; split by subfolder on req
   assert.equal(I.splitTenders('21-ossary-st-mascot-new-build-self-storage', job).length, 1);
   assert.deepEqual(I.subfolders(job).length, 4);
   const T = I.splitTenders('Downloads', ['Hornsby/Fire/FS-101.pdf', 'Hornsby/FER.pdf', 'Lucid/LCE103150-F102.pdf', 'LCE2001-F1.pdf', 'LCE2001-F2.pdf'].map(it), { bySub: true });
-  assert.deepEqual(T.map(t => [t.folder, t.items.map(i => i.path)]), [['Downloads/Hornsby', ['Fire/FS-101.pdf', 'FER.pdf']], ['Downloads/Lucid', ['LCE103150-F102.pdf']], ['Downloads · LCE2001', ['LCE2001-F1.pdf', 'LCE2001-F2.pdf']]]);
+  assert.deepEqual(T.map(t => [t.folder, t.items.map(i => i.path)]), [['Downloads/Hornsby', ['Fire/FS-101.pdf', 'FER.pdf']], ['Downloads/Lucid', ['LCE103150-F102.pdf']], ['Downloads', ['LCE2001-F1.pdf', 'LCE2001-F2.pdf']]]);
   assert.deepEqual(I.groupLoose(['LCE103150-F102.pdf', 'LCE103150-F103.pdf', '2405 - Hornsby FS-101.pdf', '2405 - Hornsby FS-102.pdf', 'Tender.eml'].map(it), '').map(g => [g.folder, g.items.length]),
     [['LCE103150', 2], ['2405', 2], ['', 1]]);
   assert.equal(I.jobCode('20261102 scan.pdf'), ''); assert.equal(I.jobCode('2026-11-02 notes.pdf'), ''); assert.equal(I.jobCode('FS-101.pdf'), '');
@@ -89,11 +89,12 @@ test('the same project again: matched by name or site address', () => {
   assert.equal(I.sameProject({ name: 'Khartoum Road' }, P), null);
 });
 
-test('downloaded zips side by side are one tender each; numbered batches (docs0, docs1 …) are one tender', () => {
+test('a folder is one project even with zips inside (site photos are zipped); split by subfolder / zip only on request', () => {
   const it = p => ({ path: p, name: p.split('/').pop() });
-  const Q = I.splitTenders('Quote', ['10-king-street-common-area-refurbishment (1).zip', '21-ossary-st-mascot-new-build-self-storage.zip'].map(it));
-  assert.deepEqual(Q.map(t => I.tenderName(t.folder)), ['10 King Street Common Area Refurbishment', '21 Ossary St Mascot New Build Self Storage']);
+  const Q = ['10-king-street-common-area-refurbishment (1).zip', '21-ossary-st-mascot-new-build-self-storage.zip'].map(it);
+  assert.equal(I.splitTenders('Quote', Q).length, 1);
+  assert.equal(I.splitTenders('21-ossary', ['04 Services/FS-101.pdf', 'Site Photos.zip', 'Specs.zip'].map(it)).length, 1);
+  assert.deepEqual(I.splitTenders('Quote', Q, { bySub: true }).map(t => I.tenderName(t.folder)), ['10 King Street Common Area Refurbishment', '21 Ossary St Mascot New Build Self Storage']);
+  assert.equal(I.splitTenders('Quote', ['a.zip', 'b.zip', 'notes.txt'].map(it), { bySub: true }).length, 3, 'loose non-zip files stay together');
   assert.equal(I.splitTenders('afterSentDocuments', ['docs0/a.pdf', 'docs1/b.pdf', 'docs10/c.pdf'].map(it)).length, 1);
-  assert.equal(I.splitTenders('Quote', ['a.zip', 'b.zip', 'notes.txt'].map(it)).length, 3, 'loose non-zip files stay together beside the zips');
-  assert.equal(I.splitTenders('Job', ['tender.zip', 'FER.pdf'].map(it)).length, 1, 'one zip with its e-mail / FER stays one tender');
 });
