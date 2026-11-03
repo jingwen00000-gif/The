@@ -10,7 +10,14 @@ Electron 桌面版。`app/index.html` 是全部界面与计算逻辑；`main.js`
     npm install electron@33 --save-dev
     npx electron .
 
-打包 Windows / macOS：
+打包 Windows（Strix FireTake）：
+    npx @electron/packager . "Strix FireTake" --platform=win32 --arch=x64 --no-asar --out=dist
+    npx resedit-cli --in "dist/Strix FireTake-win32-x64/Strix FireTake.exe" --out "dist/Strix FireTake-win32-x64/Strix FireTake.exe" \
+      --icon 1,icon.ico --product-name "Strix FireTake" --file-description "Strix FireTake" --company-name "Strix" \
+      --file-version <版本>.0 --product-version <版本>.0
+（resedit 在 Mac / Linux 上也能把 icon.ico 和版本信息写进 exe，不需要 wine；版本号要四段，如 2.13.6.0）
+
+打包 Windows / macOS（旧说明）：
     npm install @electron/packager --save-dev
     npx @electron/packager . FireTake --platform=win32 --arch=x64 --icon=icon.ico --no-asar
     npx @electron/packager . FireTake --platform=darwin --arch=arm64 --icon=icon.icns --no-asar
