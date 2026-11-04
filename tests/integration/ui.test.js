@@ -211,6 +211,22 @@ test('page list: × deletes a sheet at once (with its take-off), ticks + 删除�
   assert.equal(many, n0 - 3); assert.equal(again, n0); assert.ok(closed);
 });
 
+test('existing devices are never counted (new build or refurbishment); recessed and surface speakers are separate quote lines', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close();
+    await newProject(); S.pages.push({ id: 'pg1', name: 'L1', kind: 'image', w: 1000, h: 800, mPerUnit: 0.01 });
+    const add = (type, act) => S.marks.push({ id: uid(), page: 'pg1', type, x: Math.random() * 900, y: Math.random() * 700, ...(act ? { act } : {}) });
+    add('speaker'); add('speaker'); add('spk_surf'); add('speaker', 'retain'); add('smoke', 'retain'); add('smoke', 'remove'); add('smoke');
+    const qty = () => Object.fromEntries(compute().lines.filter(l => l.k).map(l => [l.k, l.qty]));
+    S.ptype = 'NEW'; const nb = { counts: itemCounts(), lines: qty(), mode: markMode(S.marks[3]) };
+    S.ptype = 'REFURB'; const rf = { counts: itemCounts(), lines: qty() };
+    return { nb, rf, names: [ITEM.speaker.zh, ITEM.spk_surf.zh] }; });
+  assert.deepEqual(r.nb.counts, { speaker: 2, spk_surf: 1, smoke: 1 }, 'new build: existing and to-be-removed devices are not counted');
+  assert.equal(r.nb.lines.speaker, 2); assert.equal(r.nb.lines.spk_surf, 1); assert.equal(r.nb.lines.smoke, 1); assert.equal(r.nb.mode, 'retain', 'drawn as existing');
+  assert.equal(r.rf.lines['speaker@retain'], undefined, 'refurbishment: no line for existing devices'); assert.equal(r.rf.lines['smoke@remove'], 1, 'removal still priced'); assert.equal(r.rf.lines.speaker, 2);
+  assert.deepEqual(r.names, ['嵌入式扬声器（吸顶）', '明装扬声器（墙面 / 吊顶下）']);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');

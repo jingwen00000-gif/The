@@ -193,7 +193,7 @@ FVE.segments=function(objs){const out=[]; for(const o of objs){if(o.synthetic) c
 FVE.DESC_RULES=[
   ['cs_smoke',/(CONCEALED|CEILING|ROOF)\s*(SPACE|VOID).*(SMOKE|DETECT)|REMOTE\s*INDICATOR/],['duct_probe',/DUCT.*(PROBE|DETECT|SAMPL)|IN-?DUCT/],
   ['heat',/HEAT|THERMAL|RATE.OF.RISE|FIXED\s*TEMP/],['smoke',/SMOKE|PHOTO.?ELECTRIC|OPTICAL|MULTI.?SENSOR|MULTI.?CRITERIA|\bDETECTOR\b/],
-  ['mcp',/MANUAL\s*CALL|BREAK\s*GLASS/],['wip',/WARDEN|\bWIP\b|INTERCOM/],['horn',/HORN/],['proj_spk',/PROJECTION/],['spk_surf',/(SURFACE|WALL).*SPEAKER/],['speaker',/SPEAKER|LOUDSPEAKER/],
+  ['mcp',/MANUAL\s*CALL|BREAK\s*GLASS/],['wip',/WARDEN|\bWIP\b|INTERCOM/],['horn',/HORN/],['proj_spk',/PROJECTION/],['spk_surf',/(SURFACE|WALL)[\s-]*(MOUNT\w*|MTD)?[^\n]{0,20}SPEAKER|SPEAKER[^\n]{0,24}\b(SURFACE|WALL)[\s-]*(MOUNT\w*|MTD)|\bSURFACE\s+SPKR?\b|\bWALL\s+SPKR?\b/],['speaker',/RECESSED[^\n]{0,20}SPEAKER|CEILING[^\n]{0,20}SPEAKER|SPEAKER|LOUDSPEAKER/],
   ['sounder',/SOUNDER|STROBE|VISUAL\s*(ALARM|WARN)|\bVAD\b|\bBELL\b|BEACON|FLASHING/],['door_mag',/DOOR\s*(HOLD|MAG|RELEASE)|MAGNETIC/],
   ['fip',/INDICATOR\s*PANEL|\bFIP\b|\bFDCIE\b|ALARM\s*PANEL|\bMIMIC\b/],['relay',/INTERFACE|RELAY|INPUT\s*\/?\s*OUTPUT|\bMODULE\b|\bI\/O\b/],
   ['spk_space',/(CONCEALED|CEILING|ROOF)\s*(SPACE|VOID).*(SPRINKLER|HEAD)/],['spk_side',/SIDE\s*WALL/],['spk_semi',/SEMI.?RECESS/],['spk_conc',/CONCEALED.*(SPRINKLER|PENDANT|PENDENT)|FLUSH/],

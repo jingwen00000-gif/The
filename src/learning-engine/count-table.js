@@ -17,7 +17,7 @@ const statusOf=s=>(STATUS.find(([,re])=>re.test(String(s||'').trim()))||[null])[
 const num=s=>{const m=String(s||'').replace(/,/g,'').match(/^\s*(\d+(?:\.\d+)?)\s*(m|lm|ea|no\.?|count)?\s*$/i); return m?+m[1]:null};
 // the device a row names; FVE's vocabulary first, then takeoff words FVE does not use ('Concealed head', 'FH')
 const EXTRA=[['spk_conc',/CONCEALED\s+(HEAD|PENDENT|PENDANT)/],['spk_semi',/SEMI.?RECESS/],['spk_pend',/PENDENT|PENDANT|SPRINKLER\s+HEAD|^HEAD\b|EXPOSED\s+HEAD|^(STANDARD|UPRIGHT)\s+HEAD/],['hydrant',/^FH$|FIRE\s+HYDRANT/],['hosereel',/^FHR$|HOSE\s*REEL/],
-  ['speaker',/SPEAKER/],['smoke',/SMOKE/],['heat',/THERMAL|HEAT/],['mcp',/MCP|MANUAL\s+CALL/],['relay',/RELAY|MODULE|\bI\/?O\b/],['sounder',/STROBE|SOUNDER|VAD/],['wip',/\bWIP\b|WARDEN/],['blanket',/BLANKET/],['ext_abe',/EXTINGUISH/]];
+  ['spk_surf',/(SURFACE|WALL)[\s-]*(MOUNT\w*|MTD)?[^\n]{0,20}SPEAKER|SPEAKER[^\n]{0,24}\b(SURFACE|WALL)[\s-]*(MOUNT\w*|MTD)/],['speaker',/SPEAKER/],['smoke',/SMOKE/],['heat',/THERMAL|HEAT/],['mcp',/MCP|MANUAL\s+CALL/],['relay',/RELAY|MODULE|\bI\/?O\b/],['sounder',/STROBE|SOUNDER|VAD/],['wip',/\bWIP\b|WARDEN/],['blanket',/BLANKET/],['ext_abe',/EXTINGUISH/]];
 function typeOf(desc,FVE){const d=String(desc||'').toUpperCase().replace(/\s+R$/,'').trim(); const t=FVE&&FVE.classifyDesc?FVE.classifyDesc(d).type:null; if(t) return t;
   const e=EXTRA.find(([,re])=>re.test(d)); return e?e[0]:null}
 

@@ -108,7 +108,7 @@ function nameRows(D,unknown,consultant){return new Promise(async resolve=>{
 /* ---------------------------------------------------------------- results */
 const LOWC=.75;
 function groupsOf(R){const G=new Map(); const idx=id=>S.pages.findIndex(p=>p.id===id);
-  for(const d of R.dets){if(!ITEM[d.type]) continue; const k=d.type+'|'+(d.status||'new'); let g=G.get(k); if(!g) G.set(k,g={type:d.type,status:d.status||'new',dets:[],per:{},conf:0,low:0,src:{}}); g.dets.push(d); g.per[d.page]=(g.per[d.page]||0)+1; g.conf+=d.conf; if(d.conf<LOWC) g.low++; for(const s of d.sources||[]) g.src[s]=(g.src[s]||0)+1}
+  for(const d of R.dets){if(!ITEM[d.type]) continue; if(d.status==='existing') d.status='retain'; const k=d.type+'|'+(d.status||'new'); let g=G.get(k); if(!g) G.set(k,g={type:d.type,status:d.status||'new',dets:[],per:{},conf:0,low:0,src:{}}); g.dets.push(d); g.per[d.page]=(g.per[d.page]||0)+1; g.conf+=d.conf; if(d.conf<LOWC) g.low++; for(const s of d.sources||[]) g.src[s]=(g.src[s]||0)+1}
   return [...G.values()].map(g=>({...g,conf:g.conf/g.dets.length})).sort((a,b)=>(ITEMS.findIndex(i=>i.k===a.type)-ITEMS.findIndex(i=>i.k===b.type))||a.status.localeCompare(b.status))}
 const lineSys=l=>l.cls==='cable'?'DET':(/HOSE\s*REEL/i.test(l.desc)?'HR':/HYDRANT/i.test(l.desc)?'HYD':'SPR');
 function lineDn(l,mat){const sizes=(MATS[mat]||{}).sizes||[]; if(MATS[mat]&&MATS[mat].cable){const ew=/EWIS|WARNING|SPEAKER|EVAC/i.test(l.desc), fr=/FIRE\s*RATED|\bFR\b|WS\d/i.test(l.desc); return (ew?3:1)+(fr?1:0)}
@@ -116,7 +116,7 @@ function lineDn(l,mat){const sizes=(MATS[mat]||{}).sizes||[]; if(MATS[mat]&&MATS
 function showResults(R){const G=groupsOf(R); FX.groups=G; const multi=new Set(R.dets.map(d=>d.page)).size>1, ref=isRef();
   const pname=id=>{const p=S.pages.find(q=>q.id===id); return p?esc(p.name.replace(/\.pdf$/i,'')):'?'};
   const srcTxt=g=>Object.entries(g.src).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,n])=>`${k} ${Math.round(100*n/g.dets.length)}%`).join(' · ');
-  const rows=G.map((g,i)=>`<tr><td><input type="checkbox" data-fxon="${i}" checked></td><td>${esc(ITEM[g.type].zh)}${ref||g.status!=='new'?`<div class="note">${ACT[g.status]?ACT[g.status].zh:esc(g.status)}</div>`:''}</td>
+  const rows=G.map((g,i)=>`<tr><td><input type="checkbox" data-fxon="${i}" ${g.status==='retain'?'':'checked'}></td><td>${esc(ITEM[g.type].zh)}${ref||g.status!=='new'?`<div class="note"${g.status==='retain'?' style="color:var(--warn)"':''}>${ACT[g.status]?ACT[g.status].zh:esc(g.status)}${g.status==='retain'?' · '+T('不统计（既有设备默认不加入）'):''}</div>`:''}</td>
     <td class="r num"><b>${g.dets.length}</b>${multi?`<div class="note">${Object.entries(g.per).map(([pid,n])=>`${pname(pid)} ${n}`).join('<br>')}</div>`:''}</td>
     <td class="r num">${Math.round(g.conf*100)}%${g.low?`<div class="note" style="color:#b45309">${g.low} ${T('个低置信')}</div>`:''}</td><td class="note">${esc(srcTxt(g))}</td></tr>`).join('');
   const lrows=R.lines.map((l,i)=>{const sys=lineSys(l); return `<tr><td><input type="checkbox" data-fxl="${i}" ${l.total>0?'checked':''}></td><td>${esc(l.desc)}<div class="note">${l.cls==='cable'?T('电缆'):T('管线')}${l.status&&ACT[l.status]?' · '+ACT[l.status].zh:''}</div></td>
