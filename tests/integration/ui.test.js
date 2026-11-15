@@ -227,6 +227,25 @@ test('existing devices are never counted (new build or refurbishment); recessed 
   assert.deepEqual(r.names, ['嵌入式扬声器（吸顶）', '明装扬声器（墙面 / 吊顶下）']);
 });
 
+test('drawing register: title blocks give level, typical-floor multiplier and sheet type; an older revision is flagged and removed; a gap is reported', async () => {
+  const { page } = app; const { Page, pdf } = require('../lib/pdfwriter');
+  const sheet = (no, rev, title) => { const p = new Page(1190, 842); p.rect(20, 20, 1150, 802); p.text(900, 790, 'DRAWING NO.', 5); p.text(900, 805, no, 11); p.text(1100, 790, 'REV', 5); p.text(1100, 805, rev, 11);
+    p.text(620, 790, 'TITLE', 5); p.text(620, 802, title, 8); p.circle(300, 300, 6); return p; };
+  const buf = pdf([sheet('FS-001', 'T1', 'LEGEND OF SYMBOLS AND NOTES'), sheet('FS-101', 'T1', 'LEVEL 2-8 TYPICAL SPRINKLER LAYOUT'), sheet('FS-101', 'P2', 'LEVEL 2-8 TYPICAL SPRINKLER LAYOUT'), sheet('FS-104', 'T1', 'ROOF PLAN')]).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); showTab('takeoff');
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    await newProject(); await openFiles([new File([u], 'FS set.pdf', { type: 'application/pdf' })]); await readSheets(false);
+    const pages = S.pages.map(p => ({ dwg: p.sheet && p.sheet.dwg, rev: p.sheet && p.sheet.rev, type: p.sheet && p.sheet.type, level: p.level || '', mult: +p.mult || 1 }));
+    // the estimator's own level is kept when the title blocks are read again
+    S.pages[3].level = 'RF'; S.pages[3].autoLevel = false; await readSheets(true); const kept = S.pages[3].level;
+    sheetRegister(); const box = document.querySelector('#ftModal'); const txt = box.textContent; box.querySelector('#rgDropOld').click();
+    return { pages, kept, missing: /FS-102/.test(txt) && /FS-103/.test(txt), older: /FS-101 rev P2 → rev T1/.test(txt), left: S.pages.map(p => p.sheet.dwg + ' ' + p.sheet.rev) }; }, buf);
+  assert.deepEqual(r.pages, [{ dwg: 'FS-001', rev: 'T1', type: 'legend', level: '', mult: 1 }, { dwg: 'FS-101', rev: 'T1', type: 'plan', level: 'L2-L8', mult: 7 },
+    { dwg: 'FS-101', rev: 'P2', type: 'plan', level: 'L2-L8', mult: 7 }, { dwg: 'FS-104', rev: 'T1', type: 'plan', level: 'Roof', mult: 1 }]);
+  assert.equal(r.kept, 'RF'); assert.ok(r.missing, 'FS-102 / FS-103 reported missing'); assert.ok(r.older);
+  assert.deepEqual(r.left, ['FS-001 T1', 'FS-101 T1', 'FS-104 T1']);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');

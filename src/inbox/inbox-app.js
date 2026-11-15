@@ -147,7 +147,7 @@ async function importOne(a,v,into){
   const by={}; for(const d of a.G.docs) (by[d.cat]=by[d.cat]||[]).push(d); if(rest.length) by.DWG=(by.DWG||[]).concat(rest); if(a.G.emails.length) by.EMAIL=(by.EMAIL||[]).concat(a.G.emails);
   // a few files at a time (hundreds of photos read at once fail on Windows)
   for(const [cat,L] of Object.entries(by)) for(let i=0;i<L.length;i+=8){const F=[]; for(const x of L.slice(i,i+8)){try{F.push(await x.read())}catch(e){console.warn(x.path,e)}} if(F.length) await addDocs(F,cat)}
-  pagesInit(); await showPage(); changed(); await saveNow(); renderProjSel(); return curId}
+  pagesInit(); await showPage(); changed(); if(typeof readSheets==='function') await readSheets(false); await saveNow(); renderProjSel(); return curId}
 
 async function review(list,src,done){if(IA.busy&&Date.now()-IA.busy<20*60000) return toast(tt('正在读取上一个文件夹，请稍候')); IA.busy=Date.now(); IA.stop=false; done=done||new Map();
   const d=ftModal(tt('导入招标文件夹'),`<p id="ibSay" style="margin:0">${tt('正在读取文件…')}</p>`,[{t:tt('停止'),fn:()=>{IA.stop=true}}]); const say=t=>{const e=d.querySelector('#ibSay'); if(e) e.textContent=t};
