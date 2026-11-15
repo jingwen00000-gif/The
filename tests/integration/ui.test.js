@@ -264,6 +264,35 @@ test('填总包报价表: the builder\'s Excel schedule is filled from the estim
   assert.ok(r.remembered >= 7);
 });
 
+test('供应商询价: packages from the bill, the price sheet out and back, quotes levelled, chosen supply rates used in the quote and undone', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close();
+    const ex = PROJECTS.find(p => /^示例|^Example/.test(p.name)); if (ex && ex.id !== curId) await switchProject(ex.id); S.rfq = null;
+    const inflate = async b => new Uint8Array(await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    let saved = null; saveFile = async (n, data) => { saved = { n, u: new Uint8Array(await data.arrayBuffer()) }; };
+    FT_RFQ_APP.open(); let box = document.querySelector('#ftModal'); const pkgs = S.rfq.packages.map(p => p.name);
+    const card = box.querySelector('[data-rp]'); card.querySelector('[data-rnn]').value = 'Supplier A'; card.querySelector('[data-rne]').value = 'a@sup.example'; card.querySelector('[data-radd]').click();
+    box = document.querySelector('#ftModal'); const c2 = box.querySelector('[data-rp]'); c2.querySelector('[data-rnn]').value = 'Supplier B'; c2.querySelector('[data-radd]').click();
+    const p = S.rfq.packages[0]; const R = FT_RFQ_APP.sync();
+    box = document.querySelector('#ftModal'); box.querySelector('[data-rp] [data-rs="0"] [data-rsheet]').click(); await new Promise(r => setTimeout(r, 200));
+    // supplier A fills in the sheet we sent; supplier B is typed in by hand
+    const W = await FT_LEARN.pricing.readXlsx(saved.u, inflate); const rows = W[0].rows.map(r => r.slice()); const hdr = rows.findIndex(r => r[0] === 'Code');
+    for (let i = hdr + 1; i < rows.length; i++) if (String(rows[i][0] || '').includes(':')) rows[i][4] = 10;
+    const reply = new File([xlsxBuild([{ name: 'RFQ', rows }])], 'reply A.xlsx');
+    await FT_RFQ_APP.importReply(p, p.suppliers[0], R, reply);
+    p.suppliers[1].prices = { [p.codes[0]]: 7 }; p.suppliers[1].got = todayISO();
+    const L = FT_RFQ.level(p, R), code = p.codes[0], row = R.find(x => x.code === code);
+    const rate = () => row.kind === 'item' ? S.rates.items[row.k].m : S.rates.pipe[row.mk + '-' + row.dn].m;
+    const before = row.kind === 'item' ? (S.rates.items[row.k] || ITEM[row.k]).m : (S.rates.pipe[row.mk + '-' + row.dn] || { m: 0 }).m;
+    p.choice = 'cheapest'; const n = FT_RFQ_APP.apply(p, R); const after = rate(), applied = S.rfq.applied[code];
+    FT_RFQ_APP.open(); const shows = document.querySelector('#ftModal').textContent.includes('Supplier B');
+    FT_RFQ_APP.undo(p, R); const undone = rate();
+    return { pkgs, sheet: saved.n, aRead: Object.keys(p.suppliers[0].prices).length, codes: p.codes.length, best: L.lines[0].best === p.suppliers[1].id, missingB: L.missing[p.suppliers[1].id], n, after, applied, shows, before, undone }; });
+  assert.ok(r.pkgs.length >= 2); assert.match(r.sheet, /^RFQ .* Supplier A\.xlsx$/); assert.equal(r.aRead, r.codes, 'every line read back from the returned sheet');
+  assert.ok(r.best, 'the cheaper supplier wins the line'); assert.equal(r.missingB || 0, r.codes - 1); assert.equal(r.n, r.codes);
+  assert.equal(r.after, 7); assert.equal(r.applied.supplier, 'Supplier B'); assert.ok(r.shows); assert.equal(r.undone, r.before);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
