@@ -293,6 +293,24 @@ test('供应商询价: packages from the bill, the price sheet out and back, quo
   assert.equal(r.after, 7); assert.equal(r.applied.supplier, 'Supplier B'); assert.ok(r.shows); assert.equal(r.undone, r.before);
 });
 
+test('FER decisions into the price: an included item becomes a priced quote line (material + labour + risk) and an Inclusion; unpriced lines are flagged', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { const d0 = document.querySelector('#ftModal'); if (d0 && d0.open) d0.close();
+    await newProject(); showTab('docs'); S.extra = [];
+    await addDocs([new File(['3.7 Portable fire extinguishers shall be provided in accordance with AS 2444-2001 throughout the building.\n3.8 Hydrant booster cabinet to be provided by the fire services contractor.'], 'FER Rev B.txt', { type: 'text/plain' })], 'FER');
+    const d = S.docs[S.docs.length - 1]; document.querySelector(`[data-drev="${d.id}"]`).click();
+    for (let i = 0; i < 50 && !document.querySelector('#revCard [data-revi]'); i++) await new Promise(r => setTimeout(r, 100));
+    const inc = d.review.items.filter(x => x.cat === 'incl'); inc.forEach(x => { const c = document.querySelector(`#revCard [data-revi="${x.id}"]`); c.checked = true; c.dispatchEvent(new Event('change')); });
+    document.querySelector('[data-revdo="line"]').click();
+    const lines0 = S.extra.map(x => ({ sys: x.sys, src: x.src })), warn = preflight('fs').some(w => /附加报价行|additional quote lines/.test(w.msg));
+    const before = compute().ex; const x = S.extra[0]; x.qty = 2; x.mat = 500; x.hrs = 0; x.risk = 10; changed();
+    const C = compute(), l = C.lines.find(l => l.k === 'x_' + x.id);
+    showTab('quote'); renderQuote(); const shown = !!document.querySelector('#qExtra [data-xid]');
+    return { n: inc.length, lines0, warn, mat: l && Math.round(l.mat), up: C.ex > before, incl: S.inclCustom, shown }; });
+  assert.ok(r.n >= 1); assert.equal(r.lines0.length, r.n); assert.match(r.lines0[0].src, /FER Rev B\.txt cl\. 3\./); assert.ok(r.warn, 'unpriced lines flagged before sending');
+  assert.equal(r.mat, 1100, '2 × $500 + 10 % risk'); assert.ok(r.up); assert.match(r.incl, /cl\. 3\./); assert.ok(r.shown);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
