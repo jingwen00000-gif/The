@@ -91,7 +91,7 @@ async function analyse(folder,items0,say){const items=await expandZips(items0); 
       else if(/\.pdf$/i.test(f.name)) text=(await pdfPagesText(file,2)).pages.join('\n');
       else if(root.FT_OCR) text=await within(FT_OCR.read(file),120000,'');
       let c=text?FT_INBOX.parseContact(text,{ownDomain:own}):null; G.contactHow='ocr';
-      if((!c||!c.email&&!c.contact)&&/\.(png|jpe?g|webp|bmp|gif)$/i.test(f.name)&&typeof callClaude==='function'&&(CFG.apiKey||(typeof WEBAI==='function'&&WEBAI()))){
+      if((!c||!c.email&&!c.contact)&&/\.(png|jpe?g|webp|bmp|gif)$/i.test(f.name)&&typeof callClaude==='function'&&typeof aiOn==='function'&&aiOn()){
         const out=parseJSON(await callClaude('This image is the contact details of a construction company sending a tender (often an e-mail signature). Reply with JSON only: {"contact":"","role":"","client":"","email":"","phone":"","mobile":""} (empty string when not shown; client = the company name).',await jpeg64(file),null));
         if(out){c=out; G.contactHow='ai'}}
       if(c&&(c.email||c.contact||c.client)){const phone=[c.mobile,c.phone].filter(Boolean).filter((x,i,A)=>A.indexOf(x)===i).join(' / ');

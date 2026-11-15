@@ -16,6 +16,10 @@ class Page {
       `${f(cx - r)} ${y(cy + k)} ${f(cx - k)} ${y(cy + r)} ${f(cx)} ${y(cy + r)} c ${f(cx + k)} ${y(cy + r)} ${f(cx + r)} ${y(cy + k)} ${f(cx + r)} ${y(cy)} c`; }
   // a PDF markup (what Bluebeam / Acrobat count tools leave): Square, Circle or FreeText, box given top-left
   annot(subtype, hex, x, y, w, h, contents = '', subject = '') { this.annots.push({ subtype, hex, x, y, w, h, contents, subject }); return this; }
+  // a Bluebeam-style markup written as its own annotation dictionary (top-left page coordinates): a Count polygon or a Length polyline
+  bbCount(subj, hex, x, y, d = 9) { this.annots.push({ raw: true, dict: `/Subtype /Polygon /IT /PolygonCount /Subj (${subj}) /C [${rgb(hex).join(' ')}] /Contents (1) /Vertices [${[x - d, y, x, y - d, x + d, y, x, y + d].map((v, i) => i % 2 ? this.y(v) : this.f(v)).join(' ')}] /Rect [${this.f(x - d)} ${this.y(y + d)} ${this.f(x + d)} ${this.y(y - d)}]` }); return this; }
+  bbLength(subj, hex, pts, text) { const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]);
+    this.annots.push({ raw: true, dict: `/Subtype /PolyLine /IT /PolyLineDimension /Subj (${subj}) /C [${rgb(hex).join(' ')}] /Contents (${text}) /Vertices [${pts.map(q => this.f(q[0]) + ' ' + this.y(q[1])).join(' ')}] /Rect [${this.f(Math.min(...xs))} ${this.y(Math.max(...ys))} ${this.f(Math.max(...xs))} ${this.y(Math.min(...ys))}]` }); return this; }
   circle(cx, cy, r) { this.ops.push(this.circlePath(cx, cy, r) + ' S'); return this; }
   disc(cx, cy, r) { this.ops.push(this.circlePath(cx, cy, r) + ' f'); return this; }
   text(x, y, s, size = 6, hex = '000000') { const [r, g, b] = rgb(hex); const e = String(s).replace(/([()\\])/g, '\\$1');
@@ -29,7 +33,7 @@ function pdf(pages) {
   const kids = [];
   for (const p of pages) { const stream = p.ops.join('\n'); const c = add(`<< /Length ${Buffer.byteLength(stream)} >>\nstream\n${stream}\nendstream`);
     const esc = t => String(t).replace(/([()\\])/g, '\\$1');
-    const an = (p.annots || []).map(a => { const [r, g, b] = rgb(a.hex), R = [a.x, p.h - a.y - a.h, a.x + a.w, p.h - a.y].map(v => +v.toFixed(3));
+    const an = (p.annots || []).map(a => { if (a.raw) return add(`<< /Type /Annot ${a.dict} /F 4 >>`); const [r, g, b] = rgb(a.hex), R = [a.x, p.h - a.y - a.h, a.x + a.w, p.h - a.y].map(v => +v.toFixed(3));
       return add(`<< /Type /Annot /Subtype /${a.subtype} /Rect [${R.join(' ')}] /C [${r} ${g} ${b}] /F 4 /T (Estimator) /Contents (${esc(a.contents)}) /Subj (${esc(a.subject)})${a.subtype === 'FreeText' ? ' /DA (/Helv 8 Tf 0 0 0 rg)' : ''} >>`); });
     kids.push(add(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${p.w} ${p.h}] /Resources << /Font << /F1 ${font} 0 R >> >> /Contents ${c} 0 R${an.length ? ` /Annots [${an.map(i => i + ' 0 R').join(' ')}]` : ''} >>`)); }
   objs[pagesId - 1] = `<< /Type /Pages /Kids [${kids.map(k => k + ' 0 R').join(' ')}] /Count ${kids.length} >>`;

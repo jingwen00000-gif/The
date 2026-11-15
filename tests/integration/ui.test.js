@@ -352,6 +352,32 @@ test('box search result bar over the drawing: count, fewer / more, next to check
   assert.equal(r.added, 18); assert.equal(r.pending, 0, 'accept all confirms them'); assert.ok(r.gone); assert.equal(r.left, 0); assert.ok(r.noBar);
 });
 
+test('Bluebeam takeoff import: counts by subject, removals, measured pipe with the sheet scaled from Bluebeam; offline mode hides AI and refuses Claude calls', async () => {
+  const { page } = app; const { Page, pdf } = require('../lib/pdfwriter');
+  const p = new Page(1190, 842); p.rect(20, 20, 1150, 802);
+  for (let i = 0; i < 5; i++) p.bbCount('SMOKE DETECTOR ', 'ff0000', 200 + i * 80, 200);
+  p.bbCount('X RECESSED CEILING SPEAKER', '008040', 300, 400).bbCount('X RECESSED CEILING SPEAKER', '008040', 400, 400).bbCount('Mystery thing', '0000ff', 600, 600);
+  p.bbLength('40FS', 'ff0000', [[200, 500], [500, 500], [500, 600]], '14.11 m');   // 400 pt drawn → 1:100 (0.03528 m/pt)
+  const buf = pdf([p]).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); showTab('takeoff');
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    await newProject(); S.ptype = 'REFURB'; CFG.bbMap = {}; await FT_BLUEBEAM_APP.open(new File([u], 'takeoff.pdf', { type: 'application/pdf' }));
+    const box = document.querySelector('#ftModal'); const rows = [...box.querySelectorAll('tbody tr')].map(tr => [tr.querySelector('input').checked, tr.children[1].textContent.trim()]);
+    box.querySelector('.ftmbtns .btn.primary').click(); await new Promise(r => setTimeout(r, 300));
+    const c = {}; S.marks.forEach(m => { const k = m.type + (m.act ? '@' + m.act : ''); c[k] = (c[k] || 0) + 1; });
+    const pg = S.pages[0], run = S.runs[0], len = runLen(run);
+    // offline: AI buttons hidden, Claude refused at once, the FER review still works with its built-in rules
+    CFG.offline = true; aiSync(); const hidden = getComputedStyle(document.querySelector('#aiDetect')).display === 'none';
+    let err = null; try { await callClaude('List every symbol in this legend.', null, null) } catch (e) { err = e.code }
+    CFG.offline = false; aiSync();
+    return { rows, c, runs: S.runs.length, mat: run.mat, dn: run.dn, sys: run.sys, ratio: pg.ratio, len: Math.round(len * 100) / 100, remembered: Object.keys(CFG.bbMap).length, hidden, err, fonts: !document.querySelector('link[href*="fonts.googleapis"]') }; }, buf);
+  assert.deepEqual(r.rows.map(x => x[1].replace(/^\s+/, '')).sort(), ['40FS', 'Mystery thing', 'SMOKE DETECTOR', 'X RECESSED CEILING SPEAKER'].sort());
+  assert.equal(r.rows.find(x => /Mystery/.test(x[1]))[0], false, 'an unknown subject is left unticked');
+  assert.deepEqual(r.c, { smoke: 5, 'speaker@remove': 2 }); assert.equal(r.runs, 1); assert.deepEqual([r.sys, r.mat, r.dn], ['SPR', 'GMS', 40]);
+  assert.equal(r.ratio, 100, 'scale from Bluebeam'); assert.equal(r.len, 14.11); assert.ok(r.remembered >= 3);
+  assert.ok(r.hidden); assert.equal(r.err, 'offline'); assert.ok(r.fonts, 'no Google Fonts request');
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');

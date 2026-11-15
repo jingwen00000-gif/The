@@ -125,7 +125,7 @@ ipcMain.handle('pdf-bytes', async (_e, { html }) => {
 ipcMain.handle('claude', async (_e, { key, body }) => {
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
+      method: 'POST', signal: AbortSignal.timeout(120000),
       headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify(body)
     });
