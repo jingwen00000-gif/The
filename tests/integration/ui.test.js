@@ -246,6 +246,24 @@ test('drawing register: title blocks give level, typical-floor multiplier and sh
   assert.deepEqual(r.left, ['FS-001 T1', 'FS-101 T1', 'FS-104 T1']);
 });
 
+test('填总包报价表: the builder\'s Excel schedule is filled from the estimate (systems suggested, formulas kept, choices remembered)', async () => {
+  const { page } = app;
+  const x = fs.readFileSync(path.join(__dirname, '../datasets/builder-schedule/schedule.xlsx')).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close();
+    const ex = PROJECTS.find(p => /^示例|^Example/.test(p.name)); if (ex && ex.id !== curId) await switchProject(ex.id);
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    let saved = null; saveFile = async (n, data) => { saved = { n, u: new Uint8Array(await data.arrayBuffer()) }; };
+    await FT_BUILDER.open(new File([u], 'schedule.xlsx')); const box = document.querySelector('#ftModal');
+    const picks = [...box.querySelectorAll('[data-bsk]')].map(s => s.value), note = box.textContent;
+    const C = compute(); box.querySelector('.ftmbtns .btn.primary').click(); await new Promise(r => setTimeout(r, 300));
+    const E = await FT_LEARN.pricing.unzip(saved.u, async d => new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()));
+    const W = FT_XLSXFILL.read(E).sheets[0]; const val = ref => (W.rows.find(x => x.ref === ref) || {}).value;
+    return { picks, hasTotal: /已分配|Assigned/.test(note), name: saved.n, D4: val('D4'), spr: Math.round((C.sellBySys.SPR || 0) * 100) / 100, D10: val('D10'), formula: W.rows.find(x => x.ref === 'D11').formula, remembered: Object.keys(CFG.builderMap || {}).length, hyd: !!C.sellBySys.HYD }; }, x);
+  assert.equal(r.picks[0], 'sys:SPR'); assert.equal(r.picks[1], r.hyd ? 'sys:HYD' : '', 'a system not in this quote is not offered'); assert.equal(r.picks[6], '', 'by-others row left empty');
+  assert.ok(r.hasTotal); assert.match(r.name, /filled\.xlsx$/); assert.equal(r.D4, r.spr, 'sprinkler sell price written'); assert.equal(r.D10, null); assert.ok(r.formula, 'subtotal formula kept');
+  assert.ok(r.remembered >= 7);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
