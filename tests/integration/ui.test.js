@@ -311,6 +311,25 @@ test('FER decisions into the price: an included item becomes a priced quote line
   assert.equal(r.mat, 1100, '2 × $500 + 10 % risk'); assert.ok(r.up); assert.match(r.incl, /cl\. 3\./); assert.ok(r.shown);
 });
 
+test('fit-out: proposed layout against the existing one (stays / relocated / new / removed); symbol rules go with drawing questions only', async () => {
+  const { page } = app;
+  const r = await page.evaluate(async () => { const d0 = document.querySelector('#ftModal'); if (d0 && d0.open) d0.close();
+    await newProject(); S.ptype = 'REFURB';
+    S.pages.push({ id: 'ex', name: 'Existing layout', kind: 'image', w: 1000, h: 800, mPerUnit: 0.01 }, { id: 'pr', name: 'Proposed layout', kind: 'image', w: 1000, h: 800, mPerUnit: 0.01 });
+    const add = (page, type, x, y) => S.marks.push({ id: uid(), page, type, x, y });
+    add('ex', 'speaker', 100, 100); add('ex', 'smoke', 300, 300); add('ex', 'smoke', 500, 500);
+    add('pr', 'speaker', 110, 100); add('pr', 'smoke', 380, 300); add('pr', 'speaker', 800, 700);
+    const res = compareExisting('ex', 'pr'); const acts = S.marks.filter(m => m.page === 'pr').map(m => m.type + ':' + (m.act || 'new') + (m.from ? '@' + m.from.join(',') : ''));
+    const again = compareExisting('ex', 'pr');   // running it again does not add the removals twice
+    CFG.symbolRules = 'SS inside a circle is a surface-mounted speaker\nFHR next to a square is a hose reel';
+    const a = withRules('List every symbol in this legend.'), b = withRules('You are reading tender documents for the project.');
+    CFG.symbolRules = '';
+    return { res, again, acts, a, b }; });
+  assert.deepEqual(r.res, { retain: 1, relocate: 1, new: 1, remove: 1 }); assert.deepEqual(r.again, r.res);
+  assert.deepEqual(r.acts.sort(), ['smoke:relocate@300,300', 'smoke:remove', 'speaker:new', 'speaker:retain']);
+  assert.match(r.a, /estimator's own symbol rules[\s\S]*- SS inside a circle is a surface-mounted speaker\n- FHR next to a square/); assert.doesNotMatch(r.b, /symbol rules/);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
