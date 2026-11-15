@@ -330,6 +330,28 @@ test('fit-out: proposed layout against the existing one (stays / relocated / new
   assert.match(r.a, /estimator's own symbol rules[\s\S]*- SS inside a circle is a surface-mounted speaker\n- FHR next to a square/); assert.doesNotMatch(r.b, /symbol rules/);
 });
 
+test('box search result bar over the drawing: count, fewer / more, next to check, discard, accept all (counted and confirmed)', async () => {
+  const { page } = app; const { Page, pdf } = require('../lib/pdfwriter');
+  const p = new Page(842, 595); for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) { p.circle(120 + i * 90, 120 + j * 120, 9); p.line(111 + i * 90, 120 + j * 120, 129 + i * 90, 120 + j * 120); }
+  p.rect(700, 400, 20, 12);
+  const buf = pdf([p]).toString('base64');
+  const r = await page.evaluate(async b64 => { const d = document.querySelector('#ftModal'); if (d && d.open) d.close(); showTab('takeoff');
+    const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    await newProject(); await openFiles([new File([u], 'heads.pdf', { type: 'application/pdf' })]); setTool('symbox'); cur.item = 'spk_pend';
+    const pg = page(); await smAddSample(pg, [106, 106, 134, 134]); SM.scope = 'page'; await smRun();
+    const bar = () => document.querySelector('#smBar'), txt = () => bar() ? bar().textContent : '';
+    const n0 = smCounts().n, shown = /找到 \d+ 个结果|Found \d+ results/.test(txt()), t0 = SM.thr;
+    bar().querySelector('[data-smb="less"]').click(); const tUp = SM.thr; bar().querySelector('[data-smb="more"]').click(); bar().querySelector('[data-smb="more"]').click(); const tDown = SM.thr;
+    bar().querySelector('[data-smb="next"]').click(); await new Promise(r => setTimeout(r, 100)); const picked = !!SM.selRes;
+    const before = S.marks.length; bar().querySelector('[data-smb="ok"]').click(); await new Promise(r => setTimeout(r, 100));
+    const added = S.marks.slice(before); const gone = !bar();
+    // discard on a second search leaves nothing behind
+    setTool('symbox'); await smAddSample(pg, [106, 106, 134, 134]); await smRun(); bar().querySelector('[data-smb="drop"]').click();
+    return { n0, shown, t0, tUp, tDown, picked, added: added.length, pending: added.filter(m => m.pending).length, gone, left: Object.keys(SM.results).length, noBar: !bar() }; }, buf);
+  assert.equal(r.n0, 18, 'all 18 heads found'); assert.ok(r.shown); assert.ok(r.tUp >= r.t0 && r.tUp <= 0.995 && r.tDown < r.tUp, JSON.stringify([r.t0, r.tUp, r.tDown])); assert.ok(r.picked);
+  assert.equal(r.added, 18); assert.equal(r.pending, 0, 'accept all confirms them'); assert.ok(r.gone); assert.equal(r.left, 0); assert.ok(r.noBar);
+});
+
 test('tender folder import: another service\'s sheet with a vague name is filed, not opened for take-off', async () => {
   const { page } = app;
   const pdf = fs.readFileSync(path.join(DS, 'project.pdf')).toString('base64');
